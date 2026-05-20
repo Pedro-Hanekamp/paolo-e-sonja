@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contatti — LARIOCLIMB</title>
+  <meta name="description" content="Contattaci: segnalazioni, aggiornamenti, nuove vie e informazioni sull'arrampicata nel Lecchese">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: var(--space-xl);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .contact-lang {
+      border-top: 2px solid var(--accent);
+      padding-top: var(--space-md);
+    }
+
+    .contact-lang h2 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0 0 var(--space-sm);
+    }
+
+    .contact-lang p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.65;
+      margin: 0 0 var(--space-sm);
+    }
+
+    .contact-lang .lang-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: var(--space-sm);
+    }
+
+    .email-box {
+      background: var(--bg-accent);
+      border: 1px solid var(--divider);
+      border-radius: var(--r-md);
+      padding: var(--space-md) var(--space-lg);
+      margin-bottom: var(--space-2xl);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .email-box .email-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .email-display {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: 0.02em;
+      user-select: all;
+    }
+
+    .email-note {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-left: auto;
+      font-style: italic;
+    }
+
+    .contact-topics {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .contact-topics h3 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0 0 var(--space-sm);
+    }
+
+    .topics-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-xs) var(--space-lg);
+    }
+
+    .topics-list li {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .topics-list li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: var(--accent-mid);
+    }
+
+    .spam-note {
+      background: var(--bg-alt);
+      border-left: 3px solid var(--divider);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: 0 var(--r-sm) var(--r-sm) 0;
+      margin-bottom: var(--space-xl);
+    }
+
+    .spam-note p {
+      font-size: 0.82rem;
+      color: var(--text-light);
+      margin: 0;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <div class="header-inner">
+      <a class="site-logo" href="index.html" aria-label="LARIOCLIMB — home">
+        <img src="http://larioclimb.paolo-sonja.net/nuovo_logo_larioclimb.jpg" alt="LarioClimb logo" height="80">
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Apri menu">☰</button>
+      <nav class="header-nav-wrap" id="main-nav" aria-label="Navigazione principale">
+        <ul class="nav-primary" role="list">
+          <li><a href="falesie_lecco/index.html">Topos</a></li>
+          <li><a href="bacheca/index.html">Bacheca</a></li>
+          <li><a href="lariobloc/index.html">Lariobloc</a></li>
+          <li><a href="https://www.paolo-sonja.net/scialp/lario/" target="_blank" rel="noopener">Larioski ↗</a></li>
+          <li><a href="accomodation.html">Accomodation</a></li>
+          <li><a href="shops.html">Shops</a></li>
+          <li><a href="http://www.vienormali.it/" target="_blank" rel="noopener">Altre Topos ↗</a></li>
+          <li><a href="index.html#meteo">Meteo</a></li>
+          <li class="nav-active nav-mail"><a href="mailus.html">@mail</a></li>
+        </ul>
+        <ul class="nav-secondary" role="list">
+          <li class="nav-active"><a href="http://www.paolo-sonja.net/" target="_blank" rel="noopener">Paolo&amp;Sonja</a></li>
+          <li><a href="http://www.paolo-sonja.net/viaggi/" target="_blank" rel="noopener">Viaggi-Trips</a></li>
+          <li><a href="http://www.paolo-sonja.net/masino/" target="_blank" rel="noopener">Masino-Bregaglia</a></li>
+          <li><a href="http://www.paolo-sonja.net/mello/" target="_blank" rel="noopener">Val di Mello</a></li>
+          <li><a href="http://www.paolo-sonja.net/bike/" target="_blank" rel="noopener">Bike</a></li>
+          <li><a href="http://www.paolo-sonja.net/alpiretiche/" target="_blank" rel="noopener">Alpi Retiche</a></li>
+          <li><a href="http://www.paolo-sonja.net/qualido/" target="_blank" rel="noopener">Qualido</a></li>
+          <li><a href="http://www.paolo-sonja.net/scialpinismo/" target="_blank" rel="noopener">Sci Alpinismo</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="page-title-bar">
+    <div class="container">
+      <h1>Contatti</h1>
+      <p>Scrivici — per aggiornamenti, segnalazioni e tutto il resto</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="site-main" style="max-width:860px;">
+
+      <!-- EMAIL -->
+      <div class="email-box">
+        <span class="email-label">E-mail</span>
+        <span class="email-display">larioclimb <!-- anti-spam --> [at] <!-- anti-spam --> paolo&#45;sonja&#46;net</span>
+        <span class="email-note">Rimuovi gli spazi e sostituisci [at] con @ e &#46; con .</span>
+      </div>
+
+      <div class="spam-note">
+        <p>L'indirizzo è scritto in forma anti-spam. Copialo e correggilo prima di inviare. Grazie per la comprensione.</p>
+      </div>
+
+      <!-- WHAT TO SEND -->
+      <div class="contact-topics">
+        <h3>Cosa puoi inviarci</h3>
+        <ul class="topics-list">
+          <li>Nuove vie o settori</li>
+          <li>Aggiornamenti su chiodature</li>
+          <li>Segnalazioni di pericolo</li>
+          <li>Notizie dalla bacheca</li>
+          <li>Correzioni a relazioni esistenti</li>
+          <li>Restrizioni d'accesso</li>
+          <li>Foto e documentazione storica</li>
+          <li>Segnalazioni su soste e fix</li>
+        </ul>
+      </div>
+
+      <!-- TRILINGUAL -->
+      <div class="contact-grid">
+
+        <div class="contact-lang">
+          <span class="lang-tag">Italiano</span>
+          <h2>Scrivici</h2>
+          <p>
+            Questo sito vive grazie agli aggiornamenti della comunità. Se hai notizie su nuove vie, chiodature, restrizioni d'accesso o qualsiasi cosa legata all'arrampicata nel Lecchese, scrivici pure.
+          </p>
+          <p>
+            Cercheremo di rispondere a ogni segnalazione utile e, se opportuno, di pubblicarla sulla bacheca.
+          </p>
+        </div>
+
+        <div class="contact-lang">
+          <span class="lang-tag">English</span>
+          <h2>Get in touch</h2>
+          <p>
+            If you have updates on new routes, re-bolting, access restrictions or anything related to climbing in the Lecco area, feel free to write to us.
+          </p>
+          <p>
+            We will try to respond to every useful report and, where appropriate, publish it on the bulletin board.
+          </p>
+        </div>
+
+        <div class="contact-lang">
+          <span class="lang-tag">Deutsch</span>
+          <h2>Kontakt</h2>
+          <p>
+            Wenn Sie Neuigkeiten über neue Routen, Sanierungen, Zugangsbeschränkungen oder alles rund ums Klettern im Raum Lecco haben, schreiben Sie uns gerne.
+          </p>
+          <p>
+            Wir versuchen, jeden nützlichen Hinweis zu beantworten und ihn gegebenenfalls auf dem schwarzen Brett zu veröffentlichen.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- LARIOBLOC CONTACT -->
+      <div class="section-label" style="margin-bottom:var(--space-md);">
+        <h2>Lariobloc</h2>
+      </div>
+      <div class="prose" style="color:var(--text-muted); margin-bottom:var(--space-2xl);">
+        <p>Per tutto ciò che riguarda il bouldering — zone blocchi, aggiornamenti sui settori, nuovi massi — contatta direttamente <strong>Paolo Zorloni</strong>:</p>
+        <p>
+          <a href="mailto:3xplorer73@gmail.com">3xplorer73@gmail.com</a><br>
+          333.1747111
+        </p>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-col">
+        <h5>Sezioni</h5>
+        <ul>
+          <li><a href="falesie_lecco/index.html">Topos — Falesie Lecco</a></li>
+          <li><a href="bacheca/index.html">Bacheca Virtuale</a></li>
+          <li><a href="lariobloc/index.html">Lariobloc</a></li>
+          <li><a href="pillole/pillole.html">Pillole di Storia</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Info</h5>
+        <ul>
+          <li><a href="accomodation.html">Accomodation</a></li>
+          <li><a href="shops.html">Shops</a></li>
+          <li><a href="autori.html">Gli Autori</a></li>
+          <li><a href="mailus.html">Contatti</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Rete Paolo &amp; Sonja</h5>
+        <ul>
+          <li><a href="http://www.paolo-sonja.net/" target="_blank" rel="noopener">paolo-sonja.net</a></li>
+          <li><a href="http://www.paolo-sonja.net/masino/" target="_blank" rel="noopener">Masino-Bregaglia</a></li>
+          <li><a href="http://www.paolo-sonja.net/mello/" target="_blank" rel="noopener">Val di Mello</a></li>
+          <li><a href="https://www.paolo-sonja.net/scialp/lario/" target="_blank" rel="noopener">LarioSki</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-copy">
+      <span>© Copyright 2002–2025 larioclimb.paolo-sonja.net</span>
+      <span><a href="autori.html">Autori</a> · <a href="mailus.html">Contatti</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/nav.js"></script>
+</body>
+</html>

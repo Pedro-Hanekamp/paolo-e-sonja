@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:larioclimb.paolo-sonja.net)",
+      "Bash(mkdir -p \"C:\\\\Users\\\\pedro\\\\Desktop\\\\paolo e sonja\\\\assets\" \"C:\\\\Users\\\\pedro\\\\Desktop\\\\paolo e sonja\\\\falesie_lecco\" \"C:\\\\Users\\\\pedro\\\\Desktop\\\\paolo e sonja\\\\bacheca\" \"C:\\\\Users\\\\pedro\\\\Desktop\\\\paolo e sonja\\\\lariobloc\" \"C:\\\\Users\\\\pedro\\\\Desktop\\\\paolo e sonja\\\\pillole\")"
+    ]
+  }
+}

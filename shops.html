@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shops — LARIOCLIMB</title>
+  <meta name="description" content="Negozi di arrampicata e outdoor vicino al Lago di Como e al Lecchese">
+  <link rel="stylesheet" href="assets/style.css">
+
+  <!-- ============================================================
+       SHOPS PAGE — LARIOCLIMB
+       ============================================================
+       This page lists the climbing and outdoor shops near Lecco.
+
+       HOW TO ADD A NEW SHOP:
+       1. Copy an entire <div class="shop-card"> ... </div> block below
+       2. Paste it after the last shop card, inside <div class="shop-list">
+       3. Replace the name, address, phone, website, map URL, and photo
+
+       HOW TO EDIT THE MAP:
+       - Each map is a Google Maps embed. To get a new embed URL:
+         1. Go to maps.google.com
+         2. Search for the shop address
+         3. Click Share → Embed a map → Copy the HTML
+         4. Replace the <iframe src="..."> URL inside the map-wrap div
+
+       HOW TO ADD/CHANGE A PHOTO:
+       - Find the <div class="shop-photo"> section inside each card
+       - Replace the placeholder <div> with an <img> tag like this:
+         <img src="foto_del_negozio.jpg" alt="Nome del negozio" style="width:100%;height:100%;object-fit:cover;">
+       - Put the image file in the same folder as this file (root of the site)
+       ============================================================ -->
+
+  <style>
+    /* -------------------------------------------------------
+       SHOPS PAGE STYLES
+       These styles only affect this page (shops.html).
+       The main site styles are in assets/style.css
+       ------------------------------------------------------- */
+
+    /* Outer wrapper — stacks two shop cards vertically with space between */
+    .shop-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3xl);
+    }
+
+    /* Each shop gets a card with a visible border and subtle background */
+    .shop-card {
+      border: 1px solid var(--divider);
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    /* The top part of each card — info on the left, map on the right */
+    .shop-card-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;  /* two equal columns */
+      gap: 0;
+    }
+
+    /* On small screens (phone), stack the info above the map */
+    @media (max-width: 640px) {
+      .shop-card-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Left column — shop name, address, phone, website */
+    .shop-info {
+      padding: var(--space-2xl);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Shop name + website link at the top of the info column */
+    .shop-header {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-xl);
+    }
+
+    .shop-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0;
+    }
+
+    /* The "website ↗" link shown next to the shop name */
+    .shop-web {
+      font-size: 0.82rem;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+    .shop-web:hover { text-decoration: underline; }
+
+    /* Address block — italic, muted color */
+    .shop-address {
+      font-style: italic;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: var(--space-md);
+    }
+
+    /* Phone number link */
+    .shop-phone {
+      margin: 0;
+    }
+    .shop-phone a {
+      color: var(--accent);
+      font-size: 0.95rem;
+      text-decoration: none;
+    }
+    .shop-phone a:hover { text-decoration: underline; }
+
+    /* Right column — Google Maps iframe */
+    .shop-map {
+      background: var(--bg-alt);
+      min-height: 280px;
+    }
+
+    /* The iframe itself fills the entire map column */
+    .shop-map iframe {
+      width: 100%;
+      height: 100%;
+      min-height: 280px;
+      border: 0;
+      display: block;
+    }
+
+    /* Photo strip below the info+map row */
+    .shop-photo-row {
+      border-top: 1px solid var(--divider);
+      display: grid;
+      /* 3 equal photo slots — change the number (3) to add/remove slots */
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+
+    /* Each individual photo slot */
+    .shop-photo {
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+      background: var(--bg-accent);
+      border-right: 1px solid var(--divider);
+    }
+    .shop-photo:last-child { border-right: 0; }
+
+    /* The grey placeholder shown when no photo has been added yet */
+    .shop-photo-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 6px;
+      color: var(--text-light);
+      font-size: 0.78rem;
+      text-align: center;
+      padding: 12px;
+    }
+    .shop-photo-placeholder span {
+      font-size: 1.6rem;
+      opacity: 0.35;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     SITE HEADER — same on every page
+     To change nav links: edit the <ul class="nav-primary"> list
+     To change secondary links: edit <ul class="nav-secondary">
+     ============================================================ -->
+<header class="site-header">
+  <div class="container">
+    <div class="header-inner">
+
+      <!-- LOGO — links back to homepage -->
+      <a class="site-logo" href="index.html" aria-label="LARIOCLIMB — home">
+        <img src="http://larioclimb.paolo-sonja.net/nuovo_logo_larioclimb.jpg" alt="LarioClimb logo" height="80">
+      </a>
+
+      <!-- HAMBURGER BUTTON — appears only on mobile, toggles the nav open/closed -->
+      <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Apri menu">☰</button>
+
+      <!-- MAIN NAVIGATION -->
+      <nav class="header-nav-wrap" id="main-nav" aria-label="Navigazione principale">
+
+        <!-- PRIMARY NAV — main site sections -->
+        <ul class="nav-primary" role="list">
+          <li><a href="falesie_lecco/index.html">Topos</a></li>
+          <li><a href="bacheca/index.html">Bacheca</a></li>
+          <li><a href="lariobloc/index.html">Lariobloc</a></li>
+          <li><a href="https://www.paolo-sonja.net/scialp/lario/" target="_blank" rel="noopener">Larioski ↗</a></li>
+          <li><a href="accomodation.html">Accomodation</a></li>
+          <!-- nav-active = highlights the current page in the nav -->
+          <li class="nav-active"><a href="shops.html">Shops</a></li>
+          <li><a href="http://www.vienormali.it/" target="_blank" rel="noopener">Altre Topos ↗</a></li>
+          <li><a href="index.html#meteo">Meteo</a></li>
+          <li class="nav-mail"><a href="mailus.html">@mail</a></li>
+        </ul>
+
+        <!-- SECONDARY NAV — links to Paolo & Sonja's other sites -->
+        <ul class="nav-secondary" role="list">
+          <li class="nav-active"><a href="http://www.paolo-sonja.net/" target="_blank" rel="noopener">Paolo&amp;Sonja</a></li>
+          <li><a href="http://www.paolo-sonja.net/viaggi/" target="_blank" rel="noopener">Viaggi-Trips</a></li>
+          <li><a href="http://www.paolo-sonja.net/masino/" target="_blank" rel="noopener">Masino-Bregaglia</a></li>
+          <li><a href="http://www.paolo-sonja.net/mello/" target="_blank" rel="noopener">Val di Mello</a></li>
+          <li><a href="http://www.paolo-sonja.net/bike/" target="_blank" rel="noopener">Bike</a></li>
+          <li><a href="http://www.paolo-sonja.net/alpiretiche/" target="_blank" rel="noopener">Alpi Retiche</a></li>
+          <li><a href="http://www.paolo-sonja.net/qualido/" target="_blank" rel="noopener">Qualido</a></li>
+          <li><a href="http://www.paolo-sonja.net/scialpinismo/" target="_blank" rel="noopener">Sci Alpinismo</a></li>
+        </ul>
+
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- PAGE TITLE BAR
+       To change the title or subtitle, edit the <h1> and <p> below -->
+  <div class="page-title-bar">
+    <div class="container">
+      <h1>Shops</h1>
+      <p>Negozi di arrampicata e outdoor nella zona</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="site-main" style="max-width:900px;">
+
+      <!-- ========================================================
+           SHOP LIST
+           Each shop is one <div class="shop-card"> block.
+           To add a new shop: copy a full shop-card block and paste
+           it after the closing </div> of the last shop card.
+           ======================================================== -->
+      <div class="shop-list">
+
+
+        <!-- ======================================================
+             SHOP 1 — ALPSTATION BRIANZA
+             ====================================================== -->
+        <div class="shop-card">
+
+          <!-- Top row: info on the left, map on the right -->
+          <div class="shop-card-inner">
+
+            <!-- LEFT: shop details -->
+            <div class="shop-info">
+
+              <!-- Shop name and website link -->
+              <!-- To change the name: edit the text inside <h2> -->
+              <!-- To change the website: edit the href="..." and the link text -->
+              <div class="shop-header">
+                <h2>Alpstation Brianza</h2>
+                <a href="http://www.alpstation.it/" target="_blank" rel="noopener" class="shop-web">alpstation.it ↗</a>
+              </div>
+
+              <div>
+                <!-- Address — use <br> for line breaks -->
+                <address class="shop-address">
+                  Via Provinciale 11<br>
+                  23843 Dolzago — Lecco
+                </address>
+
+                <!-- Phone — update both the href (tel:+39...) and the visible text -->
+                <p class="shop-phone">
+                  <a href="tel:+390341451250">0341-451.250</a>
+                </p>
+              </div>
+            </div>
+
+            <!-- RIGHT: Google Maps embed
+                 To update the map:
+                 1. Go to maps.google.com
+                 2. Search "Via Provinciale 11, Dolzago, LC"
+                 3. Click Share → Embed a map → Copy the <iframe> src URL
+                 4. Replace the src="..." below with the new URL -->
+            <div class="shop-map">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2784.2!2d9.3352!3d45.7889!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sVia+Provinciale+11%2C+23843+Dolzago+LC!5e0!3m2!1sit!2sit!4v1700000000000!5m2!1sit!2sit"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa Alpstation Brianza — Via Provinciale 11, Dolzago LC">
+              </iframe>
+            </div>
+
+          </div><!-- end shop-card-inner -->
+
+          <!-- PHOTO STRIP
+               3 photo slots. To add a real photo, replace the
+               <div class="shop-photo-placeholder"> block with:
+               <img src="nome_foto.jpg" alt="Descrizione" style="width:100%;height:100%;object-fit:cover;">
+               Put the image file in the root folder of the site (same level as shops.html). -->
+          <div class="shop-photo-row">
+
+            <!-- Photo slot 1: exterior / facade of the shop -->
+            <div class="shop-photo">
+              <!-- REPLACE THIS PLACEHOLDER with an <img> tag once you have a photo -->
+              <div class="shop-photo-placeholder">
+                <span>📷</span>
+                Facciata del negozio<br>
+                <em>Sostituire con foto</em>
+              </div>
+            </div>
+
+            <!-- Photo slot 2: interior / products display -->
+            <div class="shop-photo">
+              <div class="shop-photo-placeholder">
+                <span>📷</span>
+                Interno / prodotti<br>
+                <em>Sostituire con foto</em>
+              </div>
+            </div>
+
+            <!-- Photo slot 3: team / detail shot -->
+            <div class="shop-photo">
+              <div class="shop-photo-placeholder">
+                <span>📷</span>
+                Dettaglio / team<br>
+                <em>Sostituire con foto</em>
+              </div>
+            </div>
+
+          </div><!-- end shop-photo-row -->
+
+        </div><!-- end shop-card: Alpstation Brianza -->
+
+
+        <!-- ======================================================
+             SHOP 2 — SHERPA
+             ====================================================== -->
+        <div class="shop-card">
+
+          <!-- Top row: info on the left, map on the right -->
+          <div class="shop-card-inner">
+
+            <!-- LEFT: shop details -->
+            <div class="shop-info">
+
+              <!-- Shop name and website link -->
+              <div class="shop-header">
+                <h2>Sherpa</h2>
+                <a href="http://www.sherpaonline.it/" target="_blank" rel="noopener" class="shop-web">sherpaonline.it ↗</a>
+              </div>
+
+              <div>
+                <!-- Address -->
+                <address class="shop-address">
+                  Via 4 Novembre n°42<br>
+                  Ronco Briantino — Milano
+                </address>
+
+                <!-- Phone -->
+                <p class="shop-phone">
+                  <a href="tel:+390396817092">039-6817092</a>
+                </p>
+              </div>
+            </div>
+
+            <!-- RIGHT: Google Maps embed
+                 To update: search "Via 4 Novembre 42, Ronco Briantino, MB"
+                 on maps.google.com → Share → Embed → copy the src URL -->
+            <div class="shop-map">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2784.2!2d9.2541!3d45.7012!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sVia+4+Novembre+42%2C+Ronco+Briantino+MB!5e0!3m2!1sit!2sit!4v1700000001000!5m2!1sit!2sit"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa Sherpa — Via 4 Novembre 42, Ronco Briantino">
+              </iframe>
+            </div>
+
+          </div><!-- end shop-card-inner -->
+
+          <!-- PHOTO STRIP — same structure as above -->
+          <div class="shop-photo-row">
+
+            <!-- Photo slot 1 -->
+            <div class="shop-photo">
+              <div class="shop-photo-placeholder">
+                <span>📷</span>
+                Facciata del negozio<br>
+                <em>Sostituire con foto</em>
+              </div>
+            </div>
+
+            <!-- Photo slot 2 -->
+            <div class="shop-photo">
+              <div class="shop-photo-placeholder">
+                <span>📷</span>
+                Interno / prodotti<br>
+                <em>Sostituire con foto</em>
+              </div>
+            </div>
+
+            <!-- Photo slot 3 -->
+            <div class="shop-photo">
+              <div class="shop-photo-placeholder">
+                <span>📷</span>
+                Dettaglio / team<br>
+                <em>Sostituire con foto</em>
+              </div>
+            </div>
+
+          </div><!-- end shop-photo-row -->
+
+        </div><!-- end shop-card: Sherpa -->
+
+
+        <!-- ======================================================
+             ADD A NEW SHOP HERE
+             Copy the entire shop-card block above (from the comment
+             "SHOP 1" to its closing </div>) and paste it here.
+             Then update: name, website, address, phone, map src.
+             ====================================================== -->
+
+
+      </div><!-- end shop-list -->
+
+    </div>
+  </div>
+</main>
+
+<!-- ============================================================
+     SITE FOOTER — same on every page
+     To add/remove footer links: edit the <ul> lists below
+     ============================================================ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-inner">
+
+      <!-- Footer column 1: main site sections -->
+      <div class="footer-col">
+        <h5>Sezioni</h5>
+        <ul>
+          <li><a href="falesie_lecco/index.html">Topos — Falesie Lecco</a></li>
+          <li><a href="bacheca/index.html">Bacheca Virtuale</a></li>
+          <li><a href="lariobloc/index.html">Lariobloc</a></li>
+          <li><a href="pillole/pillole.html">Pillole di Storia</a></li>
+        </ul>
+      </div>
+
+      <!-- Footer column 2: info pages -->
+      <div class="footer-col">
+        <h5>Info</h5>
+        <ul>
+          <li><a href="accomodation.html">Accomodation</a></li>
+          <li><a href="shops.html">Shops</a></li>
+          <li><a href="autori.html">Gli Autori</a></li>
+          <li><a href="mailus.html">Contatti</a></li>
+        </ul>
+      </div>
+
+      <!-- Footer column 3: Paolo & Sonja network -->
+      <div class="footer-col">
+        <h5>Rete Paolo &amp; Sonja</h5>
+        <ul>
+          <li><a href="http://www.paolo-sonja.net/" target="_blank" rel="noopener">paolo-sonja.net</a></li>
+          <li><a href="http://www.paolo-sonja.net/masino/" target="_blank" rel="noopener">Masino-Bregaglia</a></li>
+          <li><a href="http://www.paolo-sonja.net/mello/" target="_blank" rel="noopener">Val di Mello</a></li>
+          <li><a href="https://www.paolo-sonja.net/scialp/lario/" target="_blank" rel="noopener">LarioSki</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Copyright line — update the year range if needed -->
+    <div class="footer-copy">
+      <span>© Copyright 2002–2025 larioclimb.paolo-sonja.net</span>
+      <span><a href="autori.html">Autori</a> · <a href="mailus.html">Contatti</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- Navigation script — handles the mobile hamburger menu open/close -->
+<script src="assets/nav.js"></script>
+</body>
+</html>
