@@ -195,7 +195,7 @@ small { font-size: 0.8rem; color: var(--text-muted); }
 }
 .hero-img-wrap {
   position: relative;
-  height: clamp(280px, 40vw, 480px);
+  height: clamp(160px, 22vw, 260px);
   overflow: hidden;
 }
 .hero-img-wrap img {
