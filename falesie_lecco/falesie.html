@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Falesie — LARIOCLIMB</title>
+  <meta name="description" content="Mappa e indice completo delle falesie intorno al Lago di Como e nel Lecchese — guide scaricabili in PDF">
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <style>
+    /* ── page layout ── */
+    .falesie-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .falesie-layout { grid-template-columns: 1fr; }
+    }
+
+    /* ── map ── */
+    #map {
+      width: 100%;
+      height: 500px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--divider);
+      position: sticky;
+      top: 100px;
+    }
+    @media (max-width: 860px) {
+      #map { height: 320px; position: static; }
+    }
+
+    /* ── filter panel ── */
+    .filter-panel {
+      background: var(--bg-alt);
+      border: 1px solid var(--divider);
+      border-radius: var(--r-md);
+      padding: var(--space-md);
+    }
+    .filter-panel h4 {
+      color: var(--text-muted);
+      margin-bottom: var(--space-sm);
+    }
+    .search-wrap {
+      position: relative;
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      opacity: 0.45;
+    }
+    #crag-search {
+      width: 100%;
+      padding: 0.55rem 0.75rem 0.55rem 2.2rem;
+      border: 1px solid var(--divider);
+      border-radius: var(--r-sm);
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      transition: border-color 0.15s;
+    }
+    #crag-search:focus {
+      outline: none;
+      border-color: var(--accent-mid);
+    }
+    #crag-search::placeholder { color: var(--text-light); }
+
+    .filter-zone {
+      margin-top: var(--space-sm);
+    }
+    .filter-zone label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
+      margin-top: var(--space-sm);
+    }
+    .zone-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+    .tag-btn {
+      padding: 0.25rem 0.65rem;
+      border-radius: 99px;
+      border: 1px solid var(--divider);
+      background: var(--bg);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: all 0.15s;
+      line-height: 1.4;
+    }
+    .tag-btn:hover { border-color: var(--accent-mid); color: var(--accent); }
+    .tag-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: oklch(0.975 0.008 75);
+    }
+
+    .result-count {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: var(--space-sm);
+    }
+
+    /* ── table ── */
+    .crag-table-wrap {
+      overflow-x: auto;
+      border-radius: var(--r-md);
+      border: 1px solid var(--divider);
+    }
+    table.crag-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .crag-table thead th {
+      background: var(--bg-alt);
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--divider);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+    .crag-table thead th:hover { color: var(--accent); }
+    .crag-table thead th .sort-icon { opacity: 0.35; margin-left: 4px; }
+    .crag-table thead th.sort-asc .sort-icon::after { content: " ↑"; opacity: 1; }
+    .crag-table thead th.sort-desc .sort-icon::after { content: " ↓"; opacity: 1; }
+    .crag-table tbody tr {
+      border-bottom: 1px solid var(--divider);
+      transition: background 0.1s;
+    }
+    .crag-table tbody tr:last-child { border-bottom: none; }
+    .crag-table tbody tr:hover { background: var(--bg-alt); }
+    .crag-table tbody tr.hidden { display: none; }
+    .crag-table td { padding: 0.65rem 1rem; vertical-align: middle; }
+    .crag-table td.crag-name { font-weight: 500; }
+    .crag-table td.crag-zone {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .zone-badge {
+      display: inline-block;
+      padding: 0.15rem 0.55rem;
+      border-radius: 99px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    /* zone colors */
+    .z-lago-di-como    { background: oklch(0.88 0.06 200); color: oklch(0.30 0.10 200); }
+    .z-alta-lecco      { background: oklch(0.88 0.06 150); color: oklch(0.28 0.10 150); }
+    .z-triangolo-lariano { background: oklch(0.88 0.06 100); color: oklch(0.30 0.10 100); }
+    .z-valsassina      { background: oklch(0.88 0.06 50);  color: oklch(0.32 0.10 50);  }
+    .z-grigna          { background: oklch(0.88 0.06 30);  color: oklch(0.32 0.10 30);  }
+
+    .pdf-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--accent);
+      padding: 0.25rem 0.65rem;
+      border: 1px solid var(--accent-mid);
+      border-radius: var(--r-sm);
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .pdf-link:hover {
+      background: var(--accent);
+      color: oklch(0.975 0.008 75);
+      text-decoration: none;
+      border-color: var(--accent);
+    }
+    .no-pdf {
+      font-size: 0.78rem;
+      color: var(--text-light);
+    }
+
+    /* ── empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-xl) var(--space-md);
+      color: var(--text-muted);
+    }
+    .empty-state svg { opacity: 0.3; margin-bottom: var(--space-sm); }
+
+    /* ── map popup ── */
+    .leaflet-popup-content-wrapper {
+      border-radius: var(--r-md);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+    }
+    .popup-name { font-weight: 600; margin-bottom: 4px; }
+    .popup-zone { font-size: 0.75rem; color: #666; margin-bottom: 6px; }
+    .popup-pdf { font-size: 0.8rem; color: oklch(0.42 0.10 200); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <div class="header-inner">
+      <a class="site-logo" href="../index.html" aria-label="LARIOCLIMB — home">
+        <img src="http://larioclimb.paolo-sonja.net/nuovo_logo_larioclimb.jpg" alt="LarioClimb logo" height="80">
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Apri menu">☰</button>
+      <nav class="header-nav-wrap" id="main-nav" aria-label="Navigazione principale">
+        <ul class="nav-primary" role="list">
+          <li class="nav-active"><a href="index.html">Topos</a></li>
+          <li><a href="../bacheca/index.html">Bacheca</a></li>
+          <li><a href="../lariobloc/index.html">Lariobloc</a></li>
+          <li><a href="https://www.paolo-sonja.net/scialp/lario/" target="_blank" rel="noopener">Larioski ↗</a></li>
+          <li><a href="../accomodation.html">Accomodation</a></li>
+          <li><a href="../shops.html">Shops</a></li>
+          <li><a href="http://www.vienormali.it/" target="_blank" rel="noopener">Altre Topos ↗</a></li>
+          <li><a href="../index.html#meteo">Meteo</a></li>
+          <li class="nav-mail"><a href="../mailus.html">@mail</a></li>
+        </ul>
+        <ul class="nav-secondary" role="list">
+          <li><a href="http://www.paolo-sonja.net/" target="_blank" rel="noopener">Paolo&amp;Sonja</a></li>
+          <li><a href="http://www.paolo-sonja.net/viaggi/" target="_blank" rel="noopener">Viaggi-Trips</a></li>
+          <li><a href="http://www.paolo-sonja.net/masino/" target="_blank" rel="noopener">Masino-Bregaglia</a></li>
+          <li><a href="http://www.paolo-sonja.net/mello/" target="_blank" rel="noopener">Val di Mello</a></li>
+          <li><a href="http://www.paolo-sonja.net/bike/" target="_blank" rel="noopener">Bike</a></li>
+          <li><a href="http://www.paolo-sonja.net/alpiretiche/" target="_blank" rel="noopener">Alpi Retiche</a></li>
+          <li><a href="http://www.paolo-sonja.net/qualido/" target="_blank" rel="noopener">Qualido</a></li>
+          <li><a href="http://www.paolo-sonja.net/scialpinismo/" target="_blank" rel="noopener">Sci Alpinismo</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="page-title-bar">
+    <div class="container">
+      <h1>Falesie</h1>
+      <p>Mappa e indice completo delle falesie — 73 guide PDF scaricabili</p>
+    </div>
+  </div>
+
+  <div class="container" style="padding-top: var(--space-lg); padding-bottom: var(--space-2xl);">
+
+    <!-- MAP + FILTER -->
+    <div class="falesie-layout" style="margin-bottom: var(--space-xl);">
+
+      <!-- LEFT: filter + stats -->
+      <div>
+        <div class="filter-panel">
+          <h4>Cerca una falesia</h4>
+          <div class="search-wrap">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="search" id="crag-search" placeholder="Es. Galbiate, Tramonto…" autocomplete="off">
+          </div>
+
+          <div class="filter-zone">
+            <label>Zona</label>
+            <div class="zone-tags">
+              <button class="tag-btn active" data-zone="all">Tutte</button>
+              <button class="tag-btn" data-zone="Lago di Como">Lago di Como</button>
+              <button class="tag-btn" data-zone="Alta Lecco">Alta Lecco</button>
+              <button class="tag-btn" data-zone="Triangolo Lariano">Triangolo Lariano</button>
+              <button class="tag-btn" data-zone="Valsassina">Valsassina</button>
+              <button class="tag-btn" data-zone="Grigna">Grigna</button>
+            </div>
+          </div>
+
+          <p class="result-count"><span id="result-count">73</span> falesie</p>
+        </div>
+
+        <!-- disclaimer -->
+        <div class="disclaimer" style="margin-top: var(--space-lg);">
+          <h3>Avvertenza — Warning — Hinweis</h3>
+          <p style="font-size:0.85rem; margin-top: var(--space-sm); color:var(--text-muted);">
+            <strong>IT:</strong> L'arrampicata è intrinsecamente pericolosa. Verificare le informazioni direttamente in parete, specialmente l'attrezzatura.
+          </p>
+          <p style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-muted);">
+            <strong>EN:</strong> Climbing is inherently dangerous. Verify all route info on-site, especially fixed protection.
+          </p>
+          <p style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-muted);">
+            <strong>DE:</strong> Klettern ist gefährlich. Alle Angaben vor Ort überprüfen, besonders Sicherungsmaterial.
+          </p>
+        </div>
+      </div>
+
+      <!-- RIGHT: map -->
+      <div id="map" aria-label="Mappa delle falesie del Lecchese"></div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="crag-table-wrap">
+      <table class="crag-table" id="crag-table">
+        <thead>
+          <tr>
+            <th data-col="name">Falesia <span class="sort-icon"></span></th>
+            <th data-col="zone">Zona <span class="sort-icon"></span></th>
+            <th data-col="alt">Alt. (m) <span class="sort-icon"></span></th>
+            <th>PDF</th>
+          </tr>
+        </thead>
+        <tbody id="crag-tbody">
+          <!-- rows injected by JS -->
+        </tbody>
+      </table>
+      <div class="empty-state" id="empty-state" style="display:none;">
+        <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <p>Nessuna falesia trovata.</p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-col">
+        <h5>Sezioni</h5>
+        <ul>
+          <li><a href="index.html">Topos — Falesie Lecco</a></li>
+          <li><a href="falesie.html">Mappa Falesie</a></li>
+          <li><a href="../bacheca/index.html">Bacheca Virtuale</a></li>
+          <li><a href="../lariobloc/index.html">Lariobloc</a></li>
+          <li><a href="../pillole/pillole.html">Pillole di Storia</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Info</h5>
+        <ul>
+          <li><a href="../accomodation.html">Accomodation</a></li>
+          <li><a href="../shops.html">Shops</a></li>
+          <li><a href="../autori.html">Gli Autori</a></li>
+          <li><a href="../mailus.html">Contatti</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Rete Paolo &amp; Sonja</h5>
+        <ul>
+          <li><a href="http://www.paolo-sonja.net/" target="_blank" rel="noopener">paolo-sonja.net</a></li>
+          <li><a href="http://www.paolo-sonja.net/masino/" target="_blank" rel="noopener">Masino-Bregaglia</a></li>
+          <li><a href="http://www.paolo-sonja.net/mello/" target="_blank" rel="noopener">Val di Mello</a></li>
+          <li><a href="https://www.paolo-sonja.net/scialp/lario/" target="_blank" rel="noopener">LarioSki</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-copy">
+      <span>© Copyright 2002–2025 larioclimb.paolo-sonja.net</span>
+      <span><a href="../autori.html">Autori</a> · <a href="../mailus.html">Contatti</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/nav.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+// ── CRAG DATA ──────────────────────────────────────────────────────────────
+// Fields: name, zone, alt (m), lat, lng, pdf (relative path or null)
+const CRAGS = [
+  // Lago di Como — western/central lake shore
+  { name: "Bastionata del Lago",     zone: "Lago di Como",      alt: 210,  lat: 45.992, lng: 9.313,  pdf: "bastionatalago/bastionatalago.pdf" },
+  { name: "Varenna",                 zone: "Lago di Como",      alt: 250,  lat: 46.012, lng: 9.284,  pdf: "varenna/varenna.pdf" },
+  { name: "Sasso Negher",            zone: "Lago di Como",      alt: 300,  lat: 46.138, lng: 9.376,  pdf: "sassnegher/sassnegher_CAI_colico.pdf" },
+  { name: "Torre Marina",            zone: "Lago di Como",      alt: 280,  lat: 46.040, lng: 9.272,  pdf: "torremarina/torremarina.pdf" },
+  { name: "Lariosauro",              zone: "Lago di Como",      alt: 320,  lat: 45.985, lng: 9.300,  pdf: "lariosauro/lariosauro.pdf" },
+  { name: "Grotta di Mandello",      zone: "Lago di Como",      alt: 350,  lat: 45.928, lng: 9.318,  pdf: "grottamandello/grottamandello.pdf" },
+  { name: "Strapiombo di Mandello",  zone: "Lago di Como",      alt: 380,  lat: 45.924, lng: 9.320,  pdf: "strapiombomandello/strapiombomandello.pdf" },
+  { name: "Pilastro Rosso",          zone: "Lago di Como",      alt: 420,  lat: 45.920, lng: 9.315,  pdf: "pilastrorosso/pilastrorosso.pdf" },
+  { name: "Sass di Resegone",        zone: "Lago di Como",      alt: 440,  lat: 45.916, lng: 9.322,  pdf: "sassocarlano/sassocarlano.pdf" },
+  { name: "Pradello",                zone: "Lago di Como",      alt: 460,  lat: 45.912, lng: 9.329,  pdf: "pradello/pradello.pdf" },
+  { name: "Versasio",                zone: "Lago di Como",      alt: 340,  lat: 45.935, lng: 9.308,  pdf: "versasio/versasio.pdf" },
+  { name: "Discoteca",               zone: "Lago di Como",      alt: 290,  lat: 45.940, lng: 9.310,  pdf: "discoteca/discoteca.pdf" },
+  { name: "Promesse nel Sole",       zone: "Lago di Como",      alt: 310,  lat: 45.945, lng: 9.305,  pdf: "promessenelsole/promessenelsole.pdf" },
+  { name: "Real Ba",                 zone: "Lago di Como",      alt: 270,  lat: 45.948, lng: 9.304,  pdf: "realba/realba.pdf" },
+
+  // Alta Lecco — east shore and Resegone foothills
+  { name: "Antimedale",              zone: "Alta Lecco",        alt: 500,  lat: 45.870, lng: 9.398,  pdf: "antimedale/antimedale.pdf" },
+  { name: "Mago",                    zone: "Alta Lecco",        alt: 480,  lat: 45.875, lng: 9.392,  pdf: "mago/mago.pdf" },
+  { name: "Muro Nascosto",           zone: "Alta Lecco",        alt: 440,  lat: 45.862, lng: 9.405,  pdf: "muronascosto/muronascosto.pdf" },
+  { name: "Pala San Martino",        zone: "Alta Lecco",        alt: 520,  lat: 45.855, lng: 9.412,  pdf: "palasanmartino/palasanmartino.pdf" },
+  { name: "Placche San Martino",     zone: "Alta Lecco",        alt: 560,  lat: 45.850, lng: 9.418,  pdf: "placchesanmartino/sanmartinoplacc.pdf" },
+  { name: "Bagaì de Lecch",          zone: "Alta Lecco",        alt: 540,  lat: 45.852, lng: 9.415,  pdf: "placchesanmartino/bagaidelecch.pdf" },
+  { name: "Picett",                  zone: "Alta Lecco",        alt: 530,  lat: 45.851, lng: 9.416,  pdf: "placchesanmartino/picett.pdf" },
+  { name: "Stoppani",                zone: "Alta Lecco",        alt: 490,  lat: 45.845, lng: 9.425,  pdf: "stoppani/stoppani_new.pdf" },
+  { name: "Pass del Fo",             zone: "Alta Lecco",        alt: 510,  lat: 45.848, lng: 9.420,  pdf: "passdelfo/passdelfo.pdf" },
+  { name: "Buco del Piombo",         zone: "Alta Lecco",        alt: 460,  lat: 45.840, lng: 9.430,  pdf: "bucodelpiombo/bucodelpiombo.pdf" },
+  { name: "Pungitopo",               zone: "Alta Lecco",        alt: 450,  lat: 45.838, lng: 9.432,  pdf: "pungitopo/pungitopo.pdf" },
+  { name: "Amicizia",                zone: "Alta Lecco",        alt: 480,  lat: 45.842, lng: 9.428,  pdf: "amicizia/amicizia.pdf" },
+  { name: "Introbio",                zone: "Alta Lecco",        alt: 700,  lat: 45.957, lng: 9.446,  pdf: "introbio/introbio.pdf" },
+  { name: "Campelli",                zone: "Alta Lecco",        alt: 650,  lat: 45.952, lng: 9.440,  pdf: "campelli/campelli.pdf" },
+  { name: "Campiano",                zone: "Alta Lecco",        alt: 620,  lat: 45.948, lng: 9.442,  pdf: "campiano/campiano.pdf" },
+
+  // Triangolo Lariano — SW of Lake Como
+  { name: "Corni di Canzo",          zone: "Triangolo Lariano", alt: 700,  lat: 45.810, lng: 9.245,  pdf: "cornidicanzo/cornidicanzo.pdf" },
+  { name: "Sasso Giallo",            zone: "Triangolo Lariano", alt: 620,  lat: 45.820, lng: 9.258,  pdf: "sassogiallo/sassogiallo.pdf" },
+  { name: "Sasso Derba",             zone: "Triangolo Lariano", alt: 580,  lat: 45.825, lng: 9.262,  pdf: "sassoderba/sassoderba.pdf" },
+  { name: "Val Brona",               zone: "Triangolo Lariano", alt: 550,  lat: 45.830, lng: 9.270,  pdf: "valbrona/valbrona.pdf" },
+  { name: "Tramonto",                zone: "Triangolo Lariano", alt: 510,  lat: 45.815, lng: 9.252,  pdf: "tramonto/tramonto.pdf" },
+  { name: "Falesia del Tramonto",    zone: "Triangolo Lariano", alt: 505,  lat: 45.813, lng: 9.250,  pdf: "tramonto/tramonto.pdf" },
+  { name: "Ceppo Virale",            zone: "Triangolo Lariano", alt: 600,  lat: 45.808, lng: 9.240,  pdf: "ceppovirale/ceppovirale.pdf" },
+  { name: "Val Cepelline",           zone: "Triangolo Lariano", alt: 640,  lat: 45.805, lng: 9.235,  pdf: "valcepelline/valcepelline.pdf" },
+  { name: "Eco",                     zone: "Triangolo Lariano", alt: 580,  lat: 45.802, lng: 9.242,  pdf: "eco/eco.pdf" },
+  { name: "Cascina Galbiate",        zone: "Triangolo Lariano", alt: 420,  lat: 45.800, lng: 9.355,  pdf: "galbiate/galbiate.pdf" },
+  { name: "Sprofondo",               zone: "Triangolo Lariano", alt: 500,  lat: 45.818, lng: 9.260,  pdf: "sprofondo/sprofondo.pdf" },
+  { name: "Civate",                  zone: "Triangolo Lariano", alt: 380,  lat: 45.805, lng: 9.350,  pdf: "civate/civate.pdf" },
+  { name: "Occhiolo",                zone: "Triangolo Lariano", alt: 360,  lat: 45.800, lng: 9.348,  pdf: "occhiolo/occhiolo.pdf" },
+  { name: "Ballabiot",               zone: "Triangolo Lariano", alt: 440,  lat: 45.812, lng: 9.358,  pdf: "ballabiot/ballabiot.pdf" },
+  { name: "Bio Muro",                zone: "Triangolo Lariano", alt: 410,  lat: 45.808, lng: 9.352,  pdf: "biomuro/biomuro.pdf" },
+
+  // Valsassina
+  { name: "Val Grande",              zone: "Valsassina",        alt: 780,  lat: 45.960, lng: 9.455,  pdf: "valgrande/valgrande.pdf" },
+  { name: "Lares",                   zone: "Valsassina",        alt: 820,  lat: 45.965, lng: 9.458,  pdf: "lares/lares.pdf" },
+  { name: "Nibbio",                  zone: "Valsassina",        alt: 860,  lat: 45.970, lng: 9.462,  pdf: "nibbio/nibbio.pdf" },
+  { name: "Masone",                  zone: "Valsassina",        alt: 750,  lat: 45.955, lng: 9.450,  pdf: "masone/masone.pdf" },
+  { name: "Pizzoderna",              zone: "Valsassina",        alt: 800,  lat: 45.958, lng: 9.452,  pdf: "pizzoderna/pizzoderna.pdf" },
+  { name: "Val Boazzo",              zone: "Valsassina",        alt: 840,  lat: 45.962, lng: 9.460,  pdf: "valboazzo/valboazzo.pdf" },
+  { name: "Val dell'Oro",            zone: "Valsassina",        alt: 900,  lat: 45.975, lng: 9.470,  pdf: "valdelloro/valdelloro.pdf" },
+  { name: "Esino",                   zone: "Valsassina",        alt: 950,  lat: 45.978, lng: 9.475,  pdf: "esino/esino.pdf" },
+  { name: "Fusinetta",               zone: "Valsassina",        alt: 880,  lat: 45.968, lng: 9.465,  pdf: "fusinetta/fusinetta.pdf" },
+  { name: "Il Muro del Butch",       zone: "Valsassina",        alt: 760,  lat: 45.954, lng: 9.448,  pdf: "ilmurodelbutch/ilmurodelbutch.pdf" },
+  { name: "Cainallo",                zone: "Valsassina",        alt: 920,  lat: 45.980, lng: 9.478,  pdf: "cainallo/cainallo.pdf" },
+  { name: "Muro del Pianto",         zone: "Valsassina",        alt: 810,  lat: 45.960, lng: 9.454,  pdf: "murodelpianto/murodelpianto.pdf" },
+  { name: "Rocca di Baiedo",         zone: "Valsassina",        alt: 870,  lat: 45.972, lng: 9.468,  pdf: "roccadibaiedo/baiedo.pdf" },
+  { name: "Sasso Alippi",            zone: "Valsassina",        alt: 830,  lat: 45.963, lng: 9.457,  pdf: "sassoalippi/sassoalippi.pdf" },
+  { name: "Sasso Carlano",           zone: "Valsassina",        alt: 790,  lat: 45.956, lng: 9.449,  pdf: "sassocarlano/sassocarlano.pdf" },
+  { name: "Grifone",                 zone: "Valsassina",        alt: 850,  lat: 45.966, lng: 9.464,  pdf: "grifone/grifone.pdf" },
+  { name: "Torrette",                zone: "Valsassina",        alt: 890,  lat: 45.974, lng: 9.472,  pdf: "torrette/torrette.pdf" },
+
+  // Grigna
+  { name: "Erna Sorprese",           zone: "Grigna",            alt: 1000, lat: 45.900, lng: 9.360,  pdf: "ernasorprese/ernasorprese.pdf" },
+  { name: "Gajum Alta",              zone: "Grigna",            alt: 1080, lat: 45.895, lng: 9.355,  pdf: "gajum/gajumalta.pdf" },
+  { name: "Magnodeno",               zone: "Grigna",            alt: 950,  lat: 45.905, lng: 9.365,  pdf: "magnodeno/maggiociondolo.pdf" },
+  { name: "Solarium",                zone: "Grigna",            alt: 1020, lat: 45.898, lng: 9.358,  pdf: "solarium/solarium.pdf" },
+  { name: "Eretico",                 zone: "Grigna",            alt: 1050, lat: 45.893, lng: 9.352,  pdf: "eretico/eretico.pdf" },
+  { name: "San Tomas",               zone: "Grigna",            alt: 990,  lat: 45.902, lng: 9.362,  pdf: "santomas/santomas.pdf" },
+  { name: "Leves",                   zone: "Grigna",            alt: 1100, lat: 45.888, lng: 9.348,  pdf: "leves/leves.pdf" },
+  { name: "Pasqua — Isola di Pasqua",zone: "Grigna",            alt: 870,  lat: 45.910, lng: 9.372,  pdf: "pasqua/pasqua.pdf" },
+  { name: "Vaccarese",               zone: "Grigna",            alt: 860,  lat: 45.912, lng: 9.370,  pdf: "vaccarese/vaccarese.pdf" },
+  { name: "Shakespeare",             zone: "Grigna",            alt: 920,  lat: 45.906, lng: 9.365,  pdf: "shakespeare/shakespeare.pdf" },
+  { name: "Cornarossa",              zone: "Grigna",            alt: 940,  lat: 45.903, lng: 9.363,  pdf: "cornarossa/cornarossa.pdf" },
+  { name: "Cornorat",                zone: "Grigna",            alt: 960,  lat: 45.900, lng: 9.361,  pdf: "cornorat/cornorat.pdf" },
+];
+
+// ── ZONE COLOR MAP ─────────────────────────────────────────────────────────
+const ZONE_CLASS = {
+  "Lago di Como":      "z-lago-di-como",
+  "Alta Lecco":        "z-alta-lecco",
+  "Triangolo Lariano": "z-triangolo-lariano",
+  "Valsassina":        "z-valsassina",
+  "Grigna":            "z-grigna",
+};
+const ZONE_COLOR = {
+  "Lago di Como":      "#0d8f8f",
+  "Alta Lecco":        "#2e8b57",
+  "Triangolo Lariano": "#7a7a00",
+  "Valsassina":        "#c46000",
+  "Grigna":            "#b03030",
+};
+
+// ── MAP INIT ───────────────────────────────────────────────────────────────
+const map = L.map('map', { zoomControl: true }).setView([45.895, 9.385], 10);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  maxZoom: 17,
+}).addTo(map);
+
+function makeIcon(zone) {
+  const color = ZONE_COLOR[zone] || "#555";
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32">
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 9 12 20 12 20S24 21 24 12C24 5.373 18.627 0 12 0z" fill="${color}" stroke="white" stroke-width="1.5"/>
+    <circle cx="12" cy="12" r="4" fill="white" opacity="0.9"/>
+  </svg>`;
+  return L.divIcon({
+    html: svg,
+    iconSize: [24, 32],
+    iconAnchor: [12, 32],
+    popupAnchor: [0, -34],
+    className: '',
+  });
+}
+
+const markers = {};
+CRAGS.forEach((c, i) => {
+  const icon = makeIcon(c.zone);
+  const pdfLink = c.pdf
+    ? `<a class="popup-pdf" href="${c.pdf}" target="_blank">↓ PDF</a>`
+    : '<span style="color:#aaa;font-size:0.75rem;">PDF non disponibile</span>';
+  const marker = L.marker([c.lat, c.lng], { icon })
+    .addTo(map)
+    .bindPopup(`
+      <div class="popup-name">${c.name}</div>
+      <div class="popup-zone">${c.zone} · ${c.alt} m</div>
+      ${pdfLink}
+    `);
+  markers[i] = marker;
+});
+
+// ── TABLE RENDER ───────────────────────────────────────────────────────────
+let activeZone = "all";
+let searchQuery = "";
+let sortCol = "name";
+let sortDir = 1;
+
+function renderTable() {
+  const tbody = document.getElementById('crag-tbody');
+  const empty = document.getElementById('empty-state');
+  const countEl = document.getElementById('result-count');
+
+  const q = searchQuery.toLowerCase();
+  let visible = CRAGS.filter((c, i) => {
+    const matchZone = activeZone === "all" || c.zone === activeZone;
+    const matchQ = !q || c.name.toLowerCase().includes(q) || c.zone.toLowerCase().includes(q);
+    return matchZone && matchQ;
+  });
+
+  // sort
+  visible.sort((a, b) => {
+    let av = a[sortCol], bv = b[sortCol];
+    if (typeof av === 'string') return av.localeCompare(bv, 'it') * sortDir;
+    return (av - bv) * sortDir;
+  });
+
+  countEl.textContent = visible.length;
+  empty.style.display = visible.length === 0 ? 'block' : 'none';
+
+  tbody.innerHTML = visible.map((c) => {
+    const zClass = ZONE_CLASS[c.zone] || '';
+    const pdfCell = c.pdf
+      ? `<a class="pdf-link" href="${c.pdf}" target="_blank">
+           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+           </svg>PDF</a>`
+      : `<span class="no-pdf">—</span>`;
+    return `<tr>
+      <td class="crag-name">${c.name}</td>
+      <td><span class="zone-badge ${zClass}">${c.zone}</span></td>
+      <td>${c.alt}</td>
+      <td>${pdfCell}</td>
+    </tr>`;
+  }).join('');
+
+  // sync map marker visibility
+  CRAGS.forEach((c, i) => {
+    const matchZone = activeZone === "all" || c.zone === activeZone;
+    const matchQ = !q || c.name.toLowerCase().includes(q) || c.zone.toLowerCase().includes(q);
+    if (matchZone && matchQ) {
+      if (!map.hasLayer(markers[i])) markers[i].addTo(map);
+    } else {
+      if (map.hasLayer(markers[i])) map.removeLayer(markers[i]);
+    }
+  });
+}
+
+// ── SEARCH ─────────────────────────────────────────────────────────────────
+document.getElementById('crag-search').addEventListener('input', function() {
+  searchQuery = this.value;
+  renderTable();
+});
+
+// ── ZONE FILTER ────────────────────────────────────────────────────────────
+document.querySelectorAll('.tag-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    activeZone = this.dataset.zone;
+    renderTable();
+  });
+});
+
+// ── SORT ───────────────────────────────────────────────────────────────────
+document.querySelectorAll('.crag-table thead th[data-col]').forEach(th => {
+  th.addEventListener('click', function() {
+    const col = this.dataset.col;
+    if (sortCol === col) {
+      sortDir *= -1;
+      this.classList.toggle('sort-asc', sortDir === 1);
+      this.classList.toggle('sort-desc', sortDir === -1);
+    } else {
+      document.querySelectorAll('.crag-table thead th').forEach(t => t.classList.remove('sort-asc','sort-desc'));
+      sortCol = col;
+      sortDir = 1;
+      this.classList.add('sort-asc');
+    }
+    renderTable();
+  });
+});
+
+// initial render
+renderTable();
+document.querySelector(`th[data-col="name"]`).classList.add('sort-asc');
+</script>
+</body>
+</html>
