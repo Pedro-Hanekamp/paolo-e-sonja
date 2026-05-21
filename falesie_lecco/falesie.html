@@ -11,24 +11,24 @@
     /* ── page layout ── */
     .falesie-layout {
       display: grid;
-      grid-template-columns: 280px 1fr;
+      grid-template-columns: 300px 1fr;
       gap: var(--space-lg);
       align-items: start;
     }
-    @media (max-width: 860px) {
+    @media (max-width: 900px) {
       .falesie-layout { grid-template-columns: 1fr; }
     }
 
     /* ── map ── */
     #map {
       width: 100%;
-      height: 500px;
+      height: 520px;
       border-radius: var(--r-md);
       border: 1px solid var(--divider);
       position: sticky;
       top: 100px;
     }
-    @media (max-width: 860px) {
+    @media (max-width: 900px) {
       #map { height: 320px; position: static; }
     }
 
@@ -43,9 +43,7 @@
       color: var(--text-muted);
       margin-bottom: var(--space-sm);
     }
-    .search-wrap {
-      position: relative;
-    }
+    .search-wrap { position: relative; }
     .search-wrap svg {
       position: absolute;
       left: 10px;
@@ -64,37 +62,34 @@
       font-family: var(--font-body);
       font-size: 0.9rem;
       transition: border-color 0.15s;
+      box-sizing: border-box;
     }
-    #crag-search:focus {
-      outline: none;
-      border-color: var(--accent-mid);
-    }
+    #crag-search:focus { outline: none; border-color: var(--accent-mid); }
     #crag-search::placeholder { color: var(--text-light); }
 
-    .filter-zone {
-      margin-top: var(--space-sm);
-    }
-    .filter-zone label {
+    .filter-group { margin-top: var(--space-sm); }
+    .filter-group label {
       display: block;
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.4rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.35rem;
       margin-top: var(--space-sm);
+      font-weight: 600;
     }
-    .zone-tags {
+    .tag-row {
       display: flex;
       flex-wrap: wrap;
       gap: 0.3rem;
     }
     .tag-btn {
-      padding: 0.25rem 0.65rem;
+      padding: 0.22rem 0.6rem;
       border-radius: 99px;
       border: 1px solid var(--divider);
       background: var(--bg);
       color: var(--text-muted);
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-family: var(--font-body);
       cursor: pointer;
       transition: all 0.15s;
@@ -112,6 +107,19 @@
       color: var(--text-muted);
       margin-top: var(--space-sm);
     }
+    .reset-btn {
+      display: inline-block;
+      margin-top: var(--space-sm);
+      font-size: 0.75rem;
+      color: var(--accent);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: var(--font-body);
+      text-decoration: underline;
+    }
+    .reset-btn:hover { opacity: 0.75; }
 
     /* ── table ── */
     .crag-table-wrap {
@@ -122,15 +130,15 @@
     table.crag-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
     }
     .crag-table thead th {
       background: var(--bg-alt);
-      padding: 0.7rem 1rem;
+      padding: 0.7rem 0.9rem;
       text-align: left;
       font-family: var(--font-body);
       font-weight: 600;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--text-muted);
@@ -149,13 +157,10 @@
     }
     .crag-table tbody tr:last-child { border-bottom: none; }
     .crag-table tbody tr:hover { background: var(--bg-alt); }
-    .crag-table tbody tr.hidden { display: none; }
-    .crag-table td { padding: 0.65rem 1rem; vertical-align: middle; }
-    .crag-table td.crag-name { font-weight: 500; }
-    .crag-table td.crag-zone {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
+    .crag-table td { padding: 0.6rem 0.9rem; vertical-align: middle; }
+    .crag-table td.crag-name { font-weight: 500; white-space: nowrap; }
+
+    /* zone badges */
     .zone-badge {
       display: inline-block;
       padding: 0.15rem 0.55rem;
@@ -165,22 +170,42 @@
       letter-spacing: 0.02em;
       white-space: nowrap;
     }
-
-    /* zone colors */
-    .z-lago-di-como    { background: oklch(0.88 0.06 200); color: oklch(0.30 0.10 200); }
-    .z-alta-lecco      { background: oklch(0.88 0.06 150); color: oklch(0.28 0.10 150); }
+    .z-lago-di-como      { background: oklch(0.88 0.06 200); color: oklch(0.30 0.10 200); }
+    .z-alta-lecco        { background: oklch(0.88 0.06 150); color: oklch(0.28 0.10 150); }
     .z-triangolo-lariano { background: oklch(0.88 0.06 100); color: oklch(0.30 0.10 100); }
-    .z-valsassina      { background: oklch(0.88 0.06 50);  color: oklch(0.32 0.10 50);  }
-    .z-grigna          { background: oklch(0.88 0.06 30);  color: oklch(0.32 0.10 30);  }
+    .z-valsassina        { background: oklch(0.88 0.06 50);  color: oklch(0.32 0.10 50);  }
+    .z-grigna            { background: oklch(0.88 0.06 30);  color: oklch(0.32 0.10 30);  }
+
+    /* generic badge — used for diff / style / equip */
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 99px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    /* difficulty */
+    .badge-facile    { background: oklch(0.88 0.06 145); color: oklch(0.28 0.10 145); }
+    .badge-medio     { background: oklch(0.88 0.06 200); color: oklch(0.30 0.10 200); }
+    .badge-difficile { background: oklch(0.88 0.06 50);  color: oklch(0.30 0.10 50);  }
+    /* style */
+    .badge-sportiva    { background: oklch(0.90 0.04 200); color: oklch(0.35 0.08 200); }
+    .badge-multi-pitch { background: oklch(0.90 0.04 280); color: oklch(0.35 0.08 280); }
+    .badge-trad        { background: oklch(0.90 0.04 50);  color: oklch(0.35 0.08 50);  }
+    /* equipment */
+    .badge-ottimo       { background: oklch(0.88 0.08 145); color: oklch(0.28 0.12 145); }
+    .badge-buono        { background: oklch(0.88 0.08 75);  color: oklch(0.32 0.12 75);  }
+    .badge-da-verificare { background: oklch(0.88 0.06 30); color: oklch(0.32 0.10 30);  }
 
     .pdf-link {
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 500;
       color: var(--accent);
-      padding: 0.25rem 0.65rem;
+      padding: 0.22rem 0.6rem;
       border: 1px solid var(--accent-mid);
       border-radius: var(--r-sm);
       transition: all 0.15s;
@@ -192,10 +217,7 @@
       text-decoration: none;
       border-color: var(--accent);
     }
-    .no-pdf {
-      font-size: 0.78rem;
-      color: var(--text-light);
-    }
+    .no-pdf { font-size: 0.78rem; color: var(--text-light); }
 
     /* ── empty state ── */
     .empty-state {
@@ -211,9 +233,9 @@
       font-family: var(--font-body);
       font-size: 0.85rem;
     }
-    .popup-name { font-weight: 600; margin-bottom: 4px; }
-    .popup-zone { font-size: 0.75rem; color: #666; margin-bottom: 6px; }
-    .popup-pdf { font-size: 0.8rem; color: oklch(0.42 0.10 200); }
+    .popup-name  { font-weight: 600; margin-bottom: 4px; }
+    .popup-zone  { font-size: 0.75rem; color: #666; margin-bottom: 6px; }
+    .popup-pdf   { font-size: 0.8rem; color: oklch(0.42 0.10 200); }
   </style>
 </head>
 <body>
@@ -265,10 +287,11 @@
     <!-- MAP + FILTER -->
     <div class="falesie-layout" style="margin-bottom: var(--space-xl);">
 
-      <!-- LEFT: filter + stats -->
+      <!-- LEFT: filter panel -->
       <div>
         <div class="filter-panel">
-          <h4>Cerca una falesia</h4>
+          <h4>Filtra le falesie</h4>
+
           <div class="search-wrap">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
@@ -276,9 +299,10 @@
             <input type="search" id="crag-search" placeholder="Es. Galbiate, Tramonto…" autocomplete="off">
           </div>
 
-          <div class="filter-zone">
+          <!-- Zona -->
+          <div class="filter-group">
             <label>Zona</label>
-            <div class="zone-tags">
+            <div class="tag-row">
               <button class="tag-btn active" data-zone="all">Tutte</button>
               <button class="tag-btn" data-zone="Lago di Como">Lago di Como</button>
               <button class="tag-btn" data-zone="Alta Lecco">Alta Lecco</button>
@@ -288,7 +312,65 @@
             </div>
           </div>
 
+          <!-- Stagione -->
+          <div class="filter-group">
+            <label>Stagione</label>
+            <div class="tag-row">
+              <button class="tag-btn active" data-season="all">Tutte</button>
+              <button class="tag-btn" data-season="Tutto l'anno">Tutto l'anno</button>
+              <button class="tag-btn" data-season="Primavera/Autunno">Primavera/Autunno</button>
+              <button class="tag-btn" data-season="Estate">Estate</button>
+              <button class="tag-btn" data-season="Inverno">Inverno</button>
+            </div>
+          </div>
+
+          <!-- Esposizione -->
+          <div class="filter-group">
+            <label>Esposizione</label>
+            <div class="tag-row">
+              <button class="tag-btn active" data-exp="all">Tutte</button>
+              <button class="tag-btn" data-exp="Sud">Sud</button>
+              <button class="tag-btn" data-exp="Est">Est</button>
+              <button class="tag-btn" data-exp="Ovest">Ovest</button>
+              <button class="tag-btn" data-exp="Nord">Nord</button>
+            </div>
+          </div>
+
+          <!-- Difficoltà -->
+          <div class="filter-group">
+            <label>Difficoltà</label>
+            <div class="tag-row">
+              <button class="tag-btn active" data-diff="all">Tutte</button>
+              <button class="tag-btn" data-diff="Facile">Facile</button>
+              <button class="tag-btn" data-diff="Medio">Medio</button>
+              <button class="tag-btn" data-diff="Difficile">Difficile</button>
+            </div>
+          </div>
+
+          <!-- Stile -->
+          <div class="filter-group">
+            <label>Stile</label>
+            <div class="tag-row">
+              <button class="tag-btn active" data-style="all">Tutti</button>
+              <button class="tag-btn" data-style="Sportiva">Sportiva</button>
+              <button class="tag-btn" data-style="Multi-pitch">Multi-pitch</button>
+              <button class="tag-btn" data-style="Trad">Trad</button>
+            </div>
+          </div>
+
+          <!-- Attrezzatura -->
+          <div class="filter-group">
+            <label>Attrezzatura</label>
+            <div class="tag-row">
+              <button class="tag-btn active" data-equip="all">Tutte</button>
+              <button class="tag-btn" data-equip="Ottimo">Ottimo</button>
+              <button class="tag-btn" data-equip="Buono">Buono</button>
+              <button class="tag-btn" data-equip="Da verificare">Da verificare</button>
+            </div>
+          </div>
+
           <p class="result-count"><span id="result-count">73</span> falesie</p>
+          <button class="reset-btn" id="reset-btn">Azzera filtri</button>
         </div>
 
         <!-- disclaimer -->
@@ -318,6 +400,9 @@
             <th data-col="name">Falesia <span class="sort-icon"></span></th>
             <th data-col="zone">Zona <span class="sort-icon"></span></th>
             <th data-col="alt">Alt. (m) <span class="sort-icon"></span></th>
+            <th data-col="diff">Difficoltà <span class="sort-icon"></span></th>
+            <th data-col="style">Stile <span class="sort-icon"></span></th>
+            <th data-col="equip">Attrezzatura <span class="sort-icon"></span></th>
             <th>PDF</th>
           </tr>
         </thead>
@@ -379,93 +464,93 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
 // ── CRAG DATA ──────────────────────────────────────────────────────────────
-// Fields: name, zone, alt (m), lat, lng, pdf (relative path or null)
+// Fields: name, zone, alt, lat, lng, pdf, season, exp, diff, style, equip
 const CRAGS = [
-  // Lago di Como — western/central lake shore
-  { name: "Bastionata del Lago",     zone: "Lago di Como",      alt: 210,  lat: 45.992, lng: 9.313,  pdf: "bastionatalago/bastionatalago.pdf" },
-  { name: "Varenna",                 zone: "Lago di Como",      alt: 250,  lat: 46.012, lng: 9.284,  pdf: "varenna/varenna.pdf" },
-  { name: "Sasso Negher",            zone: "Lago di Como",      alt: 300,  lat: 46.138, lng: 9.376,  pdf: "sassnegher/sassnegher_CAI_colico.pdf" },
-  { name: "Torre Marina",            zone: "Lago di Como",      alt: 280,  lat: 46.040, lng: 9.272,  pdf: "torremarina/torremarina.pdf" },
-  { name: "Lariosauro",              zone: "Lago di Como",      alt: 320,  lat: 45.985, lng: 9.300,  pdf: "lariosauro/lariosauro.pdf" },
-  { name: "Grotta di Mandello",      zone: "Lago di Como",      alt: 350,  lat: 45.928, lng: 9.318,  pdf: "grottamandello/grottamandello.pdf" },
-  { name: "Strapiombo di Mandello",  zone: "Lago di Como",      alt: 380,  lat: 45.924, lng: 9.320,  pdf: "strapiombomandello/strapiombomandello.pdf" },
-  { name: "Pilastro Rosso",          zone: "Lago di Como",      alt: 420,  lat: 45.920, lng: 9.315,  pdf: "pilastrorosso/pilastrorosso.pdf" },
-  { name: "Sass di Resegone",        zone: "Lago di Como",      alt: 440,  lat: 45.916, lng: 9.322,  pdf: "sassocarlano/sassocarlano.pdf" },
-  { name: "Pradello",                zone: "Lago di Como",      alt: 460,  lat: 45.912, lng: 9.329,  pdf: "pradello/pradello.pdf" },
-  { name: "Versasio",                zone: "Lago di Como",      alt: 340,  lat: 45.935, lng: 9.308,  pdf: "versasio/versasio.pdf" },
-  { name: "Discoteca",               zone: "Lago di Como",      alt: 290,  lat: 45.940, lng: 9.310,  pdf: "discoteca/discoteca.pdf" },
-  { name: "Promesse nel Sole",       zone: "Lago di Como",      alt: 310,  lat: 45.945, lng: 9.305,  pdf: "promessenelsole/promessenelsole.pdf" },
-  { name: "Real Ba",                 zone: "Lago di Como",      alt: 270,  lat: 45.948, lng: 9.304,  pdf: "realba/realba.pdf" },
+  // ── Lago di Como ──────────────────────────────────────────────────────
+  { name:"Bastionata del Lago",     zone:"Lago di Como",      alt:210,  lat:45.992, lng:9.313, pdf:"bastionatalago/bastionatalago.pdf",   season:"Tutto l'anno",       exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Ottimo" },
+  { name:"Varenna",                 zone:"Lago di Como",      alt:250,  lat:46.012, lng:9.284, pdf:"varenna/varenna.pdf",                 season:"Tutto l'anno",       exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Sasso Negher",            zone:"Lago di Como",      alt:300,  lat:46.138, lng:9.376, pdf:"sassnegher/sassnegher_CAI_colico.pdf",season:"Primavera/Autunno",  exp:"Sud",   diff:"Facile",    style:"Sportiva",    equip:"Da verificare" },
+  { name:"Torre Marina",            zone:"Lago di Como",      alt:280,  lat:46.040, lng:9.272, pdf:"torremarina/torremarina.pdf",         season:"Tutto l'anno",       exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Ottimo" },
+  { name:"Lariosauro",              zone:"Lago di Como",      alt:320,  lat:45.985, lng:9.300, pdf:"lariosauro/lariosauro.pdf",           season:"Tutto l'anno",       exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Grotta di Mandello",      zone:"Lago di Como",      alt:350,  lat:45.928, lng:9.318, pdf:"grottamandello/grottamandello.pdf",   season:"Tutto l'anno",       exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Strapiombo di Mandello",  zone:"Lago di Como",      alt:380,  lat:45.924, lng:9.320, pdf:"strapiombomandello/strapiombomandello.pdf", season:"Tutto l'anno", exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Pilastro Rosso",          zone:"Lago di Como",      alt:420,  lat:45.920, lng:9.315, pdf:"pilastrorosso/pilastrorosso.pdf",     season:"Primavera/Autunno",  exp:"Ovest", diff:"Difficile", style:"Sportiva",    equip:"Buono" },
+  { name:"Sass di Resegone",        zone:"Lago di Como",      alt:440,  lat:45.916, lng:9.322, pdf:"sassocarlano/sassocarlano.pdf",       season:"Primavera/Autunno",  exp:"Est",   diff:"Medio",     style:"Sportiva",    equip:"Da verificare" },
+  { name:"Pradello",                zone:"Lago di Como",      alt:460,  lat:45.912, lng:9.329, pdf:"pradello/pradello.pdf",               season:"Primavera/Autunno",  exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Versasio",                zone:"Lago di Como",      alt:340,  lat:45.935, lng:9.308, pdf:"versasio/versasio.pdf",               season:"Tutto l'anno",       exp:"Est",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Discoteca",               zone:"Lago di Como",      alt:290,  lat:45.940, lng:9.310, pdf:"discoteca/discoteca.pdf",             season:"Tutto l'anno",       exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Promesse nel Sole",       zone:"Lago di Como",      alt:310,  lat:45.945, lng:9.305, pdf:"promessenelsole/promessenelsole.pdf", season:"Tutto l'anno",       exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Real Ba",                 zone:"Lago di Como",      alt:270,  lat:45.948, lng:9.304, pdf:"realba/realba.pdf",                   season:"Tutto l'anno",       exp:"Sud",   diff:"Facile",    style:"Sportiva",    equip:"Buono" },
 
-  // Alta Lecco — east shore and Resegone foothills
-  { name: "Antimedale",              zone: "Alta Lecco",        alt: 500,  lat: 45.870, lng: 9.398,  pdf: "antimedale/antimedale.pdf" },
-  { name: "Mago",                    zone: "Alta Lecco",        alt: 480,  lat: 45.875, lng: 9.392,  pdf: "mago/mago.pdf" },
-  { name: "Muro Nascosto",           zone: "Alta Lecco",        alt: 440,  lat: 45.862, lng: 9.405,  pdf: "muronascosto/muronascosto.pdf" },
-  { name: "Pala San Martino",        zone: "Alta Lecco",        alt: 520,  lat: 45.855, lng: 9.412,  pdf: "palasanmartino/palasanmartino.pdf" },
-  { name: "Placche San Martino",     zone: "Alta Lecco",        alt: 560,  lat: 45.850, lng: 9.418,  pdf: "placchesanmartino/sanmartinoplacc.pdf" },
-  { name: "Bagaì de Lecch",          zone: "Alta Lecco",        alt: 540,  lat: 45.852, lng: 9.415,  pdf: "placchesanmartino/bagaidelecch.pdf" },
-  { name: "Picett",                  zone: "Alta Lecco",        alt: 530,  lat: 45.851, lng: 9.416,  pdf: "placchesanmartino/picett.pdf" },
-  { name: "Stoppani",                zone: "Alta Lecco",        alt: 490,  lat: 45.845, lng: 9.425,  pdf: "stoppani/stoppani_new.pdf" },
-  { name: "Pass del Fo",             zone: "Alta Lecco",        alt: 510,  lat: 45.848, lng: 9.420,  pdf: "passdelfo/passdelfo.pdf" },
-  { name: "Buco del Piombo",         zone: "Alta Lecco",        alt: 460,  lat: 45.840, lng: 9.430,  pdf: "bucodelpiombo/bucodelpiombo.pdf" },
-  { name: "Pungitopo",               zone: "Alta Lecco",        alt: 450,  lat: 45.838, lng: 9.432,  pdf: "pungitopo/pungitopo.pdf" },
-  { name: "Amicizia",                zone: "Alta Lecco",        alt: 480,  lat: 45.842, lng: 9.428,  pdf: "amicizia/amicizia.pdf" },
-  { name: "Introbio",                zone: "Alta Lecco",        alt: 700,  lat: 45.957, lng: 9.446,  pdf: "introbio/introbio.pdf" },
-  { name: "Campelli",                zone: "Alta Lecco",        alt: 650,  lat: 45.952, lng: 9.440,  pdf: "campelli/campelli.pdf" },
-  { name: "Campiano",                zone: "Alta Lecco",        alt: 620,  lat: 45.948, lng: 9.442,  pdf: "campiano/campiano.pdf" },
+  // ── Alta Lecco ────────────────────────────────────────────────────────
+  { name:"Antimedale",              zone:"Alta Lecco",        alt:500,  lat:45.870, lng:9.398, pdf:"antimedale/antimedale.pdf",           season:"Primavera/Autunno",  exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Mago",                    zone:"Alta Lecco",        alt:480,  lat:45.875, lng:9.392, pdf:"mago/mago.pdf",                       season:"Primavera/Autunno",  exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Muro Nascosto",           zone:"Alta Lecco",        alt:440,  lat:45.862, lng:9.405, pdf:"muronascosto/muronascosto.pdf",       season:"Estate",             exp:"Est",   diff:"Medio",     style:"Sportiva",    equip:"Da verificare" },
+  { name:"Pala San Martino",        zone:"Alta Lecco",        alt:520,  lat:45.855, lng:9.412, pdf:"palasanmartino/palasanmartino.pdf",   season:"Primavera/Autunno",  exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Placche San Martino",     zone:"Alta Lecco",        alt:560,  lat:45.850, lng:9.418, pdf:"placchesanmartino/sanmartinoplacc.pdf", season:"Primavera/Autunno", exp:"Ovest", diff:"Medio",     style:"Multi-pitch", equip:"Buono" },
+  { name:"Bagaì de Lecch",          zone:"Alta Lecco",        alt:540,  lat:45.852, lng:9.415, pdf:"placchesanmartino/bagaidelecch.pdf",  season:"Primavera/Autunno",  exp:"Sud",   diff:"Facile",    style:"Sportiva",    equip:"Buono" },
+  { name:"Picett",                  zone:"Alta Lecco",        alt:530,  lat:45.851, lng:9.416, pdf:"placchesanmartino/picett.pdf",        season:"Primavera/Autunno",  exp:"Sud",   diff:"Facile",    style:"Trad",        equip:"Da verificare" },
+  { name:"Stoppani",                zone:"Alta Lecco",        alt:490,  lat:45.845, lng:9.425, pdf:"stoppani/stoppani_new.pdf",           season:"Estate",             exp:"Est",   diff:"Difficile", style:"Multi-pitch", equip:"Buono" },
+  { name:"Pass del Fo",             zone:"Alta Lecco",        alt:510,  lat:45.848, lng:9.420, pdf:"passdelfo/passdelfo.pdf",             season:"Primavera/Autunno",  exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Buco del Piombo",         zone:"Alta Lecco",        alt:460,  lat:45.840, lng:9.430, pdf:"bucodelpiombo/bucodelpiombo.pdf",     season:"Estate",             exp:"Nord",  diff:"Difficile", style:"Multi-pitch", equip:"Buono" },
+  { name:"Pungitopo",               zone:"Alta Lecco",        alt:450,  lat:45.838, lng:9.432, pdf:"pungitopo/pungitopo.pdf",             season:"Primavera/Autunno",  exp:"Sud",   diff:"Facile",    style:"Sportiva",    equip:"Buono" },
+  { name:"Amicizia",                zone:"Alta Lecco",        alt:480,  lat:45.842, lng:9.428, pdf:"amicizia/amicizia.pdf",               season:"Tutto l'anno",       exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Ottimo" },
+  { name:"Introbio",                zone:"Alta Lecco",        alt:700,  lat:45.957, lng:9.446, pdf:"introbio/introbio.pdf",               season:"Estate",             exp:"Est",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Campelli",                zone:"Alta Lecco",        alt:650,  lat:45.952, lng:9.440, pdf:"campelli/campelli.pdf",               season:"Estate",             exp:"Ovest", diff:"Difficile", style:"Sportiva",    equip:"Buono" },
+  { name:"Campiano",                zone:"Alta Lecco",        alt:620,  lat:45.948, lng:9.442, pdf:"campiano/campiano.pdf",               season:"Estate",             exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Da verificare" },
 
-  // Triangolo Lariano — SW of Lake Como
-  { name: "Corni di Canzo",          zone: "Triangolo Lariano", alt: 700,  lat: 45.810, lng: 9.245,  pdf: "cornidicanzo/cornidicanzo.pdf" },
-  { name: "Sasso Giallo",            zone: "Triangolo Lariano", alt: 620,  lat: 45.820, lng: 9.258,  pdf: "sassogiallo/sassogiallo.pdf" },
-  { name: "Sasso Derba",             zone: "Triangolo Lariano", alt: 580,  lat: 45.825, lng: 9.262,  pdf: "sassoderba/sassoderba.pdf" },
-  { name: "Val Brona",               zone: "Triangolo Lariano", alt: 550,  lat: 45.830, lng: 9.270,  pdf: "valbrona/valbrona.pdf" },
-  { name: "Tramonto",                zone: "Triangolo Lariano", alt: 510,  lat: 45.815, lng: 9.252,  pdf: "tramonto/tramonto.pdf" },
-  { name: "Falesia del Tramonto",    zone: "Triangolo Lariano", alt: 505,  lat: 45.813, lng: 9.250,  pdf: "tramonto/tramonto.pdf" },
-  { name: "Ceppo Virale",            zone: "Triangolo Lariano", alt: 600,  lat: 45.808, lng: 9.240,  pdf: "ceppovirale/ceppovirale.pdf" },
-  { name: "Val Cepelline",           zone: "Triangolo Lariano", alt: 640,  lat: 45.805, lng: 9.235,  pdf: "valcepelline/valcepelline.pdf" },
-  { name: "Eco",                     zone: "Triangolo Lariano", alt: 580,  lat: 45.802, lng: 9.242,  pdf: "eco/eco.pdf" },
-  { name: "Cascina Galbiate",        zone: "Triangolo Lariano", alt: 420,  lat: 45.800, lng: 9.355,  pdf: "galbiate/galbiate.pdf" },
-  { name: "Sprofondo",               zone: "Triangolo Lariano", alt: 500,  lat: 45.818, lng: 9.260,  pdf: "sprofondo/sprofondo.pdf" },
-  { name: "Civate",                  zone: "Triangolo Lariano", alt: 380,  lat: 45.805, lng: 9.350,  pdf: "civate/civate.pdf" },
-  { name: "Occhiolo",                zone: "Triangolo Lariano", alt: 360,  lat: 45.800, lng: 9.348,  pdf: "occhiolo/occhiolo.pdf" },
-  { name: "Ballabiot",               zone: "Triangolo Lariano", alt: 440,  lat: 45.812, lng: 9.358,  pdf: "ballabiot/ballabiot.pdf" },
-  { name: "Bio Muro",                zone: "Triangolo Lariano", alt: 410,  lat: 45.808, lng: 9.352,  pdf: "biomuro/biomuro.pdf" },
+  // ── Triangolo Lariano ─────────────────────────────────────────────────
+  { name:"Corni di Canzo",          zone:"Triangolo Lariano", alt:700,  lat:45.810, lng:9.245, pdf:"cornidicanzo/cornidicanzo.pdf",       season:"Primavera/Autunno",  exp:"Est",   diff:"Difficile", style:"Multi-pitch", equip:"Buono" },
+  { name:"Sasso Giallo",            zone:"Triangolo Lariano", alt:620,  lat:45.820, lng:9.258, pdf:"sassogiallo/sassogiallo.pdf",         season:"Primavera/Autunno",  exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Sasso Derba",             zone:"Triangolo Lariano", alt:580,  lat:45.825, lng:9.262, pdf:"sassoderba/sassoderba.pdf",           season:"Primavera/Autunno",  exp:"Ovest", diff:"Facile",    style:"Sportiva",    equip:"Da verificare" },
+  { name:"Val Brona",               zone:"Triangolo Lariano", alt:550,  lat:45.830, lng:9.270, pdf:"valbrona/valbrona.pdf",               season:"Estate",             exp:"Est",   diff:"Facile",    style:"Sportiva",    equip:"Da verificare" },
+  { name:"Tramonto",                zone:"Triangolo Lariano", alt:510,  lat:45.815, lng:9.252, pdf:"tramonto/tramonto.pdf",               season:"Estate",             exp:"Ovest", diff:"Medio",     style:"Sportiva",    equip:"Ottimo" },
+  { name:"Falesia del Tramonto",    zone:"Triangolo Lariano", alt:505,  lat:45.813, lng:9.250, pdf:"tramonto/tramonto.pdf",               season:"Estate",             exp:"Ovest", diff:"Medio",     style:"Sportiva",    equip:"Ottimo" },
+  { name:"Ceppo Virale",            zone:"Triangolo Lariano", alt:600,  lat:45.808, lng:9.240, pdf:"ceppovirale/ceppovirale.pdf",         season:"Primavera/Autunno",  exp:"Sud",   diff:"Facile",    style:"Sportiva",    equip:"Buono" },
+  { name:"Val Cepelline",           zone:"Triangolo Lariano", alt:640,  lat:45.805, lng:9.235, pdf:"valcepelline/valcepelline.pdf",       season:"Estate",             exp:"Nord",  diff:"Difficile", style:"Multi-pitch", equip:"Buono" },
+  { name:"Eco",                     zone:"Triangolo Lariano", alt:580,  lat:45.802, lng:9.242, pdf:"eco/eco.pdf",                         season:"Primavera/Autunno",  exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Cascina Galbiate",        zone:"Triangolo Lariano", alt:420,  lat:45.800, lng:9.355, pdf:"galbiate/galbiate.pdf",               season:"Inverno",            exp:"Sud",   diff:"Facile",    style:"Sportiva",    equip:"Ottimo" },
+  { name:"Sprofondo",               zone:"Triangolo Lariano", alt:500,  lat:45.818, lng:9.260, pdf:"sprofondo/sprofondo.pdf",             season:"Estate",             exp:"Nord",  diff:"Medio",     style:"Sportiva",    equip:"Da verificare" },
+  { name:"Civate",                  zone:"Triangolo Lariano", alt:380,  lat:45.805, lng:9.350, pdf:"civate/civate.pdf",                   season:"Tutto l'anno",       exp:"Ovest", diff:"Facile",    style:"Sportiva",    equip:"Ottimo" },
+  { name:"Occhiolo",                zone:"Triangolo Lariano", alt:360,  lat:45.800, lng:9.348, pdf:"occhiolo/occhiolo.pdf",               season:"Primavera/Autunno",  exp:"Sud",   diff:"Facile",    style:"Sportiva",    equip:"Buono" },
+  { name:"Ballabiot",               zone:"Triangolo Lariano", alt:440,  lat:45.812, lng:9.358, pdf:"ballabiot/ballabiot.pdf",             season:"Primavera/Autunno",  exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Bio Muro",                zone:"Triangolo Lariano", alt:410,  lat:45.808, lng:9.352, pdf:"biomuro/biomuro.pdf",                 season:"Tutto l'anno",       exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
 
-  // Valsassina
-  { name: "Val Grande",              zone: "Valsassina",        alt: 780,  lat: 45.960, lng: 9.455,  pdf: "valgrande/valgrande.pdf" },
-  { name: "Lares",                   zone: "Valsassina",        alt: 820,  lat: 45.965, lng: 9.458,  pdf: "lares/lares.pdf" },
-  { name: "Nibbio",                  zone: "Valsassina",        alt: 860,  lat: 45.970, lng: 9.462,  pdf: "nibbio/nibbio.pdf" },
-  { name: "Masone",                  zone: "Valsassina",        alt: 750,  lat: 45.955, lng: 9.450,  pdf: "masone/masone.pdf" },
-  { name: "Pizzoderna",              zone: "Valsassina",        alt: 800,  lat: 45.958, lng: 9.452,  pdf: "pizzoderna/pizzoderna.pdf" },
-  { name: "Val Boazzo",              zone: "Valsassina",        alt: 840,  lat: 45.962, lng: 9.460,  pdf: "valboazzo/valboazzo.pdf" },
-  { name: "Val dell'Oro",            zone: "Valsassina",        alt: 900,  lat: 45.975, lng: 9.470,  pdf: "valdelloro/valdelloro.pdf" },
-  { name: "Esino",                   zone: "Valsassina",        alt: 950,  lat: 45.978, lng: 9.475,  pdf: "esino/esino.pdf" },
-  { name: "Fusinetta",               zone: "Valsassina",        alt: 880,  lat: 45.968, lng: 9.465,  pdf: "fusinetta/fusinetta.pdf" },
-  { name: "Il Muro del Butch",       zone: "Valsassina",        alt: 760,  lat: 45.954, lng: 9.448,  pdf: "ilmurodelbutch/ilmurodelbutch.pdf" },
-  { name: "Cainallo",                zone: "Valsassina",        alt: 920,  lat: 45.980, lng: 9.478,  pdf: "cainallo/cainallo.pdf" },
-  { name: "Muro del Pianto",         zone: "Valsassina",        alt: 810,  lat: 45.960, lng: 9.454,  pdf: "murodelpianto/murodelpianto.pdf" },
-  { name: "Rocca di Baiedo",         zone: "Valsassina",        alt: 870,  lat: 45.972, lng: 9.468,  pdf: "roccadibaiedo/baiedo.pdf" },
-  { name: "Sasso Alippi",            zone: "Valsassina",        alt: 830,  lat: 45.963, lng: 9.457,  pdf: "sassoalippi/sassoalippi.pdf" },
-  { name: "Sasso Carlano",           zone: "Valsassina",        alt: 790,  lat: 45.956, lng: 9.449,  pdf: "sassocarlano/sassocarlano.pdf" },
-  { name: "Grifone",                 zone: "Valsassina",        alt: 850,  lat: 45.966, lng: 9.464,  pdf: "grifone/grifone.pdf" },
-  { name: "Torrette",                zone: "Valsassina",        alt: 890,  lat: 45.974, lng: 9.472,  pdf: "torrette/torrette.pdf" },
+  // ── Valsassina ────────────────────────────────────────────────────────
+  { name:"Val Grande",              zone:"Valsassina",        alt:780,  lat:45.960, lng:9.455, pdf:"valgrande/valgrande.pdf",             season:"Estate",             exp:"Est",   diff:"Difficile", style:"Multi-pitch", equip:"Buono" },
+  { name:"Lares",                   zone:"Valsassina",        alt:820,  lat:45.965, lng:9.458, pdf:"lares/lares.pdf",                     season:"Estate",             exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Nibbio",                  zone:"Valsassina",        alt:860,  lat:45.970, lng:9.462, pdf:"nibbio/nibbio.pdf",                   season:"Estate",             exp:"Est",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Masone",                  zone:"Valsassina",        alt:750,  lat:45.955, lng:9.450, pdf:"masone/masone.pdf",                   season:"Primavera/Autunno",  exp:"Sud",   diff:"Facile",    style:"Sportiva",    equip:"Buono" },
+  { name:"Pizzoderna",              zone:"Valsassina",        alt:800,  lat:45.958, lng:9.452, pdf:"pizzoderna/pizzoderna.pdf",           season:"Primavera/Autunno",  exp:"Ovest", diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Val Boazzo",              zone:"Valsassina",        alt:840,  lat:45.962, lng:9.460, pdf:"valboazzo/valboazzo.pdf",             season:"Estate",             exp:"Est",   diff:"Difficile", style:"Multi-pitch", equip:"Da verificare" },
+  { name:"Val dell'Oro",            zone:"Valsassina",        alt:900,  lat:45.975, lng:9.470, pdf:"valdelloro/valdelloro.pdf",           season:"Estate",             exp:"Nord",  diff:"Difficile", style:"Multi-pitch", equip:"Buono" },
+  { name:"Esino",                   zone:"Valsassina",        alt:950,  lat:45.978, lng:9.475, pdf:"esino/esino.pdf",                     season:"Estate",             exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Fusinetta",               zone:"Valsassina",        alt:880,  lat:45.968, lng:9.465, pdf:"fusinetta/fusinetta.pdf",             season:"Estate",             exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Il Muro del Butch",       zone:"Valsassina",        alt:760,  lat:45.954, lng:9.448, pdf:"ilmurodelbutch/ilmurodelbutch.pdf",   season:"Primavera/Autunno",  exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Cainallo",                zone:"Valsassina",        alt:920,  lat:45.980, lng:9.478, pdf:"cainallo/cainallo.pdf",               season:"Estate",             exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Buono" },
+  { name:"Muro del Pianto",         zone:"Valsassina",        alt:810,  lat:45.960, lng:9.454, pdf:"murodelpianto/murodelpianto.pdf",     season:"Estate",             exp:"Est",   diff:"Difficile", style:"Sportiva",    equip:"Buono" },
+  { name:"Rocca di Baiedo",         zone:"Valsassina",        alt:870,  lat:45.972, lng:9.468, pdf:"roccadibaiedo/baiedo.pdf",            season:"Estate",             exp:"Ovest", diff:"Difficile", style:"Trad",        equip:"Da verificare" },
+  { name:"Sasso Alippi",            zone:"Valsassina",        alt:830,  lat:45.963, lng:9.457, pdf:"sassoalippi/sassoalippi.pdf",         season:"Primavera/Autunno",  exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Sasso Carlano",           zone:"Valsassina",        alt:790,  lat:45.956, lng:9.449, pdf:"sassocarlano/sassocarlano.pdf",       season:"Primavera/Autunno",  exp:"Est",   diff:"Facile",    style:"Sportiva",    equip:"Buono" },
+  { name:"Grifone",                 zone:"Valsassina",        alt:850,  lat:45.966, lng:9.464, pdf:"grifone/grifone.pdf",                 season:"Estate",             exp:"Est",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Torrette",                zone:"Valsassina",        alt:890,  lat:45.974, lng:9.472, pdf:"torrette/torrette.pdf",               season:"Estate",             exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Buono" },
 
-  // Grigna
-  { name: "Erna Sorprese",           zone: "Grigna",            alt: 1000, lat: 45.900, lng: 9.360,  pdf: "ernasorprese/ernasorprese.pdf" },
-  { name: "Gajum Alta",              zone: "Grigna",            alt: 1080, lat: 45.895, lng: 9.355,  pdf: "gajum/gajumalta.pdf" },
-  { name: "Magnodeno",               zone: "Grigna",            alt: 950,  lat: 45.905, lng: 9.365,  pdf: "magnodeno/maggiociondolo.pdf" },
-  { name: "Solarium",                zone: "Grigna",            alt: 1020, lat: 45.898, lng: 9.358,  pdf: "solarium/solarium.pdf" },
-  { name: "Eretico",                 zone: "Grigna",            alt: 1050, lat: 45.893, lng: 9.352,  pdf: "eretico/eretico.pdf" },
-  { name: "San Tomas",               zone: "Grigna",            alt: 990,  lat: 45.902, lng: 9.362,  pdf: "santomas/santomas.pdf" },
-  { name: "Leves",                   zone: "Grigna",            alt: 1100, lat: 45.888, lng: 9.348,  pdf: "leves/leves.pdf" },
-  { name: "Pasqua — Isola di Pasqua",zone: "Grigna",            alt: 870,  lat: 45.910, lng: 9.372,  pdf: "pasqua/pasqua.pdf" },
-  { name: "Vaccarese",               zone: "Grigna",            alt: 860,  lat: 45.912, lng: 9.370,  pdf: "vaccarese/vaccarese.pdf" },
-  { name: "Shakespeare",             zone: "Grigna",            alt: 920,  lat: 45.906, lng: 9.365,  pdf: "shakespeare/shakespeare.pdf" },
-  { name: "Cornarossa",              zone: "Grigna",            alt: 940,  lat: 45.903, lng: 9.363,  pdf: "cornarossa/cornarossa.pdf" },
-  { name: "Cornorat",                zone: "Grigna",            alt: 960,  lat: 45.900, lng: 9.361,  pdf: "cornorat/cornorat.pdf" },
+  // ── Grigna ────────────────────────────────────────────────────────────
+  { name:"Erna Sorprese",           zone:"Grigna",            alt:1000, lat:45.900, lng:9.360, pdf:"ernasorprese/ernasorprese.pdf",       season:"Estate",             exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Gajum Alta",              zone:"Grigna",            alt:1080, lat:45.895, lng:9.355, pdf:"gajum/gajumalta.pdf",                 season:"Estate",             exp:"Est",   diff:"Difficile", style:"Multi-pitch", equip:"Buono" },
+  { name:"Magnodeno",               zone:"Grigna",            alt:950,  lat:45.905, lng:9.365, pdf:"magnodeno/maggiociondolo.pdf",        season:"Estate",             exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Solarium",                zone:"Grigna",            alt:1020, lat:45.898, lng:9.358, pdf:"solarium/solarium.pdf",               season:"Inverno",            exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Ottimo" },
+  { name:"Eretico",                 zone:"Grigna",            alt:1050, lat:45.893, lng:9.352, pdf:"eretico/eretico.pdf",                 season:"Estate",             exp:"Est",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"San Tomas",               zone:"Grigna",            alt:990,  lat:45.902, lng:9.362, pdf:"santomas/santomas.pdf",               season:"Estate",             exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Leves",                   zone:"Grigna",            alt:1100, lat:45.888, lng:9.348, pdf:"leves/leves.pdf",                     season:"Estate",             exp:"Sud",   diff:"Difficile", style:"Multi-pitch", equip:"Buono" },
+  { name:"Pasqua — Isola di Pasqua",zone:"Grigna",            alt:870,  lat:45.910, lng:9.372, pdf:"pasqua/pasqua.pdf",                   season:"Primavera/Autunno",  exp:"Est",   diff:"Medio",     style:"Sportiva",    equip:"Ottimo" },
+  { name:"Vaccarese",               zone:"Grigna",            alt:860,  lat:45.912, lng:9.370, pdf:"vaccarese/vaccarese.pdf",             season:"Primavera/Autunno",  exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Shakespeare",             zone:"Grigna",            alt:920,  lat:45.906, lng:9.365, pdf:"shakespeare/shakespeare.pdf",         season:"Estate",             exp:"Est",   diff:"Difficile", style:"Sportiva",    equip:"Buono" },
+  { name:"Cornarossa",              zone:"Grigna",            alt:940,  lat:45.903, lng:9.363, pdf:"cornarossa/cornarossa.pdf",           season:"Estate",             exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Cornorat",                zone:"Grigna",            alt:960,  lat:45.900, lng:9.361, pdf:"cornorat/cornorat.pdf",               season:"Estate",             exp:"Est",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
 ];
 
-// ── ZONE COLOR MAP ─────────────────────────────────────────────────────────
+// ── ZONE HELPERS ───────────────────────────────────────────────────────────
 const ZONE_CLASS = {
   "Lago di Como":      "z-lago-di-como",
   "Alta Lecco":        "z-alta-lecco",
@@ -494,50 +579,57 @@ function makeIcon(zone) {
     <path d="M12 0C5.373 0 0 5.373 0 12c0 9 12 20 12 20S24 21 24 12C24 5.373 18.627 0 12 0z" fill="${color}" stroke="white" stroke-width="1.5"/>
     <circle cx="12" cy="12" r="4" fill="white" opacity="0.9"/>
   </svg>`;
-  return L.divIcon({
-    html: svg,
-    iconSize: [24, 32],
-    iconAnchor: [12, 32],
-    popupAnchor: [0, -34],
-    className: '',
-  });
+  return L.divIcon({ html: svg, iconSize: [24,32], iconAnchor: [12,32], popupAnchor: [0,-34], className: '' });
 }
 
 const markers = {};
 CRAGS.forEach((c, i) => {
-  const icon = makeIcon(c.zone);
   const pdfLink = c.pdf
     ? `<a class="popup-pdf" href="${c.pdf}" target="_blank">↓ PDF</a>`
     : '<span style="color:#aaa;font-size:0.75rem;">PDF non disponibile</span>';
-  const marker = L.marker([c.lat, c.lng], { icon })
+  markers[i] = L.marker([c.lat, c.lng], { icon: makeIcon(c.zone) })
     .addTo(map)
-    .bindPopup(`
-      <div class="popup-name">${c.name}</div>
-      <div class="popup-zone">${c.zone} · ${c.alt} m</div>
-      ${pdfLink}
-    `);
-  markers[i] = marker;
+    .bindPopup(`<div class="popup-name">${c.name}</div><div class="popup-zone">${c.zone} · ${c.alt} m</div>${pdfLink}`);
 });
 
-// ── TABLE RENDER ───────────────────────────────────────────────────────────
-let activeZone = "all";
+// ── FILTER STATE ───────────────────────────────────────────────────────────
+const filters = { zone:"all", season:"all", exp:"all", diff:"all", style:"all", equip:"all" };
 let searchQuery = "";
 let sortCol = "name";
 let sortDir = 1;
 
-function renderTable() {
-  const tbody = document.getElementById('crag-tbody');
-  const empty = document.getElementById('empty-state');
-  const countEl = document.getElementById('result-count');
+// ── BADGE HELPERS ──────────────────────────────────────────────────────────
+function diffClass(d) {
+  const m = { "Facile":"badge-facile", "Medio":"badge-medio", "Difficile":"badge-difficile" };
+  return m[d] || "";
+}
+function styleClass(s) {
+  const m = { "Sportiva":"badge-sportiva", "Multi-pitch":"badge-multi-pitch", "Trad":"badge-trad" };
+  return m[s] || "";
+}
+function equipClass(e) {
+  const m = { "Ottimo":"badge-ottimo", "Buono":"badge-buono", "Da verificare":"badge-da-verificare" };
+  return m[e] || "";
+}
 
+// ── TABLE RENDER ───────────────────────────────────────────────────────────
+function renderTable() {
+  const tbody  = document.getElementById('crag-tbody');
+  const empty  = document.getElementById('empty-state');
+  const countEl = document.getElementById('result-count');
   const q = searchQuery.toLowerCase();
-  let visible = CRAGS.filter((c, i) => {
-    const matchZone = activeZone === "all" || c.zone === activeZone;
-    const matchQ = !q || c.name.toLowerCase().includes(q) || c.zone.toLowerCase().includes(q);
-    return matchZone && matchQ;
+
+  let visible = CRAGS.filter(c => {
+    if (filters.zone   !== "all" && c.zone   !== filters.zone)   return false;
+    if (filters.season !== "all" && c.season !== filters.season) return false;
+    if (filters.exp    !== "all" && c.exp    !== filters.exp)    return false;
+    if (filters.diff   !== "all" && c.diff   !== filters.diff)   return false;
+    if (filters.style  !== "all" && c.style  !== filters.style)  return false;
+    if (filters.equip  !== "all" && c.equip  !== filters.equip)  return false;
+    if (q && !c.name.toLowerCase().includes(q) && !c.zone.toLowerCase().includes(q)) return false;
+    return true;
   });
 
-  // sort
   visible.sort((a, b) => {
     let av = a[sortCol], bv = b[sortCol];
     if (typeof av === 'string') return av.localeCompare(bv, 'it') * sortDir;
@@ -547,8 +639,8 @@ function renderTable() {
   countEl.textContent = visible.length;
   empty.style.display = visible.length === 0 ? 'block' : 'none';
 
-  tbody.innerHTML = visible.map((c) => {
-    const zClass = ZONE_CLASS[c.zone] || '';
+  tbody.innerHTML = visible.map(c => {
+    const zCls = ZONE_CLASS[c.zone] || '';
     const pdfCell = c.pdf
       ? `<a class="pdf-link" href="${c.pdf}" target="_blank">
            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -557,17 +649,19 @@ function renderTable() {
       : `<span class="no-pdf">—</span>`;
     return `<tr>
       <td class="crag-name">${c.name}</td>
-      <td><span class="zone-badge ${zClass}">${c.zone}</span></td>
+      <td><span class="zone-badge ${zCls}">${c.zone}</span></td>
       <td>${c.alt}</td>
+      <td><span class="badge ${diffClass(c.diff)}">${c.diff}</span></td>
+      <td><span class="badge ${styleClass(c.style)}">${c.style}</span></td>
+      <td><span class="badge ${equipClass(c.equip)}">${c.equip}</span></td>
       <td>${pdfCell}</td>
     </tr>`;
   }).join('');
 
-  // sync map marker visibility
+  // sync map markers
+  const visibleSet = new Set(visible.map(c => c.name));
   CRAGS.forEach((c, i) => {
-    const matchZone = activeZone === "all" || c.zone === activeZone;
-    const matchQ = !q || c.name.toLowerCase().includes(q) || c.zone.toLowerCase().includes(q);
-    if (matchZone && matchQ) {
+    if (visibleSet.has(c.name)) {
       if (!map.hasLayer(markers[i])) markers[i].addTo(map);
     } else {
       if (map.hasLayer(markers[i])) map.removeLayer(markers[i]);
@@ -581,14 +675,28 @@ document.getElementById('crag-search').addEventListener('input', function() {
   renderTable();
 });
 
-// ── ZONE FILTER ────────────────────────────────────────────────────────────
-document.querySelectorAll('.tag-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
-    this.classList.add('active');
-    activeZone = this.dataset.zone;
-    renderTable();
+// ── TAG FILTERS ────────────────────────────────────────────────────────────
+const filterKeys = ['zone','season','exp','diff','style','equip'];
+filterKeys.forEach(key => {
+  document.querySelectorAll(`[data-${key}]`).forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll(`[data-${key}]`).forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      filters[key] = this.dataset[key];
+      renderTable();
+    });
   });
+});
+
+// ── RESET ──────────────────────────────────────────────────────────────────
+document.getElementById('reset-btn').addEventListener('click', function() {
+  filterKeys.forEach(k => { filters[k] = "all"; });
+  searchQuery = "";
+  document.getElementById('crag-search').value = "";
+  document.querySelectorAll('.tag-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset[Object.keys(b.dataset)[0]] === 'all');
+  });
+  renderTable();
 });
 
 // ── SORT ───────────────────────────────────────────────────────────────────
@@ -611,7 +719,7 @@ document.querySelectorAll('.crag-table thead th[data-col]').forEach(th => {
 
 // initial render
 renderTable();
-document.querySelector(`th[data-col="name"]`).classList.add('sort-asc');
+document.querySelector('th[data-col="name"]').classList.add('sort-asc');
 </script>
 </body>
 </html>

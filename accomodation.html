@@ -6,6 +6,172 @@
   <title>Accomodation — LARIOCLIMB</title>
   <meta name="description" content="Posti letto e rifugi vicino alle falesie del Lecchese e del Lago di Como">
   <link rel="stylesheet" href="assets/style.css">
+
+  <style>
+    /* -------------------------------------------------------
+       ACCOMODATION PAGE STYLES
+       Same card pattern as shops.html
+       ------------------------------------------------------- */
+
+    .accom-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3xl);
+    }
+
+    /* Section heading for Piani Resinelli / Altre Località */
+    .accom-section-heading {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--divider);
+      padding-bottom: var(--space-sm);
+      margin-bottom: var(--space-2xl);
+      margin-top: var(--space-3xl);
+    }
+    .accom-section-heading:first-of-type {
+      margin-top: 0;
+    }
+
+    /* Card — identical to shops */
+    .shop-card {
+      border: 1px solid var(--divider);
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .shop-card-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    @media (max-width: 640px) {
+      .shop-card-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .shop-info {
+      padding: var(--space-2xl);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .shop-header {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-xl);
+    }
+
+    .shop-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .shop-web {
+      font-size: 0.82rem;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+    .shop-web:hover { text-decoration: underline; }
+
+    .shop-address {
+      font-style: italic;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: var(--space-md);
+    }
+
+    .shop-phone {
+      margin: 0;
+    }
+    .shop-phone a {
+      color: var(--accent);
+      font-size: 0.95rem;
+      text-decoration: none;
+    }
+    .shop-phone a:hover { text-decoration: underline; }
+
+    .shop-map {
+      background: var(--bg-alt);
+      min-height: 260px;
+    }
+
+    .shop-map iframe {
+      width: 100%;
+      height: 100%;
+      min-height: 260px;
+      border: 0;
+      display: block;
+    }
+
+    .shop-photo-row {
+      border-top: 1px solid var(--divider);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+
+    .shop-photo {
+      height: 160px;
+      overflow: hidden;
+      position: relative;
+      background: var(--bg-accent);
+      border-right: 1px solid var(--divider);
+    }
+    .shop-photo:last-child { border-right: 0; }
+
+    .shop-photo-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 6px;
+      color: var(--text-light);
+      font-size: 0.78rem;
+      text-align: center;
+      padding: 12px;
+    }
+    .shop-photo-placeholder span {
+      font-size: 1.6rem;
+      opacity: 0.35;
+    }
+
+    /* Type badge — B&B / Rifugio / Camping */
+    .accom-type {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.15em 0.55em;
+      border-radius: 99px;
+      background: var(--bg-accent);
+      color: var(--text-muted);
+      margin-bottom: var(--space-sm);
+    }
+
+    /* Contact name line */
+    .accom-contact {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: var(--space-sm);
+    }
+  </style>
 </head>
 <body>
 
@@ -25,11 +191,11 @@
           <li class="nav-active"><a href="accomodation.html">Accomodation</a></li>
           <li><a href="shops.html">Shops</a></li>
           <li><a href="http://www.vienormali.it/" target="_blank" rel="noopener">Altre Topos ↗</a></li>
-          <li><a href="#meteo">Meteo</a></li>
+          <li><a href="index.html#meteo">Meteo</a></li>
           <li class="nav-mail"><a href="mailus.html">@mail</a></li>
         </ul>
         <ul class="nav-secondary" role="list">
-          <li class="nav-active"><a href="http://www.paolo-sonja.net/" target="_blank" rel="noopener">Paolo&amp;Sonja</a></li>
+          <li><a href="http://www.paolo-sonja.net/" target="_blank" rel="noopener">Paolo&amp;Sonja</a></li>
           <li><a href="http://www.paolo-sonja.net/viaggi/" target="_blank" rel="noopener">Viaggi-Trips</a></li>
           <li><a href="http://www.paolo-sonja.net/masino/" target="_blank" rel="noopener">Masino-Bregaglia</a></li>
           <li><a href="http://www.paolo-sonja.net/mello/" target="_blank" rel="noopener">Val di Mello</a></li>
@@ -52,211 +218,697 @@
   </div>
 
   <div class="container">
-    <div class="site-main">
+    <div class="site-main" style="max-width:900px;">
 
-      <!-- PHOTO CAROUSEL — replace src values with real photos of the area before going live -->
-      <div class="accom-carousel" aria-label="Foto Piani Resinelli">
-        <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
-        <div class="carousel-track-wrap">
-          <div class="carousel-track">
-            <!-- Slide 1 -->
-            <div class="carousel-slide">
-              <img src="http://larioclimb.paolo-sonja.net/lagodicomo.jpg" alt="Lago di Como visto dalle pareti">
-              <p class="carousel-caption">Lago di Como — vista dalle pareti dei Piani Resinelli</p>
+      <div class="accom-list">
+
+        <!-- ====================================================
+             PIANI RESINELLI
+             ==================================================== -->
+        <h2 class="accom-section-heading">Piani Resinelli</h2>
+
+
+        <!-- B&B Ai Frassini -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">B&amp;B</span>
+                <div class="shop-header">
+                  <h2>B&amp;B Ai Frassini</h2>
+                </div>
+                <address class="shop-address">
+                  Piani Resinelli — LC
+                </address>
+                <p class="accom-contact">Nicola &amp; Marilena</p>
+              </div>
+              <p class="shop-phone"><a href="tel:+390341590022">0341-590022</a></p>
             </div>
-            <!-- Slide 2 — replace with a photo of Rifugio Casimiro Ferrari -->
-            <div class="carousel-slide">
-              <img src="http://larioclimb.paolo-sonja.net/lagodicomo.jpg" alt="Rifugio Casimiro Ferrari">
-              <p class="carousel-caption">Rifugio Casimiro Ferrari — Piani Resinelli</p>
-            </div>
-            <!-- Slide 3 — replace with a photo of the area in winter/summer -->
-            <div class="carousel-slide">
-              <img src="http://larioclimb.paolo-sonja.net/lagodicomo.jpg" alt="Piani Resinelli d'estate">
-              <p class="carousel-caption">Piani Resinelli — base ideale per arrampicare tutto l'anno</p>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=B%26B+Ai+Frassini+Piani+Resinelli&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa B&B Ai Frassini">
+              </iframe>
             </div>
           </div>
-        </div>
-        <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
-        <div class="carousel-dots" aria-hidden="true">
-          <span class="carousel-dot active"></span>
-          <span class="carousel-dot"></span>
-          <span class="carousel-dot"></span>
-        </div>
-      </div>
-
-      <!-- PIANI RESINELLI -->
-      <section aria-labelledby="resinelli-heading" style="margin-bottom:var(--space-3xl);">
-        <div class="section-label">
-          <h2 id="resinelli-heading">Piani Resinelli</h2>
-        </div>
-        <div class="accom-grid">
-
-          <div class="accom-card">
-            <h3>B&amp;B Ai Frassini</h3>
-            <p class="accom-location">Piani Resinelli — LC</p>
-            <p class="stars" aria-label="4 stelle su 5">★★★★☆</p>
-            <p class="accom-contact">Nicola &amp; Marilena</p>
-            <p class="accom-phone"><a href="tel:+390341590022">0341-590022</a></p>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏠</span>Struttura<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏔️</span>Vista<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🛏️</span>Camera<br><em>Foto in arrivo</em></div></div>
           </div>
-
-          <div class="accom-card">
-            <h3>Camping La Meridiana</h3>
-            <p class="accom-location">Piani Resinelli — LC</p>
-            <p class="stars" aria-label="3 stelle su 5">★★★☆☆</p>
-            <p class="accom-contact">Ivana &amp; Claudio De Gasperi</p>
-            <p class="accom-phone"><a href="tel:+390341590000">0341-590000</a></p>
-          </div>
-
-          <div class="accom-card">
-            <h3>La Baita — Rifugio Casimiro Ferrari</h3>
-            <p class="accom-location">Piani Resinelli — LC</p>
-            <p class="stars" aria-label="4 stelle su 5">★★★★☆</p>
-            <p class="accom-contact">Laura Ferrari</p>
-            <p class="accom-phone"><a href="tel:+390341590288">0341-590288</a></p>
-          </div>
-
-          <div class="accom-card">
-            <h3>Rifugio S.E.L.</h3>
-            <p class="accom-location">Piani Resinelli — LC</p>
-            <p class="stars" aria-label="3 stelle su 5">★★★☆☆</p>
-            <p class="accom-contact">Marco Airoldi</p>
-            <p class="accom-phone"><a href="tel:+390341590163">0341-590163</a></p>
-          </div>
-
-          <div class="accom-card">
-            <h3>Rifugio Soldanella</h3>
-            <p class="accom-location">Piani Resinelli — LC</p>
-            <p class="stars" aria-label="4 stelle su 5">★★★★☆</p>
-            <p class="accom-contact">Mauro Taramelli</p>
-            <p class="accom-phone"><a href="tel:+390341531132">0341-531132</a></p>
-          </div>
-
-          <div class="accom-card">
-            <h3>Rifugio Carlo Porta</h3>
-            <p class="accom-location">Piani Resinelli — LC</p>
-            <p class="stars" aria-label="3 stelle su 5">★★★☆☆</p>
-            <p class="accom-contact">C.A.I. Milano — Raffaele Palladino</p>
-          </div>
-
-          <div class="accom-card">
-            <h3>Rifugio Rosalba</h3>
-            <p class="accom-location">Piani Resinelli — LC</p>
-            <p class="stars" aria-label="4 stelle su 5">★★★★☆</p>
-            <p class="accom-contact">C.A.I. Milano — Mauro Cariboni</p>
-            <p class="accom-phone"><a href="tel:+390341732393">0341-732393</a></p>
-          </div>
-
-          <div class="accom-card">
-            <h3>2184 Ristorante-Pizzeria-Bar</h3>
-            <p class="accom-location">Piani Resinelli — LC</p>
-            <p class="stars" aria-label="4 stelle su 5">★★★★☆</p>
-            <p class="accom-contact">Marco Anghileri</p>
-          </div>
-
         </div>
 
-        <!-- ACCESSO STRADALE — Piani Resinelli -->
+
+        <!-- Camping La Meridiana -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">Camping</span>
+                <div class="shop-header">
+                  <h2>Camping La Meridiana</h2>
+                </div>
+                <address class="shop-address">
+                  Piani Resinelli — LC
+                </address>
+                <p class="accom-contact">Ivana &amp; Claudio De Gasperi</p>
+              </div>
+              <p class="shop-phone"><a href="tel:+390341590000">0341-590000</a></p>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=Camping+La+Meridiana+Piani+Resinelli&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa Camping La Meridiana">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>⛺</span>Campeggio<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏔️</span>Vista<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🌲</span>Area verde<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- La Baita Rifugio Casimiro Ferrari -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">Rifugio</span>
+                <div class="shop-header">
+                  <h2>La Baita — Rifugio Casimiro Ferrari</h2>
+                </div>
+                <address class="shop-address">
+                  Piani Resinelli — LC
+                </address>
+                <p class="accom-contact">Laura Ferrari</p>
+              </div>
+              <p class="shop-phone"><a href="tel:+390341590288">0341-590288</a></p>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=Rifugio+Casimiro+Ferrari+Piani+Resinelli&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa Rifugio Casimiro Ferrari">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏠</span>Rifugio<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🍽️</span>Ristorante<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏔️</span>Panorama<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- Rifugio S.E.L. -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">Rifugio</span>
+                <div class="shop-header">
+                  <h2>Rifugio S.E.L.</h2>
+                </div>
+                <address class="shop-address">
+                  Piani Resinelli — LC
+                </address>
+                <p class="accom-contact">Marco Airoldi</p>
+              </div>
+              <p class="shop-phone"><a href="tel:+390341590163">0341-590163</a></p>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=Rifugio+SEL+Piani+Resinelli&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa Rifugio S.E.L.">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏠</span>Rifugio<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏔️</span>Vista<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🛏️</span>Camere<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- Rifugio Soldanella -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">Rifugio</span>
+                <div class="shop-header">
+                  <h2>Rifugio Soldanella</h2>
+                </div>
+                <address class="shop-address">
+                  Piani Resinelli — LC
+                </address>
+                <p class="accom-contact">Mauro Taramelli</p>
+              </div>
+              <p class="shop-phone"><a href="tel:+390341531132">0341-531132</a></p>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=Rifugio+Soldanella+Piani+Resinelli&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa Rifugio Soldanella">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏠</span>Rifugio<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🍽️</span>Ristorante<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏔️</span>Panorama<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- Rifugio Carlo Porta -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">Rifugio</span>
+                <div class="shop-header">
+                  <h2>Rifugio Carlo Porta</h2>
+                </div>
+                <address class="shop-address">
+                  Piani Resinelli — LC
+                </address>
+                <p class="accom-contact">C.A.I. Milano — Raffaele Palladino</p>
+              </div>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=Rifugio+Carlo+Porta+Piani+Resinelli&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa Rifugio Carlo Porta">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏠</span>Rifugio<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏔️</span>Vista<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🧗</span>Zona<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- Rifugio Rosalba -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">Rifugio</span>
+                <div class="shop-header">
+                  <h2>Rifugio Rosalba</h2>
+                </div>
+                <address class="shop-address">
+                  Piani Resinelli — LC
+                </address>
+                <p class="accom-contact">C.A.I. Milano — Mauro Cariboni</p>
+              </div>
+              <p class="shop-phone"><a href="tel:+390341732393">0341-732393</a></p>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=Rifugio+Rosalba+Piani+Resinelli&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa Rifugio Rosalba">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏠</span>Rifugio<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🍽️</span>Ristorante<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏔️</span>Panorama<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- 2184 Ristorante-Pizzeria-Bar -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">Ristorante / Bar</span>
+                <div class="shop-header">
+                  <h2>2184 Ristorante-Pizzeria-Bar</h2>
+                </div>
+                <address class="shop-address">
+                  Piani Resinelli — LC
+                </address>
+                <p class="accom-contact">Marco Anghileri</p>
+              </div>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=2184+Ristorante+Piani+Resinelli&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa 2184 Ristorante">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🍕</span>Ristorante<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🍽️</span>Cucina<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏔️</span>Vista<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- Access box — Piani Resinelli -->
         <div class="access-box">
-          <h4>Accesso Stradale</h4>
-          <p>Da Lecco: seguire la SS583 in direzione Ballabio. A Ballabio alta, imboccare la strada provinciale per i Piani Resinelli (indicazioni chiare). Salita di circa 8 km con curve. Parcheggio ampio disponibile sul pianoro. Distanza da Lecco: ~15 km, 25–30 minuti.</p>
-        </div>
-      </section>
-
-      <!-- OTHER LOCATIONS -->
-      <section aria-labelledby="altre-heading" style="margin-bottom:var(--space-3xl);">
-        <div class="section-label">
-          <h2 id="altre-heading">Altre Località</h2>
-        </div>
-        <div class="accom-grid">
-
-          <div class="accom-card">
-            <h3>Ostello Parco Monte Barro</h3>
-            <p class="accom-location">Galbiate</p>
-            <p class="accom-phone"><a href="tel:+390341540512">0341-540512</a></p>
-          </div>
-
-          <div class="accom-card">
-            <h3>B&amp;B Funivia Piani d'Erna</h3>
-            <p class="accom-location">Lecco</p>
-            <p class="accom-phone"><a href="tel:+390341499244">0341-499244</a></p>
-          </div>
-
-          <div class="accom-card">
-            <h3>B&amp;B Sul lago dorato</h3>
-            <p class="accom-location">Lecco</p>
-            <p class="accom-phone"><a href="tel:+393383831690">338-3831690</a></p>
-          </div>
-
-          <div class="accom-card">
-            <h3>Camping Residence Grigna</h3>
-            <p class="accom-location">Ballabio</p>
-            <p class="accom-phone"><a href="tel:+390341232045">0341-232045</a></p>
-          </div>
-
-          <div class="accom-card">
-            <h3>Rifugio Stoppani</h3>
-            <p class="accom-location">Monte Resegone</p>
-          </div>
-
-          <div class="accom-card">
-            <h3>Camping Spiaggia</h3>
-            <p class="accom-location">Abbadia Lariana</p>
-          </div>
-
-          <div class="accom-card">
-            <h3>B&amp;B Contrada Lunga</h3>
-            <p class="accom-location">Abbadia Lariana</p>
-          </div>
-
-          <div class="accom-card">
-            <h3>B&amp;B Alla Torre del Barbarossa</h3>
-            <p class="accom-location">Mandello del Lario</p>
-          </div>
-
-          <div class="accom-card">
-            <h3>Cascina Lago Segrino</h3>
-            <p class="accom-location">Canzo</p>
-            <p class="accom-phone"><a href="tel:+393337801770">333-7801770</a></p>
-          </div>
-
-          <div class="accom-card">
-            <h3>B&amp;B LaVigna</h3>
-            <p class="accom-location">Primaluna</p>
-            <p class="accom-contact">Paola Fazzini</p>
-            <p class="accom-phone"><a href="tel:+390341981148">0341-981148</a></p>
-          </div>
-
-          <div class="accom-card">
-            <h3>B&amp;B L'Antica Officina</h3>
-            <p class="accom-location">Mandello del Lario</p>
-            <p class="accom-phone"><a href="tel:+393349569005">334-9569005</a></p>
-          </div>
-
-          <div class="accom-card">
-            <h3>Antico Borgo Camporeso</h3>
-            <p class="accom-location">Galbiate</p>
-          </div>
-
-          <div class="accom-card">
-            <h3>Alla Bonacina B&amp;B</h3>
-            <p class="accom-location">Lecco</p>
-            <p class="accom-phone"><a href="tel:+393338918951">333-8918951</a></p>
-          </div>
-
+          <h4>Accesso Stradale — Piani Resinelli</h4>
+          <p>Da Lecco: seguire la SS583 in direzione Ballabio. A Ballabio alta, imboccare la strada provinciale per i Piani Resinelli (indicazioni chiare). Salita di circa 8 km con curve. Parcheggio ampio disponibile sul pianoro. Distanza da Lecco: ~15 km, 25-30 minuti.</p>
         </div>
 
-        <!-- ACCESSO STRADALE — Altre Località -->
+
+        <!-- ====================================================
+             ALTRE LOCALITA'
+             ==================================================== -->
+        <h2 class="accom-section-heading">Altre Località</h2>
+
+
+        <!-- Ostello Parco Monte Barro -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">Ostello</span>
+                <div class="shop-header">
+                  <h2>Ostello Parco Monte Barro</h2>
+                </div>
+                <address class="shop-address">
+                  Galbiate — LC
+                </address>
+              </div>
+              <p class="shop-phone"><a href="tel:+390341540512">0341-540512</a></p>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=Ostello+Parco+Monte+Barro+Galbiate&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa Ostello Parco Monte Barro">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏠</span>Struttura<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🌲</span>Parco<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏔️</span>Vista<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- B&B Funivia Piani d'Erna -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">B&amp;B</span>
+                <div class="shop-header">
+                  <h2>B&amp;B Funivia Piani d'Erna</h2>
+                </div>
+                <address class="shop-address">
+                  Lecco
+                </address>
+              </div>
+              <p class="shop-phone"><a href="tel:+390341499244">0341-499244</a></p>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=Funivia+Piani+Erna+Lecco&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa B&B Funivia Piani d'Erna">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏠</span>B&amp;B<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🚡</span>Funivia<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏔️</span>Vista<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- B&B Sul lago dorato -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">B&amp;B</span>
+                <div class="shop-header">
+                  <h2>B&amp;B Sul lago dorato</h2>
+                </div>
+                <address class="shop-address">
+                  Lecco
+                </address>
+              </div>
+              <p class="shop-phone"><a href="tel:+393383831690">338-3831690</a></p>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=B%26B+Sul+lago+dorato+Lecco&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa B&B Sul lago dorato">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏠</span>B&amp;B<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🌊</span>Lago<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🛏️</span>Camera<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- Camping Residence Grigna -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">Camping</span>
+                <div class="shop-header">
+                  <h2>Camping Residence Grigna</h2>
+                </div>
+                <address class="shop-address">
+                  Ballabio — LC
+                </address>
+              </div>
+              <p class="shop-phone"><a href="tel:+390341232045">0341-232045</a></p>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=Camping+Residence+Grigna+Ballabio&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa Camping Residence Grigna">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>⛺</span>Camping<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏔️</span>Grigna<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🌲</span>Area verde<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- Rifugio Stoppani -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">Rifugio</span>
+                <div class="shop-header">
+                  <h2>Rifugio Stoppani</h2>
+                </div>
+                <address class="shop-address">
+                  Monte Resegone — LC
+                </address>
+              </div>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=Rifugio+Stoppani+Resegone&output=embed&z=14"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa Rifugio Stoppani">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏠</span>Rifugio<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏔️</span>Resegone<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🧗</span>Falesia<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- Camping Spiaggia -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">Camping</span>
+                <div class="shop-header">
+                  <h2>Camping Spiaggia</h2>
+                </div>
+                <address class="shop-address">
+                  Abbadia Lariana — LC
+                </address>
+              </div>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=Camping+Spiaggia+Abbadia+Lariana&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa Camping Spiaggia">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>⛺</span>Camping<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🌊</span>Lago<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏖️</span>Spiaggia<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- B&B Contrada Lunga -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">B&amp;B</span>
+                <div class="shop-header">
+                  <h2>B&amp;B Contrada Lunga</h2>
+                </div>
+                <address class="shop-address">
+                  Abbadia Lariana — LC
+                </address>
+              </div>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=Contrada+Lunga+Abbadia+Lariana&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa B&B Contrada Lunga">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏠</span>B&amp;B<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🌊</span>Lago<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🛏️</span>Camera<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- B&B Alla Torre del Barbarossa -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">B&amp;B</span>
+                <div class="shop-header">
+                  <h2>B&amp;B Alla Torre del Barbarossa</h2>
+                </div>
+                <address class="shop-address">
+                  Mandello del Lario — LC
+                </address>
+              </div>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=Torre+del+Barbarossa+Mandello+del+Lario&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa B&B Alla Torre del Barbarossa">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏰</span>Torre<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🌊</span>Lago<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🛏️</span>Camera<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- Cascina Lago Segrino -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">Agriturismo</span>
+                <div class="shop-header">
+                  <h2>Cascina Lago Segrino</h2>
+                </div>
+                <address class="shop-address">
+                  Canzo — CO
+                </address>
+              </div>
+              <p class="shop-phone"><a href="tel:+393337801770">333-7801770</a></p>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=Cascina+Lago+Segrino+Canzo&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa Cascina Lago Segrino">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏡</span>Cascina<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🌊</span>Lago Segrino<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🌿</span>Natura<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- B&B LaVigna -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">B&amp;B</span>
+                <div class="shop-header">
+                  <h2>B&amp;B LaVigna</h2>
+                </div>
+                <address class="shop-address">
+                  Primaluna — LC
+                </address>
+                <p class="accom-contact">Paola Fazzini</p>
+              </div>
+              <p class="shop-phone"><a href="tel:+390341981148">0341-981148</a></p>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=B%26B+LaVigna+Primaluna&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa B&B LaVigna">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏠</span>B&amp;B<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🍇</span>Vigna<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🛏️</span>Camera<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- B&B L'Antica Officina -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">B&amp;B</span>
+                <div class="shop-header">
+                  <h2>B&amp;B L'Antica Officina</h2>
+                </div>
+                <address class="shop-address">
+                  Mandello del Lario — LC
+                </address>
+              </div>
+              <p class="shop-phone"><a href="tel:+393349569005">334-9569005</a></p>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=L%27Antica+Officina+Mandello+del+Lario&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa B&B L'Antica Officina">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏠</span>B&amp;B<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🌊</span>Lago<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🛏️</span>Camera<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- Antico Borgo Camporeso -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">Agriturismo</span>
+                <div class="shop-header">
+                  <h2>Antico Borgo Camporeso</h2>
+                </div>
+                <address class="shop-address">
+                  Galbiate — LC
+                </address>
+              </div>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=Antico+Borgo+Camporeso+Galbiate&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa Antico Borgo Camporeso">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏡</span>Borgo<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🌿</span>Natura<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🛏️</span>Camera<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- Alla Bonacina B&B -->
+        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div>
+                <span class="accom-type">B&amp;B</span>
+                <div class="shop-header">
+                  <h2>Alla Bonacina B&amp;B</h2>
+                </div>
+                <address class="shop-address">
+                  Lecco
+                </address>
+              </div>
+              <p class="shop-phone"><a href="tel:+393338918951">333-8918951</a></p>
+            </div>
+            <div class="shop-map">
+              <iframe
+                src="https://maps.google.com/maps?q=Alla+Bonacina+Lecco&output=embed&z=15"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Mappa Alla Bonacina B&B">
+              </iframe>
+            </div>
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🏠</span>B&amp;B<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🌊</span>Lago<br><em>Foto in arrivo</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>🛏️</span>Camera<br><em>Foto in arrivo</em></div></div>
+          </div>
+        </div>
+
+
+        <!-- Access box — Altre Località -->
         <div class="access-box">
-          <h4>Accesso Stradale</h4>
-          <p><strong>Galbiate / Parco Monte Barro:</strong> SS36 dir. Como, uscita Galbiate. Seguire le indicazioni per Galbiate centro o Parco Monte Barro.<br>
-          <strong>Lecco città (B&amp;B):</strong> Accessibile direttamente dall'uscita Lecco Nord della SS36.<br>
-          <strong>Ballabio (Camping Grigna):</strong> SS583 da Lecco, uscita Ballabio — circa 10 minuti da Lecco.<br>
-          <strong>Abbadia Lariana:</strong> SS36 in direzione Lecco / Sondrio, uscita Abbadia Lariana — lago a vista.<br>
-          <strong>Mandello del Lario:</strong> SS36 / SS583, uscita Mandello — 15 km da Lecco in direzione Como/Colico.<br>
-          <strong>Canzo / Lago Segrino:</strong> SP342 da Erba in direzione Canzo, circa 30 km da Lecco.<br>
-          <strong>Primaluna:</strong> SS36 dir. Valtellina, uscita Bellano / Valle San Martino, poi SP62 per Primaluna — circa 25 km da Lecco.</p>
+          <h4>Accesso Stradale — Altre Località</h4>
+          <p>
+            <strong>Galbiate / Parco Monte Barro:</strong> SS36 dir. Como, uscita Galbiate. Seguire le indicazioni per Galbiate centro o Parco Monte Barro.<br>
+            <strong>Lecco città (B&amp;B):</strong> Accessibile direttamente dall'uscita Lecco Nord della SS36.<br>
+            <strong>Ballabio (Camping Grigna):</strong> SS583 da Lecco, uscita Ballabio — circa 10 minuti da Lecco.<br>
+            <strong>Abbadia Lariana:</strong> SS36 in direzione Lecco / Sondrio, uscita Abbadia Lariana — lago a vista.<br>
+            <strong>Mandello del Lario:</strong> SS36 / SS583, uscita Mandello — 15 km da Lecco in direzione Como/Colico.<br>
+            <strong>Canzo / Lago Segrino:</strong> SP342 da Erba in direzione Canzo, circa 30 km da Lecco.<br>
+            <strong>Primaluna:</strong> SS36 dir. Valtellina, uscita Bellano / Valle San Martino, poi SP62 per Primaluna — circa 25 km da Lecco.
+          </p>
         </div>
-      </section>
+
+      </div><!-- end accom-list -->
 
     </div>
   </div>
@@ -301,27 +953,5 @@
 </footer>
 
 <script src="assets/nav.js"></script>
-<script>
-(function () {
-  var track = document.querySelector('.carousel-track');
-  if (!track) return;
-  var slides = track.querySelectorAll('.carousel-slide');
-  var dots = document.querySelectorAll('.carousel-dot');
-  var total = slides.length;
-  var current = 0;
-
-  function goTo(n) {
-    current = (n + total) % total;
-    track.style.transform = 'translateX(-' + current * 100 + '%)';
-    dots.forEach(function (d, i) {
-      d.classList.toggle('active', i === current);
-    });
-  }
-
-  document.querySelector('.carousel-prev').addEventListener('click', function () { goTo(current - 1); });
-  document.querySelector('.carousel-next').addEventListener('click', function () { goTo(current + 1); });
-  dots.forEach(function (d, i) { d.addEventListener('click', function () { goTo(i); }); });
-})();
-</script>
 </body>
 </html>
