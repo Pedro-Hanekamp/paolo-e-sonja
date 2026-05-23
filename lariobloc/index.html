@@ -6,6 +6,24 @@
   <title>Lariobloc — LARIOCLIMB</title>
   <meta name="description" content="Lariobloc: guida al bouldering intorno al Lago di Como. Ranciobloc, Civatebloc, Valmadrerabloc, Gajumbloc e altre zone.">
   <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    .bloc-hero-img { width:100%; max-height:260px; object-fit:cover; border-radius:var(--radius-lg); margin-bottom:var(--space-xl); }
+    .bloc-printable { display:flex; align-items:center; gap:var(--space-md); padding:var(--space-md) var(--space-lg); background:oklch(97% 0.01 80); border:1px solid oklch(88% 0.02 80); border-radius:var(--radius-md); margin-bottom:var(--space-2xl); }
+    .bloc-printable .pdf-icon { font-size:1.6rem; line-height:1; }
+    .bloc-printable a { font-weight:600; color:var(--accent); text-decoration:none; }
+    .bloc-printable a:hover { text-decoration:underline; }
+    .bloc-printable .pdf-meta { font-size:0.8rem; color:var(--text-muted); }
+    .section-img { width:100%; max-height:200px; object-fit:cover; border-radius:var(--radius-md); margin-bottom:var(--space-lg); }
+    .pdf-list { list-style:none; padding:0; margin:var(--space-lg) 0 0; display:flex; flex-wrap:wrap; gap:var(--space-sm); }
+    .pdf-list li a { display:inline-flex; align-items:center; gap:0.35em; padding:0.4em 0.85em; background:oklch(96% 0.015 80); border:1px solid oklch(85% 0.025 80); border-radius:var(--radius-sm); font-size:0.82rem; font-weight:500; color:var(--text); text-decoration:none; transition:background 0.18s, border-color 0.18s; }
+    .pdf-list li a:hover { background:oklch(92% 0.03 80); border-color:var(--accent); color:var(--accent); }
+    .pdf-list li a::before { content:"↓"; font-weight:700; color:var(--accent); }
+    .partner-row { display:flex; align-items:center; gap:var(--space-xl); flex-wrap:wrap; margin-top:var(--space-lg); padding:var(--space-lg); background:oklch(97% 0.008 80); border-radius:var(--radius-md); }
+    .partner-logo img { height:60px; width:auto; }
+    .partner-info { font-size:0.88rem; color:var(--text-muted); }
+    .partner-info a { color:var(--accent); font-weight:600; text-decoration:none; }
+    .partner-info a:hover { text-decoration:underline; }
+  </style>
 </head>
 <body>
 
@@ -54,6 +72,9 @@
   <div class="container">
     <div class="site-main">
 
+      <!-- HERO IMAGE -->
+      <img src="lariobloc.jpg" alt="Lariobloc — bouldering sul Lago di Como" class="bloc-hero-img">
+
       <!-- CONTACT / SOCIAL -->
       <section style="margin-bottom:var(--space-2xl);">
         <div class="bloc-contact-row">
@@ -69,16 +90,27 @@
         </div>
       </section>
 
+      <!-- VERSIONE STAMPABILE -->
+      <div class="bloc-printable">
+        <span class="pdf-icon">📄</span>
+        <div>
+          <a href="LarioBloc_intro.pdf" target="_blank">Versione stampabile — Guida Lariobloc</a>
+          <div class="pdf-meta">PDF · 91 KB · Introduzione completa a tutte le zone</div>
+        </div>
+      </div>
+
       <!-- RANCIOBLOC -->
       <section aria-labelledby="rancio-heading" style="margin-bottom:var(--space-3xl);">
         <div class="section-label">
           <h2 id="rancio-heading">Ranciobloc</h2>
         </div>
+        <img src="raduno.jpg" alt="Ranciobloc — settore Raduno" class="section-img">
         <p class="prose" style="margin-bottom:var(--space-xl); color:var(--text-muted);">
-          Zona di recente sviluppo, in continua espansione. Tre settori principali, con competizioni annuali StoneColdCrazy. Quota 1.200 m — praticabile tutto l'anno.
+          Zona di recente sviluppo, in continua espansione. Tre settori principali con competizioni annuali StoneColdCrazy. Quota 1.200 m, praticabile tutto l'anno.
         </p>
         <div class="sector-grid">
           <div class="sector">
+            <img src="raduno.jpg" alt="Settore Raduno" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
             <h3>Raduno</h3>
             <dl class="sector-info">
               <dt>Stagione</dt><dd>Tutto l'anno</dd>
@@ -89,6 +121,7 @@
             <p class="sector-note">Sede delle competizioni StoneColdCrazy2007.</p>
           </div>
           <div class="sector">
+            <img src="gara.jpg" alt="Settore Gara" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
             <h3>Felice</h3>
             <dl class="sector-info">
               <dt>Stagione</dt><dd>Tutto l'anno</dd>
@@ -99,6 +132,7 @@
             <p class="sector-note">Zona ampia con orientamento e navigazione impegnativi.</p>
           </div>
           <div class="sector">
+            <img src="felice.jpg" alt="Settore Felice" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
             <h3>Menaresta</h3>
             <dl class="sector-info">
               <dt>Stagione</dt><dd>Tutto l'anno</dd>
@@ -109,6 +143,7 @@
             <p class="sector-note">Il primo settore scoperto, con accesso comodo e rapido.</p>
           </div>
           <div class="sector">
+            <img src="menaresta.jpg" alt="Settore Menaresta" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
             <h3>Pietraluna</h3>
             <dl class="sector-info">
               <dt>Stagione</dt><dd>Tutto l'anno</dd>
@@ -119,6 +154,13 @@
             <p class="sector-note">Zona piccola, ideale per sessioni veloci.</p>
           </div>
         </div>
+        <ul class="pdf-list">
+          <li><a href="Ranciobloc_intro20.pdf" target="_blank">Ranciobloc — Introduzione</a></li>
+          <li><a href="Ranciobloc_raduno21.pdf" target="_blank">Settore Raduno</a></li>
+          <li><a href="Ranciobloc_gara20.pdf" target="_blank">Settore Gara</a></li>
+          <li><a href="Ranciobloc_menaresta20.pdf" target="_blank">Settore Menaresta</a></li>
+          <li><a href="Ranciobloc_pietraluna21.pdf" target="_blank">Pietraluna</a></li>
+        </ul>
         <div class="access-box">
           <h4>Accesso Stradale</h4>
           <p>Da Lecco centro, seguire via Amendola / via Rancio in direzione Ballabio. Dopo circa 2 km, imboccare la strada per Rancio di Lecco (frazione collinare). Parcheggio disponibile lungo la strada a quota ~900 m, vicino all'attacco dei sentieri per i settori.</p>
@@ -130,6 +172,7 @@
         <div class="section-label">
           <h2 id="civate-heading">Civatebloc</h2>
         </div>
+        <img src="civatebloc.jpg" alt="Civatebloc" class="section-img">
         <p class="prose" style="margin-bottom:var(--space-xl); color:var(--text-muted);">
           La zona più vasta e varia del Lariobloc. Diversi settori con esposizioni e stagioni differenti — si trova sempre qualcosa da scalare.
         </p>
@@ -196,13 +239,23 @@
             </dl>
           </div>
         </div>
+        <ul class="pdf-list">
+          <li><a href="civatebloc_intro20.pdf" target="_blank">Civatebloc — Introduzione</a></li>
+          <li><a href="civatebloc_tajasass22.pdf" target="_blank">Taja Sass</a></li>
+          <li><a href="civatebloc_solarium21.pdf" target="_blank">Solarium</a></li>
+          <li><a href="civatebloc_condominio22.pdf" target="_blank">Condominio</a></li>
+          <li><a href="civatebloc_lostinco23.pdf" target="_blank">Lo Stinco</a></li>
+          <li><a href="civatebloc_trappolediluce20.pdf" target="_blank">Trappole di Luce</a></li>
+          <li><a href="civatebloc_eremo20.pdf" target="_blank">Eremo</a></li>
+          <li><a href="civatebloc_meteoreoro21.pdf" target="_blank">Meteore</a></li>
+        </ul>
         <div class="access-box">
           <h4>Accesso Stradale</h4>
           <p>Da Lecco, SS36 in direzione Como. Uscita Civate / Oggiono. Seguire le indicazioni per Civate; parcheggiare in paese (Piazza Risorgimento o via Mulini). I vari sentieri per i settori partono dai bordi del paese e dalla zona del monastero di San Pietro al Monte.</p>
         </div>
       </section>
 
-      <!-- OTHER ZONES -->
+      <!-- ALTRE ZONE -->
       <section aria-labelledby="altre-heading" style="margin-bottom:var(--space-3xl);">
         <div class="section-label">
           <h2 id="altre-heading">Altre Zone</h2>
@@ -210,6 +263,7 @@
         <div class="sector-grid sector-grid--wide">
 
           <div class="sector">
+            <img src="valmadrerabloc.jpg" alt="Valmadrerabloc" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
             <h3>Valmadrerabloc</h3>
             <dl class="sector-info">
               <dt>Stagione</dt><dd>Tutto l'anno (evitare gli estremi)</dd>
@@ -218,12 +272,16 @@
               <dt>Avvicinamento</dt><dd>50 min</dd>
               <dt>Settori</dt><dd>2</dd>
             </dl>
-            <p class="sector-note" style="margin-top:var(--space-sm);font-size:0.78rem;color:var(--text-muted);">
-              <strong style="color:var(--accent);">Accesso:</strong> Da Lecco, SS36 dir. Como, uscita Valmadrera. Seguire via Concordia verso la zona collinare sopra il paese. Parcheggio in località Moregallo; avvicinamento a piedi sul sentiero per il Monte Moregallo.
+            <p class="sector-note" style="font-size:0.78rem;color:var(--text-muted);">
+              <strong style="color:var(--accent);">Accesso:</strong> SS36 dir. Como, uscita Valmadrera. Via Concordia verso la zona collinare. Parcheggio a Moregallo.
             </p>
+            <ul class="pdf-list" style="margin-top:var(--space-md);">
+              <li><a href="ValmadreraBloc20.pdf" target="_blank">Topo PDF</a></li>
+            </ul>
           </div>
 
           <div class="sector">
+            <img src="gajumbloc.jpg" alt="Gajumbloc" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
             <h3>Gajumbloc</h3>
             <dl class="sector-info">
               <dt>Stagione</dt><dd>Apr – Nov</dd>
@@ -232,45 +290,78 @@
               <dt>Avvicinamento</dt><dd>15 min</dd>
             </dl>
             <p class="sector-note">Valletta ombreggiata, fresca d'estate.</p>
-            <p class="sector-note" style="font-size:0.78rem;color:var(--text-muted);">
-              <strong style="color:var(--accent);">Accesso:</strong> Da Lecco, SS36 dir. Como, uscita Galbiate. Proseguire in direzione Civate; seguire le indicazioni per la Valle del Gajum. Parcheggio in fondo alla strada sterrata all'imbocco della valle.
-            </p>
+            <ul class="pdf-list" style="margin-top:var(--space-md);">
+              <li><a href="GajumBloc20.pdf" target="_blank">Topo PDF</a></li>
+              <li><a href="gajumbloc_iiiponte20.pdf" target="_blank">Settore III Ponte</a></li>
+            </ul>
           </div>
 
           <div class="sector">
+            <img src="galbiatebloc.jpg" alt="Galbiatebloc" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
             <h3>Galbiatebloc</h3>
             <dl class="sector-info">
               <dt>Stagione</dt><dd>Ott – Apr</dd>
               <dt>Difficoltà</dt><dd>fino a 6B+</dd>
               <dt>Avvicinamento</dt><dd>30 sec – 3 min</dd>
             </dl>
-            <p class="sector-note">Comodissima zona blocchi per chi ha poco tempo. Adatta alle famiglie.</p>
-            <p class="sector-note" style="font-size:0.78rem;color:var(--text-muted);">
-              <strong style="color:var(--accent);">Accesso:</strong> Da Lecco, SS36 dir. Como, uscita Galbiate. Seguire le indicazioni per il centro di Galbiate; i massi si trovano a pochi minuti a piedi dal centro del paese, in direzione del Parco Monte Barro.
-            </p>
+            <p class="sector-note">Comodissima. Adatta alle famiglie.</p>
+            <ul class="pdf-list" style="margin-top:var(--space-md);">
+              <li><a href="GalbiateBloc_smaterno20.pdf" target="_blank">Topo PDF</a></li>
+            </ul>
           </div>
 
           <div class="sector">
             <h3>La Bonacina di Lecco</h3>
             <dl class="sector-info">
               <dt>Tipo</dt><dd>Boulder urbano</dd>
-              <dt>Posizione</dt><dd>Lungo il torrente Calderone, Lecco</dd>
+              <dt>Posizione</dt><dd>Torrente Calderone, Lecco</dd>
             </dl>
             <p class="sector-note">Boulder urbano vicino a Lecco, presso le vasche naturali del Calderone.</p>
-            <p class="sector-note" style="font-size:0.78rem;color:var(--text-muted);">
-              <strong style="color:var(--accent);">Accesso:</strong> In Lecco città: da via Amendola seguire le indicazioni per il torrente Calderone. Parcheggio nelle vicinanze di via Bonacina; i massi sono raggiungibili a piedi in 1–2 min lungo la sponda del torrente.
-            </p>
+            <ul class="pdf-list" style="margin-top:var(--space-md);">
+              <li><a href="Bonacinabloc_lecco21.pdf" target="_blank">Topo PDF</a></li>
+            </ul>
+          </div>
+
+          <div class="sector">
+            <img src="cimagandabloc.jpg" alt="CimagandaBloc" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
+            <h3>CimagandaBloc</h3>
+            <dl class="sector-info">
+              <dt>Zona</dt><dd>Val Chiavenna / Masino</dd>
+            </dl>
+            <p class="sector-note">Miniguida bouldering Cimaganda.</p>
+            <ul class="pdf-list" style="margin-top:var(--space-md);">
+              <li><a href="miniguida_cimaganda_bloc.pdf" target="_blank">Miniguida PDF</a></li>
+            </ul>
           </div>
 
         </div>
       </section>
 
-      <!-- RESOURCES -->
+      <!-- PARTNER / SPONSOR -->
+      <section style="margin-bottom:var(--space-2xl);">
+        <div class="section-label">
+          <h2>Partner</h2>
+        </div>
+        <div class="partner-row">
+          <div class="partner-logo">
+            <a href="http://www.sherpaonline.it/" target="_blank" rel="noopener">
+              <img src="../files/sherpa_logo02.jpg" alt="Sherpa Mountain Shop">
+            </a>
+          </div>
+          <div class="partner-info">
+            <a href="http://www.sherpaonline.it/" target="_blank" rel="noopener">Sherpa Mountain Shop ↗</a><br>
+            Via 4 novembre n°42, Ronco Briantino (MI) — 039-6817092
+          </div>
+        </div>
+      </section>
+
+      <!-- RISORSE -->
       <section style="margin-bottom:var(--space-2xl);">
         <div class="section-label">
           <h2>Risorse</h2>
         </div>
         <ul class="topo-nav-list">
+          <li><a href="LarioBloc_intro.pdf" target="_blank">📄 Guida Lariobloc — Versione stampabile (PDF, 91 KB)</a></li>
           <li><a href="http://www.osservatoriosormano.it/" target="_blank" rel="noopener">Webcam Meteo Sormano ↗</a></li>
         </ul>
       </section>
