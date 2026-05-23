@@ -107,7 +107,10 @@ small { font-size: 0.8rem; color: var(--text-muted); }
 }
 .site-logo img {
   height: 80px;
+  max-height: 80px;
   width: auto;
+  max-width: 240px;
+  object-fit: contain;
 }
 .header-nav-wrap {
   flex: 1;
