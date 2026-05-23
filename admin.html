@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Larioclimb — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/ayu-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closetag.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/searchcursor.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/search.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: oklch(16% 0.01 250);
+      --bg2: oklch(20% 0.01 250);
+      --bg3: oklch(24% 0.015 250);
+      --border: oklch(30% 0.015 250);
+      --text: oklch(92% 0.005 250);
+      --text-muted: oklch(60% 0.01 250);
+      --accent: oklch(70% 0.18 145);
+      --accent-dim: oklch(55% 0.14 145);
+      --danger: oklch(65% 0.2 25);
+      --warn: oklch(75% 0.18 70);
+      --radius: 6px;
+    }
+
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .topbar-logo {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .topbar-sep { width: 1px; height: 20px; background: var(--border); }
+
+    select, input[type="text"], input[type="password"] {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: var(--radius);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    select:focus, input:focus { border-color: var(--accent-dim); }
+
+    #file-select { flex: 1; max-width: 340px; cursor: pointer; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: var(--radius);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: opacity 0.15s, background 0.15s;
+      white-space: nowrap;
+    }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-primary { background: var(--accent); color: oklch(15% 0.01 250); border-color: var(--accent); }
+    .btn-primary:hover:not(:disabled) { opacity: 0.85; }
+    .btn-ghost { background: transparent; color: var(--text-muted); border-color: var(--border); }
+    .btn-ghost:hover:not(:disabled) { color: var(--text); border-color: oklch(45% 0.015 250); }
+    .btn-danger { background: transparent; color: var(--danger); border-color: var(--danger); }
+    .btn-danger:hover:not(:disabled) { background: oklch(20% 0.05 25); }
+
+    .spacer { flex: 1; }
+
+    /* ── STATUS BAR ── */
+    #status-bar {
+      font-size: 12px;
+      padding: 5px 16px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      min-height: 26px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+    }
+    #status-bar.ok { color: var(--accent); }
+    #status-bar.err { color: var(--danger); }
+    #status-bar.warn { color: var(--warn); }
+    #status-bar .status-icon { font-size: 14px; line-height: 1; }
+
+    /* ── EDITOR AREA ── */
+    #editor-wrap {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #editor-wrap .CodeMirror {
+      height: 100%;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* ── TOKEN OVERLAY ── */
+    #token-overlay {
+      position: fixed;
+      inset: 0;
+      background: oklch(8% 0.01 250 / 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      backdrop-filter: blur(4px);
+    }
+    #token-overlay.hidden { display: none; }
+
+    .token-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 32px;
+      width: min(420px, 90vw);
+    }
+    .token-card h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+    .token-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; }
+    .token-card input { width: 100%; margin-bottom: 12px; }
+    .token-card .hint {
+      font-size: 12px; color: var(--text-muted); margin-top: 12px; line-height: 1.6;
+    }
+    .token-card .hint a { color: var(--accent); text-decoration: none; }
+    .token-card .hint a:hover { text-decoration: underline; }
+    .token-row { display: flex; gap: 8px; align-items: stretch; }
+    .token-row input { flex: 1; }
+
+    /* ── COMMIT MODAL ── */
+    #commit-modal {
+      position: fixed;
+      inset: 0;
+      background: oklch(8% 0.01 250 / 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      backdrop-filter: blur(4px);
+    }
+    #commit-modal.hidden { display: none; }
+    .commit-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px;
+      width: min(460px, 90vw);
+    }
+    .commit-card h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+    .commit-card label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .commit-card input { width: 100%; margin-bottom: 20px; }
+    .commit-card .row { display: flex; gap: 10px; justify-content: flex-end; }
+
+    /* ── SPINNER ── */
+    .spinner {
+      display: inline-block;
+      width: 12px; height: 12px;
+      border: 2px solid oklch(40% 0.01 250);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<!-- TOKEN OVERLAY -->
+<div id="token-overlay">
+  <div class="token-card">
+    <h2>Admin Access</h2>
+    <p>Enter your GitHub Personal Access Token to edit and publish site files.</p>
+    <div class="token-row">
+      <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+      <button class="btn btn-primary" onclick="saveToken()">Connect</button>
+    </div>
+    <p class="hint">
+      Token needs <strong>Contents: Read & Write</strong> scope on the <code>pedro-hanekamp/paolo-e-sonja</code> repo.<br>
+      <a href="https://github.com/settings/tokens/new?scopes=repo&description=larioclimb-admin" target="_blank" rel="noopener">Generate a token on GitHub ↗</a>
+    </p>
+  </div>
+</div>
+
+<!-- COMMIT MODAL -->
+<div id="commit-modal" class="hidden">
+  <div class="commit-card">
+    <h2>Commit changes</h2>
+    <label for="commit-msg">Commit message</label>
+    <input type="text" id="commit-msg" placeholder="Update page content">
+    <div class="row">
+      <button class="btn btn-ghost" onclick="closeCommitModal()">Cancel</button>
+      <button class="btn btn-primary" id="confirm-commit-btn" onclick="confirmCommit()">Publish</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <span class="topbar-logo">⛰ LARIOCLIMB ADMIN</span>
+  <div class="topbar-sep"></div>
+  <select id="file-select" onchange="loadFile()">
+    <option value="">— select a file —</option>
+    <optgroup label="Main pages">
+      <option value="index.html">index.html — Homepage</option>
+      <option value="accomodation.html">accomodation.html — Accommodation</option>
+      <option value="shops.html">shops.html — Shops</option>
+      <option value="autori.html">autori.html — Authors</option>
+      <option value="mailus.html">mailus.html — Contact</option>
+    </optgroup>
+    <optgroup label="Bacheca">
+      <option value="bacheca/index.html">bacheca/index.html — Bulletin Board</option>
+    </optgroup>
+    <optgroup label="Falesie / Topos">
+      <option value="falesie_lecco/index.html">falesie_lecco/index.html — Topos Index</option>
+      <option value="falesie_lecco/introduzione.html">falesie_lecco/introduzione.html — Introduction</option>
+      <option value="falesie_lecco/bibliografia.html">falesie_lecco/bibliografia.html — Bibliography</option>
+    </optgroup>
+    <optgroup label="Pillole di Storia">
+      <option value="pillole/pillole.html">pillole/pillole.html — History</option>
+    </optgroup>
+    <optgroup label="Lariobloc">
+      <option value="lariobloc/index.html">lariobloc/index.html — Bouldering</option>
+    </optgroup>
+  </select>
+  <button class="btn btn-ghost" onclick="reloadFile()" title="Discard changes and reload from GitHub">↺ Reload</button>
+  <div class="spacer"></div>
+  <button class="btn btn-ghost" id="preview-btn" onclick="openPreview()" disabled>Preview ↗</button>
+  <button class="btn btn-primary" id="save-btn" onclick="openCommitModal()" disabled>Save &amp; Publish</button>
+  <div class="topbar-sep"></div>
+  <button class="btn btn-danger" onclick="logout()" title="Clear token and log out">Logout</button>
+</div>
+
+<!-- STATUS BAR -->
+<div id="status-bar">
+  <span class="status-icon">○</span>
+  <span id="status-text">Select a file to start editing.</span>
+</div>
+
+<!-- EDITOR -->
+<div id="editor-wrap">
+  <textarea id="editor"></textarea>
+</div>
+
+<script>
+  const OWNER = 'Pedro-Hanekamp';
+  const REPO  = 'paolo-e-sonja';
+  const BRANCH = 'main';
+  const PREVIEW_BASE = 'https://pedro-hanekamp.github.io/paolo-e-sonja/';
+
+  let editor, currentFile = null, currentSha = null;
+
+  // ── CodeMirror setup ──
+  window.addEventListener('DOMContentLoaded', () => {
+    editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+      mode: 'htmlmixed',
+      theme: 'ayu-dark',
+      lineNumbers: true,
+      lineWrapping: false,
+      matchBrackets: true,
+      autoCloseTags: true,
+      tabSize: 2,
+      indentWithTabs: false,
+      extraKeys: {
+        'Ctrl-S': openCommitModal,
+        'Cmd-S':  openCommitModal,
+      }
+    });
+    editor.setSize('100%', '100%');
+
+    // Token check
+    const token = getToken();
+    if (token) {
+      document.getElementById('token-overlay').classList.add('hidden');
+      setStatus('info', 'Connected. Select a file to edit.');
+    }
+  });
+
+  // ── Token ──
+  function getToken() { return localStorage.getItem('lc_gh_token'); }
+  function saveToken() {
+    const t = document.getElementById('token-input').value.trim();
+    if (!t) return;
+    localStorage.setItem('lc_gh_token', t);
+    document.getElementById('token-overlay').classList.add('hidden');
+    setStatus('info', 'Token saved. Select a file to edit.');
+  }
+  function logout() {
+    localStorage.removeItem('lc_gh_token');
+    currentFile = null; currentSha = null;
+    editor.setValue('');
+    setDisabled(true);
+    document.getElementById('file-select').value = '';
+    document.getElementById('token-overlay').classList.remove('hidden');
+  }
+  document.getElementById('token-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') saveToken();
+  });
+
+  // ── File load ──
+  async function loadFile() {
+    const path = document.getElementById('file-select').value;
+    if (!path) return;
+    await fetchFile(path);
+  }
+
+  async function reloadFile() {
+    if (!currentFile) return;
+    await fetchFile(currentFile);
+  }
+
+  async function fetchFile(path) {
+    const token = getToken();
+    if (!token) { showTokenOverlay(); return; }
+    setStatus('loading', `Loading ${path}…`);
+    setDisabled(true);
+    try {
+      const res = await fetch(
+        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`,
+        { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json' } }
+      );
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || `HTTP ${res.status}`);
+      }
+      const data = await res.json();
+      currentFile = path;
+      currentSha  = data.sha;
+      const content = decodeBase64(data.content);
+      editor.setValue(content);
+      editor.clearHistory();
+      setDisabled(false);
+      setStatus('ok', `Loaded: ${path} — ${content.length.toLocaleString()} chars`);
+      document.getElementById('preview-btn').disabled = false;
+    } catch (e) {
+      setStatus('err', `Failed to load: ${e.message}`);
+    }
+  }
+
+  // ── Commit ──
+  let pendingCommit = false;
+
+  function openCommitModal() {
+    if (!currentFile) return;
+    const sel = document.getElementById('file-select');
+    const label = sel.options[sel.selectedIndex]?.text || currentFile;
+    document.getElementById('commit-msg').value = `Update ${currentFile}`;
+    document.getElementById('commit-modal').classList.remove('hidden');
+    document.getElementById('commit-msg').focus();
+    document.getElementById('commit-msg').select();
+  }
+  function closeCommitModal() {
+    document.getElementById('commit-modal').classList.add('hidden');
+  }
+  document.getElementById('commit-msg').addEventListener('keydown', e => {
+    if (e.key === 'Enter') confirmCommit();
+    if (e.key === 'Escape') closeCommitModal();
+  });
+
+  async function confirmCommit() {
+    if (pendingCommit) return;
+    const token = getToken();
+    if (!token) { showTokenOverlay(); return; }
+    const message = document.getElementById('commit-msg').value.trim() || `Update ${currentFile}`;
+    closeCommitModal();
+    pendingCommit = true;
+    setDisabled(true);
+    setStatus('loading', `Publishing ${currentFile}…`);
+
+    try {
+      const content = btoa(unescape(encodeURIComponent(editor.getValue())));
+      const body = {
+        message,
+        content,
+        sha: currentSha,
+        branch: BRANCH,
+      };
+      const res = await fetch(
+        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${currentFile}`,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || `HTTP ${res.status}`);
+      }
+      const data = await res.json();
+      currentSha = data.content.sha;
+      setStatus('ok', `Published! "${message}" — live in ~30s`);
+    } catch (e) {
+      setStatus('err', `Publish failed: ${e.message}`);
+    } finally {
+      pendingCommit = false;
+      setDisabled(false);
+    }
+  }
+
+  // ── Preview ──
+  function openPreview() {
+    if (!currentFile) return;
+    window.open(PREVIEW_BASE + currentFile, '_blank');
+  }
+
+  // ── Helpers ──
+  function setDisabled(state) {
+    document.getElementById('save-btn').disabled    = state;
+  }
+  function setStatus(type, msg) {
+    const bar = document.getElementById('status-bar');
+    const icons = { ok: '●', err: '✕', loading: null, info: '○', warn: '!' };
+    bar.className = type === 'ok' ? 'ok' : type === 'err' ? 'err' : type === 'warn' ? 'warn' : '';
+    const iconEl = bar.querySelector('.status-icon');
+    if (type === 'loading') {
+      iconEl.innerHTML = '<span class="spinner"></span>';
+    } else {
+      iconEl.textContent = icons[type] || '○';
+    }
+    document.getElementById('status-text').textContent = msg;
+  }
+  function showTokenOverlay() {
+    document.getElementById('token-overlay').classList.remove('hidden');
+  }
+  function decodeBase64(str) {
+    // GitHub returns base64 with newlines
+    const clean = str.replace(/\n/g, '');
+    return decodeURIComponent(escape(atob(clean)));
+  }
+</script>
+</body>
+</html>
