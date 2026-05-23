@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,465 +13,980 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closetag.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldcode.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/searchcursor.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/search.min.js"></script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: oklch(16% 0.01 250);
-      --bg2: oklch(20% 0.01 250);
-      --bg3: oklch(24% 0.015 250);
-      --border: oklch(30% 0.015 250);
-      --text: oklch(92% 0.005 250);
-      --text-muted: oklch(60% 0.01 250);
-      --accent: oklch(70% 0.18 145);
-      --accent-dim: oklch(55% 0.14 145);
-      --danger: oklch(65% 0.2 25);
-      --warn: oklch(75% 0.18 70);
-      --radius: 6px;
+      --bg:      oklch(14% 0.01 250);
+      --bg2:     oklch(18% 0.01 250);
+      --bg3:     oklch(23% 0.015 250);
+      --bg4:     oklch(27% 0.015 250);
+      --border:  oklch(32% 0.015 250);
+      --text:    oklch(92% 0.005 250);
+      --muted:   oklch(58% 0.01 250);
+      --accent:  oklch(70% 0.18 145);
+      --accent2: oklch(40% 0.1 145);
+      --danger:  oklch(65% 0.2 25);
+      --warn:    oklch(78% 0.18 70);
+      --info:    oklch(72% 0.15 220);
+      --new:     oklch(70% 0.18 145);
+      --r: 8px;
     }
 
     body {
       font-family: 'IBM Plex Sans', sans-serif;
       background: var(--bg);
       color: var(--text);
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+      min-height: 100vh;
     }
 
-    /* ── TOP BAR ── */
+    /* ── TOPBAR ── */
     .topbar {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 16px;
-      background: var(--bg2);
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; gap: 12px;
+      padding: 0 20px; height: 52px;
+      background: var(--bg2); border-bottom: 1px solid var(--border);
     }
-
-    .topbar-logo {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--accent);
-      letter-spacing: 0.04em;
-      white-space: nowrap;
-    }
-
-    .topbar-sep { width: 1px; height: 20px; background: var(--border); }
-
-    select, input[type="text"], input[type="password"] {
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 13px;
-      padding: 6px 10px;
-      border-radius: var(--radius);
-      outline: none;
-      transition: border-color 0.15s;
-    }
-    select:focus, input:focus { border-color: var(--accent-dim); }
-
-    #file-select { flex: 1; max-width: 340px; cursor: pointer; }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      border-radius: var(--radius);
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: opacity 0.15s, background 0.15s;
-      white-space: nowrap;
-    }
-    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .btn-primary { background: var(--accent); color: oklch(15% 0.01 250); border-color: var(--accent); }
-    .btn-primary:hover:not(:disabled) { opacity: 0.85; }
-    .btn-ghost { background: transparent; color: var(--text-muted); border-color: var(--border); }
-    .btn-ghost:hover:not(:disabled) { color: var(--text); border-color: oklch(45% 0.015 250); }
-    .btn-danger { background: transparent; color: var(--danger); border-color: var(--danger); }
-    .btn-danger:hover:not(:disabled) { background: oklch(20% 0.05 25); }
-
+    .topbar-logo { font-size: 13px; font-weight: 600; color: var(--accent); letter-spacing: .05em; white-space: nowrap; }
+    .topbar-sep { width: 1px; height: 22px; background: var(--border); flex-shrink: 0; }
     .spacer { flex: 1; }
+    .conn-dot { font-size: 12px; color: var(--accent); white-space: nowrap; }
+    .conn-dot.off { color: var(--danger); }
+
+    /* ── TABS ── */
+    .tab-nav { display: flex; gap: 2px; }
+    .tab-btn {
+      padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 500;
+      background: transparent; border: 1px solid transparent; color: var(--muted);
+      cursor: pointer; transition: all .15s;
+    }
+    .tab-btn.active { background: var(--bg3); color: var(--text); border-color: var(--border); }
+    .tab-btn:hover:not(.active) { color: var(--text); }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 16px; border-radius: var(--r); font-size: 13px; font-weight: 500;
+      cursor: pointer; border: 1px solid transparent; font-family: inherit;
+      transition: opacity .15s, background .15s; white-space: nowrap;
+    }
+    .btn:disabled { opacity: .4; cursor: not-allowed; }
+    .btn-primary  { background: var(--accent); color: oklch(14% .01 250); border-color: var(--accent); }
+    .btn-primary:hover:not(:disabled)  { opacity: .85; }
+    .btn-publish  { background: var(--accent); color: oklch(14% .01 250); border-color: var(--accent); font-size: 14px; font-weight: 600; padding: 10px 24px; }
+    .btn-publish:hover:not(:disabled) { opacity: .85; }
+    .btn-publish.dirty { animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 oklch(70% .18 145 / .4)} 50%{box-shadow:0 0 0 8px oklch(70% .18 145 / 0)} }
+    .btn-ghost   { background: transparent; color: var(--muted); border-color: var(--border); }
+    .btn-ghost:hover:not(:disabled) { color: var(--text); border-color: var(--muted); }
+    .btn-danger  { background: transparent; color: var(--danger); border-color: var(--danger); }
+    .btn-danger:hover:not(:disabled) { background: oklch(18% .05 25); }
+    .btn-icon { padding: 5px 8px; font-size: 14px; border-radius: 6px; background: transparent; border: 1px solid transparent; cursor: pointer; color: var(--muted); transition: all .15s; font-family: inherit; }
+    .btn-icon:hover { background: var(--bg3); color: var(--text); border-color: var(--border); }
+    .btn-icon.del:hover { color: var(--danger); border-color: var(--danger); background: oklch(18% .05 25); }
+
+    /* ── FORMS ── */
+    input[type="text"], input[type="date"], input[type="password"], textarea, select {
+      background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 14px;
+      padding: 8px 12px; border-radius: var(--r); outline: none; width: 100%;
+      transition: border-color .15s;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+    textarea { resize: vertical; line-height: 1.6; }
+    select { cursor: pointer; }
+    label { display: block; font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .06em; }
 
     /* ── STATUS BAR ── */
-    #status-bar {
-      font-size: 12px;
-      padding: 5px 16px;
-      background: var(--bg2);
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-      min-height: 26px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text-muted);
+    .status-bar {
+      padding: 6px 20px; font-size: 12px; color: var(--muted);
+      background: var(--bg2); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px; min-height: 28px;
     }
-    #status-bar.ok { color: var(--accent); }
-    #status-bar.err { color: var(--danger); }
-    #status-bar.warn { color: var(--warn); }
-    #status-bar .status-icon { font-size: 14px; line-height: 1; }
-
-    /* ── EDITOR AREA ── */
-    #editor-wrap {
-      flex: 1;
-      overflow: hidden;
-      position: relative;
-    }
-
-    #editor-wrap .CodeMirror {
-      height: 100%;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    /* ── TOKEN OVERLAY ── */
-    #token-overlay {
-      position: fixed;
-      inset: 0;
-      background: oklch(8% 0.01 250 / 0.92);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      backdrop-filter: blur(4px);
-    }
-    #token-overlay.hidden { display: none; }
-
-    .token-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 32px;
-      width: min(420px, 90vw);
-    }
-    .token-card h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
-    .token-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; }
-    .token-card input { width: 100%; margin-bottom: 12px; }
-    .token-card .hint {
-      font-size: 12px; color: var(--text-muted); margin-top: 12px; line-height: 1.6;
-    }
-    .token-card .hint a { color: var(--accent); text-decoration: none; }
-    .token-card .hint a:hover { text-decoration: underline; }
-    .token-row { display: flex; gap: 8px; align-items: stretch; }
-    .token-row input { flex: 1; }
-
-    /* ── COMMIT MODAL ── */
-    #commit-modal {
-      position: fixed;
-      inset: 0;
-      background: oklch(8% 0.01 250 / 0.85);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      backdrop-filter: blur(4px);
-    }
-    #commit-modal.hidden { display: none; }
-    .commit-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 28px;
-      width: min(460px, 90vw);
-    }
-    .commit-card h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
-    .commit-card label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
-    .commit-card input { width: 100%; margin-bottom: 20px; }
-    .commit-card .row { display: flex; gap: 10px; justify-content: flex-end; }
-
-    /* ── SPINNER ── */
-    .spinner {
-      display: inline-block;
-      width: 12px; height: 12px;
-      border: 2px solid oklch(40% 0.01 250);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
+    .status-bar.ok   { color: var(--accent); }
+    .status-bar.err  { color: var(--danger); }
+    .status-bar.warn { color: var(--warn);   }
+    .spinner { display: inline-block; width: 11px; height: 11px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── TAB CONTENT ── */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── BACHECA TAB ── */
+    .bacheca-wrap { max-width: 780px; margin: 0 auto; padding: 28px 20px 80px; }
+
+    .section-title {
+      font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase;
+      letter-spacing: .1em; margin-bottom: 14px;
+    }
+
+    /* New post toggle button */
+    .new-post-btn {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 18px; border-radius: var(--r);
+      background: var(--bg3); border: 1px dashed var(--border);
+      color: var(--muted); font-size: 14px; font-weight: 500; font-family: inherit;
+      cursor: pointer; width: 100%; text-align: left; margin-bottom: 24px;
+      transition: all .15s;
+    }
+    .new-post-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent2); }
+    .new-post-btn .plus { font-size: 18px; line-height: 1; }
+
+    /* Post form */
+    .post-form-wrap {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 20px; margin-bottom: 24px;
+      display: none;
+    }
+    .post-form-wrap.open { display: block; }
+    .post-form-title { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .form-full { margin-bottom: 14px; }
+    .form-hint { font-size: 11px; color: var(--muted); margin-top: 5px; }
+    .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
+
+    /* Tag chips (in form select preview and in posts) */
+    .tag-chip {
+      display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px;
+      border-radius: 4px; text-transform: uppercase; letter-spacing: .05em; flex-shrink: 0;
+    }
+    .tag-new     { background: oklch(25% .1 145); color: var(--new);  border: 1px solid oklch(35% .12 145); }
+    .tag-warning { background: oklch(25% .1 70);  color: var(--warn); border: 1px solid oklch(35% .14 70);  }
+    .tag-info    { background: oklch(22% .1 220);  color: var(--info); border: 1px solid oklch(32% .14 220);  }
+
+    /* Post cards */
+    .year-group { margin-bottom: 32px; }
+    .year-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; padding-bottom: 8px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+
+    .post-card {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 14px 16px; margin-bottom: 8px;
+      display: flex; gap: 14px; align-items: flex-start;
+      transition: border-color .15s;
+    }
+    .post-card:hover { border-color: oklch(40% .015 250); }
+    .post-card.editing { border-color: var(--accent); background: var(--bg3); }
+    .post-card-left { flex: 1; min-width: 0; }
+    .post-card-date { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    .post-card-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+    .post-card-title { font-size: 14px; font-weight: 600; }
+    .post-card-body { font-size: 13px; color: var(--muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .post-card-actions { display: flex; gap: 4px; flex-shrink: 0; }
+
+    /* Empty state */
+    .empty-state { text-align: center; padding: 48px 20px; color: var(--muted); font-size: 14px; }
+    .empty-state .icon { font-size: 32px; margin-bottom: 12px; }
+
+    /* Publish bar (sticky) */
+    .publish-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
+      background: var(--bg2); border-top: 1px solid var(--border);
+      padding: 12px 20px; display: flex; align-items: center; gap: 16px;
+    }
+    .publish-info { font-size: 13px; color: var(--muted); }
+    .publish-info strong { color: var(--accent); }
+
+    /* ── EDITOR TAB ── */
+    .editor-tab-wrap { display: flex; flex-direction: column; height: calc(100vh - 80px); }
+    .editor-toolbar {
+      display: flex; align-items: center; gap: 10px; padding: 10px 20px;
+      background: var(--bg2); border-bottom: 1px solid var(--border); flex-shrink: 0; flex-wrap: wrap;
+    }
+    .editor-warning {
+      padding: 8px 20px; background: oklch(20% .08 70); border-bottom: 1px solid oklch(30% .1 70);
+      font-size: 12px; color: var(--warn); flex-shrink: 0;
+    }
+    .editor-wrap { flex: 1; overflow: hidden; }
+    .editor-wrap .CodeMirror { height: 100%; font-family: 'IBM Plex Mono', monospace; font-size: 13px; line-height: 1.6; }
+    select#file-select { max-width: 320px; padding: 6px 10px; font-size: 13px; }
+
+    /* ── OVERLAYS ── */
+    .overlay {
+      position: fixed; inset: 0; background: oklch(8% .01 250 / .9);
+      display: flex; align-items: center; justify-content: center; z-index: 100;
+      backdrop-filter: blur(4px);
+    }
+    .overlay.hidden { display: none; }
+    .card {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+      padding: 32px; width: min(440px, 92vw);
+    }
+    .card h2 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .card p  { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+    .card .hint { font-size: 12px; color: var(--muted); margin-top: 12px; line-height: 1.6; }
+    .card .hint a { color: var(--accent); text-decoration: none; }
+    .card .hint a:hover { text-decoration: underline; }
+    .card-row { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; }
+    .card-row input { flex: 1; }
+    .card-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+    /* Delete confirm */
+    .delete-preview { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r); padding: 12px; margin-bottom: 20px; font-size: 13px; }
+    .delete-preview .dt { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .delete-preview .dn { font-weight: 600; }
+
+    @media (max-width: 540px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .topbar { padding: 0 12px; gap: 8px; }
+      .bacheca-wrap { padding: 16px 12px 80px; }
+    }
   </style>
 </head>
 <body>
 
-<!-- TOKEN OVERLAY -->
-<div id="token-overlay">
-  <div class="token-card">
-    <h2>Admin Access</h2>
-    <p>Enter your GitHub Personal Access Token to edit and publish site files.</p>
-    <div class="token-row">
+<!-- ══ TOKEN OVERLAY ══ -->
+<div id="overlay-token" class="overlay">
+  <div class="card">
+    <h2>Accesso Admin</h2>
+    <p>Inserisci il tuo GitHub Personal Access Token per modificare e pubblicare le pagine del sito.</p>
+    <div class="card-row">
       <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
-      <button class="btn btn-primary" onclick="saveToken()">Connect</button>
+      <button class="btn btn-primary" onclick="saveToken()">Entra</button>
     </div>
     <p class="hint">
-      Token needs <strong>Contents: Read & Write</strong> scope on the <code>pedro-hanekamp/paolo-e-sonja</code> repo.<br>
-      <a href="https://github.com/settings/tokens/new?scopes=repo&description=larioclimb-admin" target="_blank" rel="noopener">Generate a token on GitHub ↗</a>
+      Il token deve avere permesso <strong>Contents: Read &amp; Write</strong> sul repo <code>pedro-hanekamp/paolo-e-sonja</code>.<br><br>
+      <a href="https://github.com/settings/tokens/new?scopes=repo&description=larioclimb-admin" target="_blank" rel="noopener">Genera un token su GitHub ↗</a>
     </p>
   </div>
 </div>
 
-<!-- COMMIT MODAL -->
-<div id="commit-modal" class="hidden">
-  <div class="commit-card">
-    <h2>Commit changes</h2>
-    <label for="commit-msg">Commit message</label>
-    <input type="text" id="commit-msg" placeholder="Update page content">
-    <div class="row">
-      <button class="btn btn-ghost" onclick="closeCommitModal()">Cancel</button>
-      <button class="btn btn-primary" id="confirm-commit-btn" onclick="confirmCommit()">Publish</button>
+<!-- ══ COMMIT MODAL ══ -->
+<div id="overlay-commit" class="overlay hidden">
+  <div class="card">
+    <h2>Pubblica le modifiche</h2>
+    <p>Aggiungi un messaggio opzionale che descrive cosa hai cambiato.</p>
+    <div class="form-full" style="margin-bottom:20px;">
+      <label>Messaggio (opzionale)</label>
+      <input type="text" id="commit-msg" placeholder="Es: Aggiunto post su nuova falesia">
+    </div>
+    <div class="card-actions">
+      <button class="btn btn-ghost" onclick="closeModal('overlay-commit')">Annulla</button>
+      <button class="btn btn-primary" id="confirm-commit-btn" onclick="confirmCommit()">🚀 Pubblica</button>
     </div>
   </div>
 </div>
 
-<!-- TOP BAR -->
+<!-- ══ DELETE CONFIRM ══ -->
+<div id="overlay-delete" class="overlay hidden">
+  <div class="card">
+    <h2>Elimina post</h2>
+    <p>Sei sicuro di voler eliminare questo post? L'operazione non può essere annullata.</p>
+    <div class="delete-preview" id="delete-preview">
+      <div class="dt" id="delete-date"></div>
+      <div class="dn" id="delete-title"></div>
+    </div>
+    <div class="card-actions">
+      <button class="btn btn-ghost" onclick="closeModal('overlay-delete')">Annulla</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Elimina</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOPBAR ══ -->
 <div class="topbar">
-  <span class="topbar-logo">⛰ LARIOCLIMB ADMIN</span>
+  <span class="topbar-logo">⛰ LARIOCLIMB</span>
   <div class="topbar-sep"></div>
-  <select id="file-select" onchange="loadFile()">
-    <option value="">— select a file —</option>
-    <optgroup label="Main pages">
-      <option value="index.html">index.html — Homepage</option>
-      <option value="accomodation.html">accomodation.html — Accommodation</option>
-      <option value="shops.html">shops.html — Shops</option>
-      <option value="autori.html">autori.html — Authors</option>
-      <option value="mailus.html">mailus.html — Contact</option>
-    </optgroup>
-    <optgroup label="Bacheca">
-      <option value="bacheca/index.html">bacheca/index.html — Bulletin Board</option>
-    </optgroup>
-    <optgroup label="Falesie / Topos">
-      <option value="falesie_lecco/index.html">falesie_lecco/index.html — Topos Index</option>
-      <option value="falesie_lecco/introduzione.html">falesie_lecco/introduzione.html — Introduction</option>
-      <option value="falesie_lecco/bibliografia.html">falesie_lecco/bibliografia.html — Bibliography</option>
-    </optgroup>
-    <optgroup label="Pillole di Storia">
-      <option value="pillole/pillole.html">pillole/pillole.html — History</option>
-    </optgroup>
-    <optgroup label="Lariobloc">
-      <option value="lariobloc/index.html">lariobloc/index.html — Bouldering</option>
-    </optgroup>
-  </select>
-  <button class="btn btn-ghost" onclick="reloadFile()" title="Discard changes and reload from GitHub">↺ Reload</button>
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('bacheca')">📋 Bacheca</button>
+    <button class="tab-btn" onclick="switchTab('editor')">🛠 Editor HTML</button>
+  </div>
   <div class="spacer"></div>
-  <button class="btn btn-ghost" id="preview-btn" onclick="openPreview()" disabled>Preview ↗</button>
-  <button class="btn btn-primary" id="save-btn" onclick="openCommitModal()" disabled>Save &amp; Publish</button>
+  <span class="conn-dot" id="conn-dot">● Connesso</span>
   <div class="topbar-sep"></div>
-  <button class="btn btn-danger" onclick="logout()" title="Clear token and log out">Logout</button>
+  <button class="btn btn-ghost" onclick="logout()" style="font-size:12px;padding:5px 10px;">Esci</button>
 </div>
 
 <!-- STATUS BAR -->
-<div id="status-bar">
-  <span class="status-icon">○</span>
-  <span id="status-text">Select a file to start editing.</span>
+<div class="status-bar" id="status-bar">
+  <span id="status-icon">○</span>
+  <span id="status-text">Caricamento bacheca in corso...</span>
 </div>
 
-<!-- EDITOR -->
-<div id="editor-wrap">
-  <textarea id="editor"></textarea>
+<!-- ══ BACHECA TAB ══ -->
+<div class="tab-content active" id="tab-bacheca">
+  <div class="bacheca-wrap">
+
+    <!-- New post button -->
+    <button class="new-post-btn" id="new-post-btn" onclick="openNewPostForm()">
+      <span class="plus">＋</span>
+      Nuovo Post
+    </button>
+
+    <!-- Post form (hidden by default) -->
+    <div class="post-form-wrap" id="post-form-wrap">
+      <div class="post-form-title" id="form-title-label">Nuovo Post</div>
+      <div class="form-grid">
+        <div>
+          <label>Data</label>
+          <input type="date" id="f-date">
+        </div>
+        <div>
+          <label>Tag / Categoria</label>
+          <select id="f-tag">
+            <option value="">Nessun tag</option>
+            <option value="tag-new|Nuova Via">🟢 Nuova Via</option>
+            <option value="tag-new|Nuove Vie">🟢 Nuove Vie</option>
+            <option value="tag-new|Nuova Zona">🟢 Nuova Zona</option>
+            <option value="tag-warning|Accesso">🟡 Accesso</option>
+            <option value="tag-warning|Manutenzione">🟡 Manutenzione</option>
+            <option value="tag-warning|Sicurezza">🟡 Sicurezza</option>
+            <option value="tag-info|Info">🔵 Info</option>
+            <option value="tag-info|Storia">🔵 Storia</option>
+            <option value="tag-info|Riflessione">🔵 Riflessione</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-full">
+        <label>Titolo</label>
+        <input type="text" id="f-title" placeholder="Titolo del post">
+      </div>
+      <div class="form-full">
+        <label>Testo</label>
+        <textarea id="f-body" rows="5" placeholder="Scrivi il testo del post.&#10;&#10;Lascia una riga vuota tra i paragrafi.&#10;Puoi usare <strong>parola</strong> per il grassetto e <em>parola</em> per il corsivo."></textarea>
+        <div class="form-hint">Lascia una riga vuota tra i paragrafi. Per il grassetto: &lt;strong&gt;parola&lt;/strong&gt; — per il corsivo: &lt;em&gt;parola&lt;/em&gt;</div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="cancelForm()">Annulla</button>
+        <button class="btn btn-primary" onclick="submitPost()">Aggiungi Post</button>
+      </div>
+    </div>
+
+    <!-- Post list -->
+    <div id="post-list">
+      <div class="empty-state">
+        <div class="icon">⏳</div>
+        Caricamento post in corso...
+      </div>
+    </div>
+
+  </div><!-- /.bacheca-wrap -->
+
+  <!-- Sticky publish bar -->
+  <div class="publish-bar">
+    <div class="publish-info" id="publish-info">Nessuna modifica in sospeso</div>
+    <div class="spacer"></div>
+    <button class="btn btn-ghost" onclick="reloadBacheca()" style="font-size:12px;padding:6px 12px;">↺ Ricarica</button>
+    <button class="btn btn-publish" id="publish-btn" onclick="openCommitModal()" disabled>🚀 Pubblica</button>
+  </div>
+</div>
+
+<!-- ══ EDITOR HTML TAB ══ -->
+<div class="tab-content" id="tab-editor">
+  <div class="editor-tab-wrap">
+    <div class="editor-toolbar">
+      <select id="file-select" onchange="loadEditorFile()">
+        <option value="">— seleziona una pagina —</option>
+        <optgroup label="Pagine principali">
+          <option value="index.html">Homepage</option>
+          <option value="accomodation.html">Accommodation</option>
+          <option value="shops.html">Shops</option>
+          <option value="autori.html">Autori</option>
+          <option value="mailus.html">Contatti</option>
+        </optgroup>
+        <optgroup label="Topos">
+          <option value="falesie_lecco/index.html">Topos — Indice</option>
+          <option value="falesie_lecco/introduzione.html">Topos — Introduzione</option>
+          <option value="falesie_lecco/bibliografia.html">Topos — Bibliografia</option>
+        </optgroup>
+        <optgroup label="Altre sezioni">
+          <option value="bacheca/index.html">Bacheca (HTML)</option>
+          <option value="pillole/pillole.html">Pillole di Storia</option>
+          <option value="lariobloc/index.html">Lariobloc</option>
+        </optgroup>
+      </select>
+      <button class="btn btn-ghost" onclick="reloadEditorFile()" style="font-size:12px;padding:6px 12px;">↺ Ricarica</button>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" id="preview-btn" onclick="openPreview()" disabled style="font-size:12px;padding:6px 12px;">Anteprima ↗</button>
+      <button class="btn btn-primary" id="editor-save-btn" onclick="openEditorCommitModal()" disabled>Salva &amp; Pubblica</button>
+    </div>
+    <div class="editor-warning">
+      ⚠️ Sezione avanzata — richiede conoscenza dell'HTML. Usa la scheda Bacheca per aggiungere post senza scrivere codice.
+    </div>
+    <div class="editor-wrap">
+      <textarea id="codemirror-editor"></textarea>
+    </div>
+  </div>
 </div>
 
 <script>
-  const OWNER = 'Pedro-Hanekamp';
-  const REPO  = 'paolo-e-sonja';
-  const BRANCH = 'main';
-  const PREVIEW_BASE = 'https://pedro-hanekamp.github.io/paolo-e-sonja/';
+// ════════════════════════════════════════
+//  CONFIG
+// ════════════════════════════════════════
+const OWNER        = 'Pedro-Hanekamp';
+const REPO         = 'paolo-e-sonja';
+const BRANCH       = 'main';
+const BACHECA_PATH = 'bacheca/index.html';
+const PREVIEW_BASE = 'https://pedro-hanekamp.github.io/paolo-e-sonja/';
 
-  let editor, currentFile = null, currentSha = null;
+// ════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════
+const state = {
+  posts:       [],   // parsed post objects
+  originalHtml:'',   // full bacheca HTML from GitHub
+  sha:         null, // bacheca file SHA
+  dirty:       false,
+  editingId:   null, // id of post being edited (null = new)
+  deleteId:    null,
+  // editor tab
+  editorFile:  null,
+  editorSha:   null,
+  cm:          null,
+};
 
-  // ── CodeMirror setup ──
-  window.addEventListener('DOMContentLoaded', () => {
-    editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
-      mode: 'htmlmixed',
-      theme: 'ayu-dark',
-      lineNumbers: true,
-      lineWrapping: false,
-      matchBrackets: true,
-      autoCloseTags: true,
-      tabSize: 2,
-      indentWithTabs: false,
-      extraKeys: {
-        'Ctrl-S': openCommitModal,
-        'Cmd-S':  openCommitModal,
-      }
+// ════════════════════════════════════════
+//  ITALIAN DATES
+// ════════════════════════════════════════
+const IT_M = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+const IT_MAP = Object.fromEntries(IT_M.map((m,i) => [m, i+1]));
+
+function toIso(display) {
+  // "31 mar 2026" → "2026-03-31"
+  const parts = display.trim().split(/\s+/);
+  if (parts.length !== 3) return '';
+  const [d, m, y] = parts;
+  const mo = IT_MAP[m.toLowerCase()];
+  if (!mo) return '';
+  return `${y}-${String(mo).padStart(2,'0')}-${String(parseInt(d)).padStart(2,'0')}`;
+}
+function toDisplay(iso) {
+  // "2026-03-31" → "31 mar 2026"
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-');
+  return `${parseInt(d)} ${IT_M[parseInt(m)-1]} ${y}`;
+}
+
+// ════════════════════════════════════════
+//  TAGS
+// ════════════════════════════════════════
+const TAG_CLASSES = {
+  'tag-new': 'tag-new', 'tag-warning': 'tag-warning', 'tag-info': 'tag-info'
+};
+
+function parseTagValue(cls, label) {
+  if (!cls) return '';
+  return `${cls}|${label}`;
+}
+
+// ════════════════════════════════════════
+//  PARSE POSTS FROM HTML
+// ════════════════════════════════════════
+function parsePosts(html) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const items = doc.querySelectorAll('.post-item');
+  const posts = [];
+  items.forEach((li, idx) => {
+    const dateEl  = li.querySelector('.post-date');
+    const tagEl   = li.querySelector('.post-tag');
+    const titleEl = li.querySelector('.post-title');
+    const bodyEl  = li.querySelector('.post-body');
+    if (!dateEl || !titleEl) return;
+
+    const dateDisplay = dateEl.textContent.trim();
+    const iso = toIso(dateDisplay);
+    const year = iso ? parseInt(iso.split('-')[0]) : 0;
+
+    let tagClass = '', tagLabel = '';
+    if (tagEl) {
+      tagLabel = tagEl.textContent.trim();
+      tagClass = Array.from(tagEl.classList).find(c => c.startsWith('tag-')) || '';
+    }
+
+    // Title text without the tag span
+    let title = '';
+    titleEl.childNodes.forEach(node => {
+      if (node.nodeType === Node.TEXT_NODE) title += node.textContent;
     });
-    editor.setSize('100%', '100%');
+    title = title.trim();
 
-    // Token check
-    const token = getToken();
-    if (token) {
-      document.getElementById('token-overlay').classList.add('hidden');
-      setStatus('info', 'Connected. Select a file to edit.');
+    const bodyHtml = bodyEl ? bodyEl.innerHTML.trim() : '';
+
+    posts.push({ id: `post-${idx}-${Date.now()}`, dateDisplay, iso, year, tagClass, tagLabel, title, bodyHtml });
+  });
+  return posts;
+}
+
+// ════════════════════════════════════════
+//  GENERATE POST HTML
+// ════════════════════════════════════════
+function postItemHtml(p) {
+  const tagHtml = p.tagClass
+    ? `\n              <span class="post-tag ${p.tagClass}">${p.tagLabel}</span>`
+    : '';
+  return `        <li class="post-item">
+          <span class="post-date">${p.dateDisplay}</span>
+          <div>
+            <div class="post-title">${tagHtml}
+              ${p.title}
+            </div>
+            <div class="post-body">
+              ${p.bodyHtml}
+            </div>
+          </div>
+        </li>`;
+}
+
+function generatePostsSection(posts) {
+  // sort newest first
+  const sorted = [...posts].sort((a,b) => (b.iso||'').localeCompare(a.iso||''));
+  // group by year
+  const byYear = {};
+  sorted.forEach(p => {
+    if (!byYear[p.year]) byYear[p.year] = [];
+    byYear[p.year].push(p);
+  });
+  const years = Object.keys(byYear).sort((a,b) => b-a);
+  return years.map(yr => {
+    const postsHtml = byYear[yr].map(p => postItemHtml(p)).join('\n\n');
+    return `
+      <div class="section-label" style="margin-bottom:var(--space-md);">
+        <h2>${yr}</h2>
+      </div>
+
+      <ul class="post-list" style="margin-bottom:var(--space-xl);">
+
+${postsHtml}
+
+      </ul>`;
+  }).join('\n');
+}
+
+function injectPostsIntoHtml(originalHtml, posts) {
+  const newSection = generatePostsSection(posts);
+  return originalHtml.replace(
+    /<!-- BACHECA_POSTS_START -->[\s\S]*?<!-- BACHECA_POSTS_END -->/,
+    `<!-- BACHECA_POSTS_START -->${newSection}\n\n      <!-- BACHECA_POSTS_END -->`
+  );
+}
+
+// ════════════════════════════════════════
+//  BODY TEXT → HTML
+// ════════════════════════════════════════
+function textToBodyHtml(text) {
+  if (!text.trim()) return '<p></p>';
+  return text.trim()
+    .split(/\n\s*\n/)
+    .map(block => `<p>${block.trim().replace(/\n/g, '<br>')}</p>`)
+    .join('\n              ');
+}
+
+function bodyHtmlToText(html) {
+  // Show inner text of <p> tags, joined by blank lines
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  return Array.from(tmp.querySelectorAll('p'))
+    .map(p => p.innerHTML.replace(/<br\s*\/?>/gi, '\n'))
+    .join('\n\n') || tmp.textContent.trim();
+}
+
+// ════════════════════════════════════════
+//  RENDER POST LIST
+// ════════════════════════════════════════
+function renderPostList() {
+  const container = document.getElementById('post-list');
+  if (!state.posts.length) {
+    container.innerHTML = `<div class="empty-state"><div class="icon">📭</div>Nessun post trovato.</div>`;
+    return;
+  }
+
+  const sorted = [...state.posts].sort((a,b) => (b.iso||'').localeCompare(a.iso||''));
+  const byYear = {};
+  sorted.forEach(p => {
+    if (!byYear[p.year]) byYear[p.year] = [];
+    byYear[p.year].push(p);
+  });
+  const years = Object.keys(byYear).sort((a,b) => b-a);
+
+  container.innerHTML = years.map(yr => {
+    const cards = byYear[yr].map(p => {
+      const tagHtml = p.tagClass
+        ? `<span class="tag-chip ${p.tagClass}">${p.tagLabel}</span>` : '';
+      const bodyText = p.bodyHtml.replace(/<[^>]+>/g, '').trim();
+      const isEditing = state.editingId === p.id;
+      return `
+        <div class="post-card${isEditing ? ' editing' : ''}" id="card-${p.id}">
+          <div class="post-card-left">
+            <div class="post-card-date">${p.dateDisplay}</div>
+            <div class="post-card-head">${tagHtml}<span class="post-card-title">${p.title}</span></div>
+            <div class="post-card-body">${bodyText}</div>
+          </div>
+          <div class="post-card-actions">
+            <button class="btn-icon" onclick="editPost('${p.id}')" title="Modifica">✏️</button>
+            <button class="btn-icon del" onclick="deletePost('${p.id}')" title="Elimina">🗑️</button>
+          </div>
+        </div>`;
+    }).join('');
+    return `<div class="year-group"><div class="year-label">${yr}</div>${cards}</div>`;
+  }).join('');
+}
+
+function updatePublishBar() {
+  const btn  = document.getElementById('publish-btn');
+  const info = document.getElementById('publish-info');
+  if (state.dirty) {
+    btn.disabled = false;
+    btn.classList.add('dirty');
+    info.innerHTML = `<strong>${state.posts.length} post</strong> in attesa di pubblicazione`;
+  } else {
+    btn.disabled = true;
+    btn.classList.remove('dirty');
+    info.innerHTML = `Nessuna modifica in sospeso`;
+  }
+}
+
+// ════════════════════════════════════════
+//  FORM LOGIC
+// ════════════════════════════════════════
+function openNewPostForm() {
+  state.editingId = null;
+  document.getElementById('form-title-label').textContent = 'Nuovo Post';
+  document.getElementById('f-date').value  = new Date().toISOString().slice(0,10);
+  document.getElementById('f-tag').value   = '';
+  document.getElementById('f-title').value = '';
+  document.getElementById('f-body').value  = '';
+  const btn = document.querySelector('#post-form-wrap .btn-primary');
+  btn.textContent = 'Aggiungi Post';
+  document.getElementById('post-form-wrap').classList.add('open');
+  document.getElementById('new-post-btn').style.display = 'none';
+  document.getElementById('f-title').focus();
+}
+
+function editPost(id) {
+  const post = state.posts.find(p => p.id === id);
+  if (!post) return;
+  state.editingId = id;
+  document.getElementById('form-title-label').textContent = 'Modifica Post';
+  document.getElementById('f-date').value  = post.iso || '';
+  document.getElementById('f-tag').value   = parseTagValue(post.tagClass, post.tagLabel);
+  document.getElementById('f-title').value = post.title;
+  document.getElementById('f-body').value  = bodyHtmlToText(post.bodyHtml);
+  const btn = document.querySelector('#post-form-wrap .btn-primary');
+  btn.textContent = 'Salva Modifiche';
+  document.getElementById('post-form-wrap').classList.add('open');
+  document.getElementById('new-post-btn').style.display = 'none';
+  document.getElementById('f-title').focus();
+  renderPostList();
+}
+
+function cancelForm() {
+  state.editingId = null;
+  document.getElementById('post-form-wrap').classList.remove('open');
+  document.getElementById('new-post-btn').style.display = '';
+  renderPostList();
+}
+
+function submitPost() {
+  const dateIso  = document.getElementById('f-date').value;
+  const tagVal   = document.getElementById('f-tag').value;
+  const title    = document.getElementById('f-title').value.trim();
+  const bodyText = document.getElementById('f-body').value;
+
+  if (!dateIso)  { alert('Inserisci una data.'); return; }
+  if (!title)    { alert('Inserisci un titolo.'); return; }
+
+  const [tagClass, tagLabel] = tagVal ? tagVal.split('|') : ['', ''];
+  const dateDisplay = toDisplay(dateIso);
+  const year = parseInt(dateIso.split('-')[0]);
+  const bodyHtml = bodyText.trim()
+    ? textToBodyHtml(bodyText)
+    : '<p></p>';
+
+  if (state.editingId) {
+    const idx = state.posts.findIndex(p => p.id === state.editingId);
+    if (idx !== -1) {
+      state.posts[idx] = { ...state.posts[idx], dateDisplay, iso: dateIso, year, tagClass, tagLabel, title, bodyHtml };
     }
+  } else {
+    state.posts.unshift({ id: `post-${Date.now()}`, dateDisplay, iso: dateIso, year, tagClass, tagLabel, title, bodyHtml });
+  }
+
+  state.dirty    = true;
+  state.editingId = null;
+  cancelForm();
+  renderPostList();
+  updatePublishBar();
+  setStatus('warn', state.editingId ? 'Post modificato. Ricorda di pubblicare.' : 'Post aggiunto. Ricorda di pubblicare.');
+}
+
+// ════════════════════════════════════════
+//  DELETE
+// ════════════════════════════════════════
+function deletePost(id) {
+  const post = state.posts.find(p => p.id === id);
+  if (!post) return;
+  state.deleteId = id;
+  document.getElementById('delete-date').textContent  = post.dateDisplay;
+  document.getElementById('delete-title').textContent = post.title;
+  showModal('overlay-delete');
+}
+
+function confirmDelete() {
+  if (!state.deleteId) return;
+  state.posts = state.posts.filter(p => p.id !== state.deleteId);
+  state.deleteId = null;
+  state.dirty = true;
+  closeModal('overlay-delete');
+  renderPostList();
+  updatePublishBar();
+  setStatus('warn', 'Post eliminato. Ricorda di pubblicare.');
+}
+
+// ════════════════════════════════════════
+//  GITHUB API
+// ════════════════════════════════════════
+function getToken() { return localStorage.getItem('lc_gh_token'); }
+
+async function ghFetch(path, opts = {}) {
+  const token = getToken();
+  const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`, {
+    headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json' },
+    ...opts,
   });
+  return res;
+}
 
-  // ── Token ──
-  function getToken() { return localStorage.getItem('lc_gh_token'); }
-  function saveToken() {
-    const t = document.getElementById('token-input').value.trim();
-    if (!t) return;
-    localStorage.setItem('lc_gh_token', t);
-    document.getElementById('token-overlay').classList.add('hidden');
-    setStatus('info', 'Token saved. Select a file to edit.');
+async function loadBacheca() {
+  const token = getToken();
+  if (!token) { showModal('overlay-token'); return; }
+  setStatus('loading', 'Caricamento bacheca...');
+  try {
+    const res = await ghFetch(BACHECA_PATH);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    state.sha          = data.sha;
+    state.originalHtml = decodeB64(data.content);
+    state.posts        = parsePosts(state.originalHtml);
+    state.dirty        = false;
+    renderPostList();
+    updatePublishBar();
+    setStatus('ok', `${state.posts.length} post caricati.`);
+  } catch(e) {
+    setStatus('err', `Errore: ${e.message}`);
   }
-  function logout() {
-    localStorage.removeItem('lc_gh_token');
-    currentFile = null; currentSha = null;
-    editor.setValue('');
-    setDisabled(true);
-    document.getElementById('file-select').value = '';
-    document.getElementById('token-overlay').classList.remove('hidden');
-  }
-  document.getElementById('token-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') saveToken();
-  });
+}
 
-  // ── File load ──
-  async function loadFile() {
-    const path = document.getElementById('file-select').value;
-    if (!path) return;
-    await fetchFile(path);
-  }
+async function reloadBacheca() {
+  state.dirty = false;
+  await loadBacheca();
+}
 
-  async function reloadFile() {
-    if (!currentFile) return;
-    await fetchFile(currentFile);
-  }
+// ════════════════════════════════════════
+//  PUBLISH (BACHECA)
+// ════════════════════════════════════════
+function openCommitModal() {
+  document.getElementById('commit-msg').value = 'Aggiornamento bacheca';
+  showModal('overlay-commit');
+  document.getElementById('commit-msg').focus();
+  document.getElementById('commit-msg').select();
+}
 
-  async function fetchFile(path) {
-    const token = getToken();
-    if (!token) { showTokenOverlay(); return; }
-    setStatus('loading', `Loading ${path}…`);
-    setDisabled(true);
-    try {
-      const res = await fetch(
-        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`,
-        { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json' } }
-      );
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || `HTTP ${res.status}`);
+let publishing = false;
+async function confirmCommit() {
+  if (publishing) return;
+  const token = getToken();
+  if (!token) { showModal('overlay-token'); return; }
+  const message = document.getElementById('commit-msg').value.trim() || 'Aggiornamento bacheca';
+  closeModal('overlay-commit');
+  publishing = true;
+  setStatus('loading', 'Pubblicazione in corso...');
+  document.getElementById('publish-btn').disabled = true;
+
+  try {
+    const newHtml = injectPostsIntoHtml(state.originalHtml, state.posts);
+    const body = {
+      message,
+      content: encodeB64(newHtml),
+      sha: state.sha,
+      branch: BRANCH,
+    };
+    const res = await fetch(
+      `https://api.github.com/repos/${OWNER}/${REPO}/contents/${BACHECA_PATH}`,
+      {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
       }
-      const data = await res.json();
-      currentFile = path;
-      currentSha  = data.sha;
-      const content = decodeBase64(data.content);
-      editor.setValue(content);
-      editor.clearHistory();
-      setDisabled(false);
-      setStatus('ok', `Loaded: ${path} — ${content.length.toLocaleString()} chars`);
-      document.getElementById('preview-btn').disabled = false;
-    } catch (e) {
-      setStatus('err', `Failed to load: ${e.message}`);
-    }
+    );
+    if (!res.ok) { const e = await res.json(); throw new Error(e.message || `HTTP ${res.status}`); }
+    const data = await res.json();
+    state.sha          = data.content.sha;
+    state.originalHtml = newHtml;
+    state.dirty        = false;
+    updatePublishBar();
+    setStatus('ok', `Pubblicato! Il sito si aggiornerà in circa 30 secondi.`);
+  } catch(e) {
+    setStatus('err', `Errore pubblicazione: ${e.message}`);
+  } finally {
+    publishing = false;
+    updatePublishBar();
   }
+}
 
-  // ── Commit ──
-  let pendingCommit = false;
-
-  function openCommitModal() {
-    if (!currentFile) return;
-    const sel = document.getElementById('file-select');
-    const label = sel.options[sel.selectedIndex]?.text || currentFile;
-    document.getElementById('commit-msg').value = `Update ${currentFile}`;
-    document.getElementById('commit-modal').classList.remove('hidden');
-    document.getElementById('commit-msg').focus();
-    document.getElementById('commit-msg').select();
-  }
-  function closeCommitModal() {
-    document.getElementById('commit-modal').classList.add('hidden');
-  }
-  document.getElementById('commit-msg').addEventListener('keydown', e => {
-    if (e.key === 'Enter') confirmCommit();
-    if (e.key === 'Escape') closeCommitModal();
+// ════════════════════════════════════════
+//  EDITOR TAB
+// ════════════════════════════════════════
+let cm;
+window.addEventListener('DOMContentLoaded', () => {
+  cm = CodeMirror.fromTextArea(document.getElementById('codemirror-editor'), {
+    mode: 'htmlmixed', theme: 'ayu-dark', lineNumbers: true, lineWrapping: false,
+    tabSize: 2, indentWithTabs: false,
+    extraKeys: { 'Ctrl-S': openEditorCommitModal, 'Cmd-S': openEditorCommitModal },
   });
+  cm.setSize('100%', '100%');
+  state.cm = cm;
 
-  async function confirmCommit() {
-    if (pendingCommit) return;
-    const token = getToken();
-    if (!token) { showTokenOverlay(); return; }
-    const message = document.getElementById('commit-msg').value.trim() || `Update ${currentFile}`;
-    closeCommitModal();
-    pendingCommit = true;
-    setDisabled(true);
-    setStatus('loading', `Publishing ${currentFile}…`);
+  // Auto-load bacheca on start
+  const token = getToken();
+  if (token) {
+    document.getElementById('overlay-token').classList.add('hidden');
+    loadBacheca();
+  } else {
+    document.getElementById('status-text').textContent = 'Inserisci il token per accedere.';
+  }
+});
 
-    try {
-      const content = btoa(unescape(encodeURIComponent(editor.getValue())));
-      const body = {
-        message,
-        content,
-        sha: currentSha,
-        branch: BRANCH,
-      };
-      const res = await fetch(
-        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${currentFile}`,
-        {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(body),
-        }
-      );
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || `HTTP ${res.status}`);
+async function loadEditorFile() {
+  const path = document.getElementById('file-select').value;
+  if (!path) return;
+  await fetchEditorFile(path);
+}
+
+async function reloadEditorFile() {
+  if (!state.editorFile) return;
+  await fetchEditorFile(state.editorFile);
+}
+
+async function fetchEditorFile(path) {
+  const token = getToken();
+  if (!token) { showModal('overlay-token'); return; }
+  setStatus('loading', `Caricamento ${path}...`);
+  document.getElementById('editor-save-btn').disabled = true;
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`,
+      { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (!res.ok) { const e = await res.json(); throw new Error(e.message || `HTTP ${res.status}`); }
+    const data = await res.json();
+    state.editorFile = path;
+    state.editorSha  = data.sha;
+    cm.setValue(decodeB64(data.content));
+    cm.clearHistory();
+    document.getElementById('editor-save-btn').disabled  = false;
+    document.getElementById('preview-btn').disabled      = false;
+    setStatus('ok', `Caricato: ${path}`);
+  } catch(e) {
+    setStatus('err', `Errore: ${e.message}`);
+  }
+}
+
+function openPreview() {
+  if (state.editorFile) window.open(PREVIEW_BASE + state.editorFile, '_blank');
+}
+
+let editorPublishing = false;
+function openEditorCommitModal() {
+  if (!state.editorFile) return;
+  document.getElementById('commit-msg').value = `Aggiornamento ${state.editorFile}`;
+  // Repurpose commit modal for editor too
+  document.getElementById('confirm-commit-btn').onclick = confirmEditorCommit;
+  showModal('overlay-commit');
+}
+
+async function confirmEditorCommit() {
+  if (editorPublishing) return;
+  const token = getToken();
+  if (!token) { showModal('overlay-token'); return; }
+  const message = document.getElementById('commit-msg').value.trim() || `Aggiornamento ${state.editorFile}`;
+  closeModal('overlay-commit');
+  editorPublishing = true;
+  setStatus('loading', 'Pubblicazione in corso...');
+  try {
+    const body = { message, content: encodeB64(cm.getValue()), sha: state.editorSha, branch: BRANCH };
+    const res = await fetch(
+      `https://api.github.com/repos/${OWNER}/${REPO}/contents/${state.editorFile}`,
+      {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
       }
-      const data = await res.json();
-      currentSha = data.content.sha;
-      setStatus('ok', `Published! "${message}" — live in ~30s`);
-    } catch (e) {
-      setStatus('err', `Publish failed: ${e.message}`);
-    } finally {
-      pendingCommit = false;
-      setDisabled(false);
-    }
+    );
+    if (!res.ok) { const e = await res.json(); throw new Error(e.message || `HTTP ${res.status}`); }
+    const data = await res.json();
+    state.editorSha = data.content.sha;
+    setStatus('ok', `Pubblicato! Il sito si aggiornerà in circa 30 secondi.`);
+  } catch(e) {
+    setStatus('err', `Errore: ${e.message}`);
+  } finally {
+    editorPublishing = false;
   }
+}
 
-  // ── Preview ──
-  function openPreview() {
-    if (!currentFile) return;
-    window.open(PREVIEW_BASE + currentFile, '_blank');
-  }
+// Reset commit modal onclick to bacheca when switching tabs
+document.getElementById('confirm-commit-btn').onclick = confirmCommit;
 
-  // ── Helpers ──
-  function setDisabled(state) {
-    document.getElementById('save-btn').disabled    = state;
-  }
-  function setStatus(type, msg) {
-    const bar = document.getElementById('status-bar');
-    const icons = { ok: '●', err: '✕', loading: null, info: '○', warn: '!' };
-    bar.className = type === 'ok' ? 'ok' : type === 'err' ? 'err' : type === 'warn' ? 'warn' : '';
-    const iconEl = bar.querySelector('.status-icon');
-    if (type === 'loading') {
-      iconEl.innerHTML = '<span class="spinner"></span>';
-    } else {
-      iconEl.textContent = icons[type] || '○';
-    }
-    document.getElementById('status-text').textContent = msg;
-  }
-  function showTokenOverlay() {
-    document.getElementById('token-overlay').classList.remove('hidden');
-  }
-  function decodeBase64(str) {
-    // GitHub returns base64 with newlines
-    const clean = str.replace(/\n/g, '');
-    return decodeURIComponent(escape(atob(clean)));
-  }
+// ════════════════════════════════════════
+//  TABS
+// ════════════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  const btn = document.querySelector(`.tab-btn[onclick="switchTab('${name}')"]`);
+  if (btn) btn.classList.add('active');
+  document.getElementById(`tab-${name}`)?.classList.add('active');
+  // Reset commit modal target
+  document.getElementById('confirm-commit-btn').onclick = name === 'bacheca' ? confirmCommit : confirmEditorCommit;
+}
+
+// ════════════════════════════════════════
+//  AUTH
+// ════════════════════════════════════════
+function saveToken() {
+  const t = document.getElementById('token-input').value.trim();
+  if (!t) return;
+  localStorage.setItem('lc_gh_token', t);
+  closeModal('overlay-token');
+  loadBacheca();
+}
+function logout() {
+  localStorage.removeItem('lc_gh_token');
+  state.posts = []; state.originalHtml = ''; state.sha = null; state.dirty = false;
+  renderPostList();
+  updatePublishBar();
+  document.getElementById('token-input').value = '';
+  showModal('overlay-token');
+}
+document.getElementById('token-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') saveToken();
+});
+
+// ════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════
+function showModal(id)  { document.getElementById(id).classList.remove('hidden'); }
+function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+document.getElementById('overlay-commit').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal('overlay-commit'); });
+document.getElementById('overlay-delete').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal('overlay-delete'); });
+document.getElementById('commit-msg').addEventListener('keydown', e => { if (e.key === 'Escape') closeModal('overlay-commit'); });
+
+function setStatus(type, msg) {
+  const bar  = document.getElementById('status-bar');
+  const icon = document.getElementById('status-icon');
+  const text = document.getElementById('status-text');
+  bar.className = `status-bar ${type === 'ok' ? 'ok' : type === 'err' ? 'err' : type === 'warn' ? 'warn' : ''}`;
+  icon.innerHTML = type === 'loading' ? '<span class="spinner"></span>' : (type === 'ok' ? '●' : type === 'err' ? '✕' : '○');
+  text.textContent = msg;
+}
+
+function decodeB64(str) {
+  return decodeURIComponent(escape(atob(str.replace(/\n/g, ''))));
+}
+function encodeB64(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
 </script>
 </body>
 </html>
