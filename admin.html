@@ -34,18 +34,13 @@
       --r: 8px;
     }
 
-    body {
-      font-family: 'IBM Plex Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
+    body { font-family: 'IBM Plex Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
     /* ── TOPBAR ── */
     .topbar {
       position: sticky; top: 0; z-index: 50;
-      display: flex; align-items: center; gap: 12px;
-      padding: 0 20px; height: 52px;
+      display: flex; align-items: center; gap: 8px;
+      padding: 0 16px; height: 52px;
       background: var(--bg2); border-bottom: 1px solid var(--border);
     }
     .topbar-logo { font-size: 13px; font-weight: 600; color: var(--accent); letter-spacing: .05em; white-space: nowrap; }
@@ -55,11 +50,11 @@
     .conn-dot.off { color: var(--danger); }
 
     /* ── TABS ── */
-    .tab-nav { display: flex; gap: 2px; }
+    .tab-nav { display: flex; gap: 2px; flex-wrap: wrap; }
     .tab-btn {
-      padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 500;
+      padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 500;
       background: transparent; border: 1px solid transparent; color: var(--muted);
-      cursor: pointer; transition: all .15s;
+      cursor: pointer; transition: all .15s; white-space: nowrap;
     }
     .tab-btn.active { background: var(--bg3); color: var(--text); border-color: var(--border); }
     .tab-btn:hover:not(.active) { color: var(--text); }
@@ -73,7 +68,7 @@
     }
     .btn:disabled { opacity: .4; cursor: not-allowed; }
     .btn-primary  { background: var(--accent); color: oklch(14% .01 250); border-color: var(--accent); }
-    .btn-primary:hover:not(:disabled)  { opacity: .85; }
+    .btn-primary:hover:not(:disabled) { opacity: .85; }
     .btn-publish  { background: var(--accent); color: oklch(14% .01 250); border-color: var(--accent); font-size: 14px; font-weight: 600; padding: 10px 24px; }
     .btn-publish:hover:not(:disabled) { opacity: .85; }
     .btn-publish.dirty { animation: pulse 2s ease-in-out infinite; }
@@ -106,7 +101,7 @@
     }
     .status-bar.ok   { color: var(--accent); }
     .status-bar.err  { color: var(--danger); }
-    .status-bar.warn { color: var(--warn);   }
+    .status-bar.warn { color: var(--warn); }
     .spinner { display: inline-block; width: 11px; height: 11px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -114,57 +109,94 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* ── BACHECA TAB ── */
-    .bacheca-wrap { max-width: 780px; margin: 0 auto; padding: 28px 20px 80px; }
+    /* ── SHARED SECTION WRAP ── */
+    .section-wrap { max-width: 780px; margin: 0 auto; padding: 28px 20px 80px; }
 
     .section-title {
       font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase;
       letter-spacing: .1em; margin-bottom: 14px;
     }
 
-    /* New post toggle button */
+    /* ── ITEM LIST ROWS (shared by negozi/alloggi/pillole) ── */
+    .item-row {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 12px 16px; margin-bottom: 6px;
+      display: flex; gap: 12px; align-items: center; transition: border-color .15s;
+    }
+    .item-row:hover { border-color: oklch(40% .015 250); }
+    .item-row.editing { border-color: var(--accent); background: var(--bg3); }
+    .item-row-body { flex: 1; min-width: 0; }
+    .item-row-name { font-size: 14px; font-weight: 600; }
+    .item-row-sub { font-size: 12px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-row-actions { flex-shrink: 0; display: flex; gap: 4px; }
+
+    .group-label {
+      font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase;
+      letter-spacing: .1em; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+      margin: 24px 0 10px;
+    }
+    .group-label:first-child { margin-top: 0; }
+
+    /* ── ITEM FORM (shared) ── */
+    .item-form-wrap {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 20px; margin-bottom: 24px; display: none;
+    }
+    .item-form-wrap.open { display: block; }
+    .item-form-title { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .form-full { margin-bottom: 14px; }
+    .form-hint { font-size: 11px; color: var(--muted); margin-top: 5px; }
+    .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
+
+    /* ── ADD ITEM BUTTON ── */
+    .add-item-btn {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 18px; border-radius: var(--r);
+      background: var(--bg3); border: 1px dashed var(--border);
+      color: var(--muted); font-size: 14px; font-weight: 500; font-family: inherit;
+      cursor: pointer; width: 100%; text-align: left; margin-bottom: 24px; transition: all .15s;
+    }
+    .add-item-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent2); }
+    .add-item-btn .plus { font-size: 18px; line-height: 1; }
+
+    /* ── AUTHOR EDITORS ── */
+    .author-editor {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 20px; margin-bottom: 12px;
+    }
+    .author-editor-name { font-size: 15px; font-weight: 600; color: var(--accent); margin-bottom: 16px; }
+
+    /* ── BACHECA POST UI ── */
     .new-post-btn {
       display: flex; align-items: center; gap: 8px;
       padding: 10px 18px; border-radius: var(--r);
       background: var(--bg3); border: 1px dashed var(--border);
       color: var(--muted); font-size: 14px; font-weight: 500; font-family: inherit;
-      cursor: pointer; width: 100%; text-align: left; margin-bottom: 24px;
-      transition: all .15s;
+      cursor: pointer; width: 100%; text-align: left; margin-bottom: 24px; transition: all .15s;
     }
     .new-post-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent2); }
     .new-post-btn .plus { font-size: 18px; line-height: 1; }
-
-    /* Post form */
     .post-form-wrap {
       background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
-      padding: 20px; margin-bottom: 24px;
-      display: none;
+      padding: 20px; margin-bottom: 24px; display: none;
     }
     .post-form-wrap.open { display: block; }
     .post-form-title { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-    .form-full { margin-bottom: 14px; }
-    .form-hint { font-size: 11px; color: var(--muted); margin-top: 5px; }
-    .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
-
-    /* Tag chips (in form select preview and in posts) */
     .tag-chip {
       display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px;
       border-radius: 4px; text-transform: uppercase; letter-spacing: .05em; flex-shrink: 0;
     }
     .tag-new     { background: oklch(25% .1 145); color: var(--new);  border: 1px solid oklch(35% .12 145); }
-    .tag-warning { background: oklch(25% .1 70);  color: var(--warn); border: 1px solid oklch(35% .14 70);  }
-    .tag-info    { background: oklch(22% .1 220);  color: var(--info); border: 1px solid oklch(32% .14 220);  }
-
-    /* Post cards */
+    .tag-warning { background: oklch(25% .1 70);  color: var(--warn); border: 1px solid oklch(35% .14 70); }
+    .tag-info    { background: oklch(22% .1 220);  color: var(--info); border: 1px solid oklch(32% .14 220); }
     .year-group { margin-bottom: 32px; }
     .year-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; padding-bottom: 8px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
-
     .post-card {
       background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
       padding: 14px 16px; margin-bottom: 8px;
-      display: flex; gap: 14px; align-items: flex-start;
-      transition: border-color .15s;
+      display: flex; gap: 14px; align-items: flex-start; transition: border-color .15s;
     }
     .post-card:hover { border-color: oklch(40% .015 250); }
     .post-card.editing { border-color: var(--accent); background: var(--bg3); }
@@ -185,6 +217,7 @@
       background: var(--bg2); border-top: 1px solid var(--border);
       padding: 12px 20px; display: flex; align-items: center; gap: 16px;
     }
+    .tab-content:not(.active) .publish-bar { display: none; }
     .publish-info { font-size: 13px; color: var(--muted); }
     .publish-info strong { color: var(--accent); }
 
@@ -221,16 +254,15 @@
     .card-row { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; }
     .card-row input { flex: 1; }
     .card-actions { display: flex; gap: 10px; justify-content: flex-end; }
-
-    /* Delete confirm */
     .delete-preview { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r); padding: 12px; margin-bottom: 20px; font-size: 13px; }
     .delete-preview .dt { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
     .delete-preview .dn { font-weight: 600; }
 
-    @media (max-width: 540px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .topbar { padding: 0 12px; gap: 8px; }
-      .bacheca-wrap { padding: 16px 12px 80px; }
+    @media (max-width: 600px) {
+      .form-grid, .form-grid-3 { grid-template-columns: 1fr; }
+      .topbar { padding: 0 10px; gap: 6px; }
+      .topbar-logo { display: none; }
+      .section-wrap { padding: 16px 12px 80px; }
     }
   </style>
 </head>
@@ -263,7 +295,7 @@
     </div>
     <div class="card-actions">
       <button class="btn btn-ghost" onclick="closeModal('overlay-commit')">Annulla</button>
-      <button class="btn btn-primary" id="confirm-commit-btn" onclick="confirmCommit()">🚀 Pubblica</button>
+      <button class="btn btn-primary" onclick="handleConfirmCommit()">🚀 Pubblica</button>
     </div>
   </div>
 </div>
@@ -271,15 +303,15 @@
 <!-- ══ DELETE CONFIRM ══ -->
 <div id="overlay-delete" class="overlay hidden">
   <div class="card">
-    <h2>Elimina post</h2>
-    <p>Sei sicuro di voler eliminare questo post? L'operazione non può essere annullata.</p>
-    <div class="delete-preview" id="delete-preview">
-      <div class="dt" id="delete-date"></div>
-      <div class="dn" id="delete-title"></div>
+    <h2>Elimina elemento</h2>
+    <p>Sei sicuro? L'operazione non può essere annullata.</p>
+    <div class="delete-preview">
+      <div class="dt" id="delete-item-subtitle"></div>
+      <div class="dn" id="delete-item-name"></div>
     </div>
     <div class="card-actions">
       <button class="btn btn-ghost" onclick="closeModal('overlay-delete')">Annulla</button>
-      <button class="btn btn-danger" onclick="confirmDelete()">Elimina</button>
+      <button class="btn btn-danger" onclick="handleConfirmDelete()">Elimina</button>
     </div>
   </div>
 </div>
@@ -290,6 +322,10 @@
   <div class="topbar-sep"></div>
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('bacheca')">📋 Bacheca</button>
+    <button class="tab-btn" onclick="switchTab('negozi')">🏪 Negozi</button>
+    <button class="tab-btn" onclick="switchTab('alloggi')">🏕 Alloggi</button>
+    <button class="tab-btn" onclick="switchTab('pillole')">📖 Pillole</button>
+    <button class="tab-btn" onclick="switchTab('autori')">👥 Autori</button>
     <button class="tab-btn" onclick="switchTab('editor')">🛠 Editor HTML</button>
   </div>
   <div class="spacer"></div>
@@ -301,20 +337,20 @@
 <!-- STATUS BAR -->
 <div class="status-bar" id="status-bar">
   <span id="status-icon">○</span>
-  <span id="status-text">Caricamento bacheca in corso...</span>
+  <span id="status-text">Caricamento in corso...</span>
 </div>
 
-<!-- ══ BACHECA TAB ══ -->
+<!-- ══════════════════════════════════════
+     TAB: BACHECA
+══════════════════════════════════════ -->
 <div class="tab-content active" id="tab-bacheca">
-  <div class="bacheca-wrap">
+  <div class="section-wrap">
 
-    <!-- New post button -->
     <button class="new-post-btn" id="new-post-btn" onclick="openNewPostForm()">
       <span class="plus">＋</span>
       Nuovo Post
     </button>
 
-    <!-- Post form (hidden by default) -->
     <div class="post-form-wrap" id="post-form-wrap">
       <div class="post-form-title" id="form-title-label">Nuovo Post</div>
       <div class="form-grid">
@@ -345,34 +381,244 @@
       <div class="form-full">
         <label>Testo</label>
         <textarea id="f-body" rows="5" placeholder="Scrivi il testo del post.&#10;&#10;Lascia una riga vuota tra i paragrafi.&#10;Puoi usare <strong>parola</strong> per il grassetto e <em>parola</em> per il corsivo."></textarea>
-        <div class="form-hint">Lascia una riga vuota tra i paragrafi. Per il grassetto: &lt;strong&gt;parola&lt;/strong&gt; — per il corsivo: &lt;em&gt;parola&lt;/em&gt;</div>
+        <div class="form-hint">Riga vuota = nuovo paragrafo. Grassetto: &lt;strong&gt;parola&lt;/strong&gt; — corsivo: &lt;em&gt;parola&lt;/em&gt;</div>
       </div>
       <div class="form-actions">
         <button class="btn btn-ghost" onclick="cancelForm()">Annulla</button>
-        <button class="btn btn-primary" onclick="submitPost()">Aggiungi Post</button>
+        <button class="btn btn-primary" id="post-submit-btn" onclick="submitPost()">Aggiungi Post</button>
       </div>
     </div>
 
-    <!-- Post list -->
     <div id="post-list">
-      <div class="empty-state">
-        <div class="icon">⏳</div>
-        Caricamento post in corso...
-      </div>
+      <div class="empty-state"><div class="icon">⏳</div>Caricamento post...</div>
     </div>
 
-  </div><!-- /.bacheca-wrap -->
+  </div>
 
-  <!-- Sticky publish bar -->
   <div class="publish-bar">
     <div class="publish-info" id="publish-info">Nessuna modifica in sospeso</div>
     <div class="spacer"></div>
     <button class="btn btn-ghost" onclick="reloadBacheca()" style="font-size:12px;padding:6px 12px;">↺ Ricarica</button>
-    <button class="btn btn-publish" id="publish-btn" onclick="openCommitModal()" disabled>🚀 Pubblica</button>
+    <button class="btn btn-publish" id="publish-btn" onclick="openCommitModalWith('Aggiornamento bacheca', doBachecaPublish)" disabled>🚀 Pubblica</button>
   </div>
 </div>
 
-<!-- ══ EDITOR HTML TAB ══ -->
+<!-- ══════════════════════════════════════
+     TAB: NEGOZI
+══════════════════════════════════════ -->
+<div class="tab-content" id="tab-negozi">
+  <div class="section-wrap">
+
+    <button class="add-item-btn" onclick="openShopForm(-1)">
+      <span class="plus">＋</span>
+      Nuovo Negozio
+    </button>
+
+    <div class="item-form-wrap" id="shop-form-wrap">
+      <div class="item-form-title" id="shop-form-title">Nuovo Negozio</div>
+      <div class="form-grid">
+        <div>
+          <label>Nome</label>
+          <input type="text" id="sf-name" placeholder="Nome negozio">
+        </div>
+        <div>
+          <label>Telefono</label>
+          <input type="text" id="sf-phone" placeholder="0341-451.250">
+        </div>
+      </div>
+      <div class="form-grid">
+        <div>
+          <label>URL sito web</label>
+          <input type="text" id="sf-url" placeholder="https://www.esempio.it/">
+        </div>
+        <div>
+          <label>Testo link (opzionale)</label>
+          <input type="text" id="sf-urltext" placeholder="alpstation.it">
+        </div>
+      </div>
+      <div class="form-full">
+        <label>Indirizzo (una riga per via, CAP e città)</label>
+        <textarea id="sf-addr" rows="3" placeholder="Via Provinciale 11&#10;23843 Dolzago - Lecco"></textarea>
+      </div>
+      <div class="form-full">
+        <label>Google Maps embed src</label>
+        <input type="text" id="sf-maps" placeholder="https://www.google.com/maps/embed?...">
+      </div>
+      <div class="form-full">
+        <label>Accesso Stradale (opzionale)</label>
+        <textarea id="sf-access" rows="2" placeholder="Indicazioni stradali..."></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="cancelShopForm()">Annulla</button>
+        <button class="btn btn-primary" id="shop-submit-btn" onclick="submitShop()">Aggiungi Negozio</button>
+      </div>
+    </div>
+
+    <div id="shop-list">
+      <div class="empty-state"><div class="icon">⏳</div>Caricamento negozi...</div>
+    </div>
+
+  </div>
+
+  <div class="publish-bar">
+    <div class="publish-info" id="shop-publish-info">Nessuna modifica in sospeso</div>
+    <div class="spacer"></div>
+    <button class="btn btn-ghost" onclick="reloadShops()" style="font-size:12px;padding:6px 12px;">↺ Ricarica</button>
+    <button class="btn btn-publish" id="shop-publish-btn" onclick="openCommitModalWith('Aggiornamento negozi', doShopsPublish)" disabled>🚀 Pubblica</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB: ALLOGGI
+══════════════════════════════════════ -->
+<div class="tab-content" id="tab-alloggi">
+  <div class="section-wrap">
+
+    <button class="add-item-btn" onclick="openAccomForm(-1)">
+      <span class="plus">＋</span>
+      Nuovo Alloggio
+    </button>
+
+    <div class="item-form-wrap" id="accom-form-wrap">
+      <div class="item-form-title" id="accom-form-title">Nuovo Alloggio</div>
+      <div class="form-grid">
+        <div>
+          <label>Sezione</label>
+          <select id="af-section">
+            <option value="Piani Resinelli">Piani Resinelli</option>
+            <option value="Altre Località">Altre Località</option>
+          </select>
+        </div>
+        <div>
+          <label>Tipo</label>
+          <select id="af-type">
+            <option value="B&amp;B">B&B</option>
+            <option value="Rifugio">Rifugio</option>
+            <option value="Camping">Camping</option>
+            <option value="Ostello">Ostello</option>
+            <option value="Agriturismo">Agriturismo</option>
+            <option value="Ristorante-Bar">Ristorante-Bar</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-full">
+        <label>Nome</label>
+        <input type="text" id="af-name" placeholder="Nome struttura">
+      </div>
+      <div class="form-grid">
+        <div>
+          <label>Indirizzo</label>
+          <input type="text" id="af-addr" placeholder="Via/Località, Comune">
+        </div>
+        <div>
+          <label>Contatto (nome, opzionale)</label>
+          <input type="text" id="af-contact" placeholder="Mario Rossi">
+        </div>
+      </div>
+      <div class="form-grid">
+        <div>
+          <label>Telefono</label>
+          <input type="text" id="af-phone" placeholder="0341-590022">
+        </div>
+        <div>
+          <label>Google Maps embed src</label>
+          <input type="text" id="af-maps" placeholder="https://www.google.com/maps/embed?...">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="cancelAccomForm()">Annulla</button>
+        <button class="btn btn-primary" id="accom-submit-btn" onclick="submitAccom()">Aggiungi Alloggio</button>
+      </div>
+    </div>
+
+    <div id="accom-list">
+      <div class="empty-state"><div class="icon">⏳</div>Caricamento alloggi...</div>
+    </div>
+
+  </div>
+
+  <div class="publish-bar">
+    <div class="publish-info" id="accom-publish-info">Nessuna modifica in sospeso</div>
+    <div class="spacer"></div>
+    <button class="btn btn-ghost" onclick="reloadAccom()" style="font-size:12px;padding:6px 12px;">↺ Ricarica</button>
+    <button class="btn btn-publish" id="accom-publish-btn" onclick="openCommitModalWith('Aggiornamento alloggi', doAccomPublish)" disabled>🚀 Pubblica</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB: PILLOLE
+══════════════════════════════════════ -->
+<div class="tab-content" id="tab-pillole">
+  <div class="section-wrap">
+
+    <button class="add-item-btn" onclick="openPilloleForm(-1)">
+      <span class="plus">＋</span>
+      Nuova Pillola
+    </button>
+
+    <div class="item-form-wrap" id="pillole-form-wrap">
+      <div class="item-form-title" id="pillole-form-title">Nuova Pillola</div>
+      <div class="form-grid">
+        <div>
+          <label>Data</label>
+          <input type="date" id="pf-date">
+        </div>
+        <div>
+          <label>URL articolo</label>
+          <input type="text" id="pf-url" placeholder="../falesie_lecco/...">
+        </div>
+      </div>
+      <div class="form-full">
+        <label>Titolo</label>
+        <input type="text" id="pf-title" placeholder="Titolo dell'articolo">
+      </div>
+      <div class="form-full">
+        <label>Descrizione breve</label>
+        <textarea id="pf-desc" rows="3" placeholder="Breve descrizione..."></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="cancelPilloleForm()">Annulla</button>
+        <button class="btn btn-primary" id="pillole-submit-btn" onclick="submitPillola()">Aggiungi Pillola</button>
+      </div>
+    </div>
+
+    <div id="pillole-list">
+      <div class="empty-state"><div class="icon">⏳</div>Caricamento pillole...</div>
+    </div>
+
+  </div>
+
+  <div class="publish-bar">
+    <div class="publish-info" id="pillole-publish-info">Nessuna modifica in sospeso</div>
+    <div class="spacer"></div>
+    <button class="btn btn-ghost" onclick="reloadPillole()" style="font-size:12px;padding:6px 12px;">↺ Ricarica</button>
+    <button class="btn btn-publish" id="pillole-publish-btn" onclick="openCommitModalWith('Aggiornamento pillole di storia', doPillolePublish)" disabled>🚀 Pubblica</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB: AUTORI
+══════════════════════════════════════ -->
+<div class="tab-content" id="tab-autori">
+  <div class="section-wrap">
+
+    <div id="autori-list">
+      <div class="empty-state"><div class="icon">⏳</div>Caricamento autori...</div>
+    </div>
+
+  </div>
+
+  <div class="publish-bar">
+    <div class="publish-info" id="autori-publish-info">Nessuna modifica in sospeso</div>
+    <div class="spacer"></div>
+    <button class="btn btn-ghost" onclick="reloadAutori()" style="font-size:12px;padding:6px 12px;">↺ Ricarica</button>
+    <button class="btn btn-publish" id="autori-publish-btn" onclick="openCommitModalWith('Aggiornamento autori', doAutoriPublish)" disabled>🚀 Pubblica</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB: EDITOR HTML
+══════════════════════════════════════ -->
 <div class="tab-content" id="tab-editor">
   <div class="editor-tab-wrap">
     <div class="editor-toolbar">
@@ -399,10 +645,10 @@
       <button class="btn btn-ghost" onclick="reloadEditorFile()" style="font-size:12px;padding:6px 12px;">↺ Ricarica</button>
       <div class="spacer"></div>
       <button class="btn btn-ghost" id="preview-btn" onclick="openPreview()" disabled style="font-size:12px;padding:6px 12px;">Anteprima ↗</button>
-      <button class="btn btn-primary" id="editor-save-btn" onclick="openEditorCommitModal()" disabled>Salva &amp; Pubblica</button>
+      <button class="btn btn-primary" id="editor-save-btn" onclick="openCommitModalWith('Aggiornamento ' + (state.editorFile||''), doEditorPublish)" disabled>Salva &amp; Pubblica</button>
     </div>
     <div class="editor-warning">
-      ⚠️ Sezione avanzata — richiede conoscenza dell'HTML. Usa la scheda Bacheca per aggiungere post senza scrivere codice.
+      ⚠️ Sezione avanzata — richiede conoscenza dell'HTML. Usa le altre schede per modificare i contenuti senza scrivere codice.
     </div>
     <div class="editor-wrap">
       <textarea id="codemirror-editor"></textarea>
@@ -418,23 +664,109 @@ const OWNER        = 'Pedro-Hanekamp';
 const REPO         = 'paolo-e-sonja';
 const BRANCH       = 'main';
 const BACHECA_PATH = 'bacheca/index.html';
+const SHOPS_PATH   = 'shops.html';
+const ACCOM_PATH   = 'accomodation.html';
+const PILLOLE_PATH = 'pillole/pillole.html';
+const AUTORI_PATH  = 'autori.html';
 const PREVIEW_BASE = 'https://pedro-hanekamp.github.io/paolo-e-sonja/';
 
 // ════════════════════════════════════════
 //  STATE
 // ════════════════════════════════════════
 const state = {
-  posts:       [],   // parsed post objects
-  originalHtml:'',   // full bacheca HTML from GitHub
-  sha:         null, // bacheca file SHA
-  dirty:       false,
-  editingId:   null, // id of post being edited (null = new)
-  deleteId:    null,
-  // editor tab
-  editorFile:  null,
-  editorSha:   null,
-  cm:          null,
+  // Bacheca
+  posts: [], originalHtml: '', sha: null, dirty: false, editingId: null,
+  // Negozi
+  shops: [], shopsHtml: '', shopsSha: null, shopsDirty: false, shopsLoaded: false, editingShopIdx: null,
+  // Alloggi
+  accoms: [], accomAccessBoxes: {}, accomHtml: '', accomSha: null, accomDirty: false, accomLoaded: false, editingAccomIdx: null,
+  // Pillole
+  pillole: [], pilloleHtml: '', pilloleSha: null, pilloleDirty: false, pilloleLoaded: false, editingPilloleIdx: null,
+  // Autori
+  autori: [], autoriHtml: '', autoriSha: null, autoriDirty: false, autoriLoaded: false,
+  // Editor
+  editorFile: null, editorSha: null, cm: null,
 };
+
+// ════════════════════════════════════════
+//  GENERIC COMMIT / DELETE MODALS
+// ════════════════════════════════════════
+let _commitCallback = null;
+function openCommitModalWith(defaultMsg, callback) {
+  _commitCallback = callback;
+  document.getElementById('commit-msg').value = defaultMsg;
+  showModal('overlay-commit');
+  document.getElementById('commit-msg').focus();
+  document.getElementById('commit-msg').select();
+}
+function handleConfirmCommit() {
+  const msg = document.getElementById('commit-msg').value.trim();
+  closeModal('overlay-commit');
+  if (_commitCallback) { _commitCallback(msg); _commitCallback = null; }
+}
+
+let _deleteCallback = null;
+function openDeleteModal(name, subtitle, callback) {
+  _deleteCallback = callback;
+  document.getElementById('delete-item-name').textContent = name;
+  document.getElementById('delete-item-subtitle').textContent = subtitle || '';
+  showModal('overlay-delete');
+}
+function handleConfirmDelete() {
+  closeModal('overlay-delete');
+  if (_deleteCallback) { _deleteCallback(); _deleteCallback = null; }
+}
+
+// ════════════════════════════════════════
+//  GENERIC FILE API
+// ════════════════════════════════════════
+async function loadFile(path) {
+  const token = getToken();
+  if (!token) { showModal('overlay-token'); throw new Error('No token'); }
+  const res = await fetch(
+    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`,
+    { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json' } }
+  );
+  if (!res.ok) { const e = await res.json(); throw new Error(e.message || `HTTP ${res.status}`); }
+  const data = await res.json();
+  return { html: decodeB64(data.content), sha: data.sha };
+}
+async function saveFile(path, sha, content, message) {
+  const token = getToken();
+  const body = { message, content: encodeB64(content), sha, branch: BRANCH };
+  const res = await fetch(
+    `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`,
+    { method: 'PUT', headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
+  );
+  if (!res.ok) { const e = await res.json(); throw new Error(e.message || `HTTP ${res.status}`); }
+  return (await res.json()).content.sha;
+}
+
+// ════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function extractSection(html, startMarker, endMarker) {
+  const re = new RegExp(`<!-- ${startMarker} -->([\\s\\S]*?)<!-- ${endMarker} -->`);
+  const m = html.match(re); return m ? m[1] : '';
+}
+function injectSection(html, startMarker, endMarker, newContent) {
+  const re = new RegExp(`<!-- ${startMarker} -->[\\s\\S]*?<!-- ${endMarker} -->`);
+  return html.replace(re, `<!-- ${startMarker} -->\n${newContent}\n        <!-- ${endMarker} -->`);
+}
+function addrHtmlToText(html) {
+  return html.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').trim();
+}
+function addrTextToHtml(text) {
+  return text.trim().split('\n').map(l => l.trim()).filter(Boolean).join('<br>\n                  ');
+}
+function isoToSlash(iso) {
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+}
 
 // ════════════════════════════════════════
 //  ITALIAN DATES
@@ -443,7 +775,6 @@ const IT_M = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov',
 const IT_MAP = Object.fromEntries(IT_M.map((m,i) => [m, i+1]));
 
 function toIso(display) {
-  // "31 mar 2026" → "2026-03-31"
   const parts = display.trim().split(/\s+/);
   if (parts.length !== 3) return '';
   const [d, m, y] = parts;
@@ -452,70 +783,112 @@ function toIso(display) {
   return `${y}-${String(mo).padStart(2,'0')}-${String(parseInt(d)).padStart(2,'0')}`;
 }
 function toDisplay(iso) {
-  // "2026-03-31" → "31 mar 2026"
   if (!iso) return '';
   const [y, m, d] = iso.split('-');
   return `${parseInt(d)} ${IT_M[parseInt(m)-1]} ${y}`;
 }
 
 // ════════════════════════════════════════
-//  TAGS
+//  TABS
 // ════════════════════════════════════════
-const TAG_CLASSES = {
-  'tag-new': 'tag-new', 'tag-warning': 'tag-warning', 'tag-info': 'tag-info'
-};
-
-function parseTagValue(cls, label) {
-  if (!cls) return '';
-  return `${cls}|${label}`;
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.tab-btn[onclick="switchTab('${name}')"]`)?.classList.add('active');
+  document.getElementById(`tab-${name}`)?.classList.add('active');
+  if (name === 'negozi'  && !state.shopsLoaded)   loadShops();
+  if (name === 'alloggi' && !state.accomLoaded)    loadAccom();
+  if (name === 'pillole' && !state.pilloleLoaded)  loadPillole();
+  if (name === 'autori'  && !state.autoriLoaded)   loadAutori();
 }
 
 // ════════════════════════════════════════
-//  PARSE POSTS FROM HTML
+//  AUTH
 // ════════════════════════════════════════
+function getToken() { return localStorage.getItem('lc_gh_token'); }
+
+function saveToken() {
+  const t = document.getElementById('token-input').value.trim();
+  if (!t) return;
+  localStorage.setItem('lc_gh_token', t);
+  closeModal('overlay-token');
+  loadBacheca();
+}
+function logout() {
+  localStorage.removeItem('lc_gh_token');
+  state.posts = []; state.originalHtml = ''; state.sha = null; state.dirty = false;
+  state.shopsLoaded = false; state.accomLoaded = false; state.pilloleLoaded = false; state.autoriLoaded = false;
+  renderPostList();
+  updateBachecaBar();
+  document.getElementById('token-input').value = '';
+  showModal('overlay-token');
+}
+document.getElementById('token-input').addEventListener('keydown', e => { if (e.key === 'Enter') saveToken(); });
+
+// ════════════════════════════════════════
+//  STATUS
+// ════════════════════════════════════════
+function setStatus(type, msg) {
+  const bar  = document.getElementById('status-bar');
+  const icon = document.getElementById('status-icon');
+  const text = document.getElementById('status-text');
+  bar.className = `status-bar ${type === 'ok' ? 'ok' : type === 'err' ? 'err' : type === 'warn' ? 'warn' : ''}`;
+  icon.innerHTML = type === 'loading' ? '<span class="spinner"></span>' : (type === 'ok' ? '●' : type === 'err' ? '✕' : '○');
+  text.textContent = msg;
+}
+
+// ════════════════════════════════════════
+//  MODAL UTILS
+// ════════════════════════════════════════
+function showModal(id)  { document.getElementById(id).classList.remove('hidden'); }
+function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+document.getElementById('overlay-commit').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal('overlay-commit'); });
+document.getElementById('overlay-delete').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal('overlay-delete'); });
+document.getElementById('commit-msg').addEventListener('keydown', e => { if (e.key === 'Enter') handleConfirmCommit(); if (e.key === 'Escape') closeModal('overlay-commit'); });
+
+// ════════════════════════════════════════
+//  BASE64
+// ════════════════════════════════════════
+function decodeB64(str) { return decodeURIComponent(escape(atob(str.replace(/\n/g, '')))); }
+function encodeB64(str) { return btoa(unescape(encodeURIComponent(str))); }
+
+// ════════════════════════════════════════
+//  ██████╗  █████╗  ██████╗██╗  ██╗███████╗ ██████╗ █████╗
+//  ██╔══██╗██╔══██╗██╔════╝██║  ██║██╔════╝██╔════╝██╔══██╗
+//  ██████╔╝███████║██║     ███████║█████╗  ██║     ███████║
+//  ██╔══██╗██╔══██║██║     ██╔══██║██╔══╝  ██║     ██╔══██║
+//  ██████╔╝██║  ██║╚██████╗██║  ██║███████╗╚██████╗██║  ██║
+//  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝
+// ════════════════════════════════════════
+
 function parsePosts(html) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-  const items = doc.querySelectorAll('.post-item');
+  const doc = new DOMParser().parseFromString(html, 'text/html');
   const posts = [];
-  items.forEach((li, idx) => {
+  doc.querySelectorAll('.post-item').forEach((li, idx) => {
     const dateEl  = li.querySelector('.post-date');
     const tagEl   = li.querySelector('.post-tag');
     const titleEl = li.querySelector('.post-title');
     const bodyEl  = li.querySelector('.post-body');
     if (!dateEl || !titleEl) return;
-
     const dateDisplay = dateEl.textContent.trim();
     const iso = toIso(dateDisplay);
     const year = iso ? parseInt(iso.split('-')[0]) : 0;
-
     let tagClass = '', tagLabel = '';
     if (tagEl) {
       tagLabel = tagEl.textContent.trim();
       tagClass = Array.from(tagEl.classList).find(c => c.startsWith('tag-')) || '';
     }
-
-    // Title text without the tag span
     let title = '';
-    titleEl.childNodes.forEach(node => {
-      if (node.nodeType === Node.TEXT_NODE) title += node.textContent;
-    });
+    titleEl.childNodes.forEach(node => { if (node.nodeType === Node.TEXT_NODE) title += node.textContent; });
     title = title.trim();
-
     const bodyHtml = bodyEl ? bodyEl.innerHTML.trim() : '';
-
     posts.push({ id: `post-${idx}-${Date.now()}`, dateDisplay, iso, year, tagClass, tagLabel, title, bodyHtml });
   });
   return posts;
 }
 
-// ════════════════════════════════════════
-//  GENERATE POST HTML
-// ════════════════════════════════════════
 function postItemHtml(p) {
-  const tagHtml = p.tagClass
-    ? `\n              <span class="post-tag ${p.tagClass}">${p.tagLabel}</span>`
-    : '';
+  const tagHtml = p.tagClass ? `\n              <span class="post-tag ${p.tagClass}">${p.tagLabel}</span>` : '';
   return `        <li class="post-item">
           <span class="post-date">${p.dateDisplay}</span>
           <div>
@@ -530,14 +903,9 @@ function postItemHtml(p) {
 }
 
 function generatePostsSection(posts) {
-  // sort newest first
   const sorted = [...posts].sort((a,b) => (b.iso||'').localeCompare(a.iso||''));
-  // group by year
   const byYear = {};
-  sorted.forEach(p => {
-    if (!byYear[p.year]) byYear[p.year] = [];
-    byYear[p.year].push(p);
-  });
+  sorted.forEach(p => { if (!byYear[p.year]) byYear[p.year] = []; byYear[p.year].push(p); });
   const years = Object.keys(byYear).sort((a,b) => b-a);
   return years.map(yr => {
     const postsHtml = byYear[yr].map(p => postItemHtml(p)).join('\n\n');
@@ -562,19 +930,14 @@ function injectPostsIntoHtml(originalHtml, posts) {
   );
 }
 
-// ════════════════════════════════════════
-//  BODY TEXT → HTML
-// ════════════════════════════════════════
 function textToBodyHtml(text) {
   if (!text.trim()) return '<p></p>';
-  return text.trim()
-    .split(/\n\s*\n/)
+  return text.trim().split(/\n\s*\n/)
     .map(block => `<p>${block.trim().replace(/\n/g, '<br>')}</p>`)
     .join('\n              ');
 }
 
 function bodyHtmlToText(html) {
-  // Show inner text of <p> tags, joined by blank lines
   const tmp = document.createElement('div');
   tmp.innerHTML = html;
   return Array.from(tmp.querySelectorAll('p'))
@@ -582,28 +945,19 @@ function bodyHtmlToText(html) {
     .join('\n\n') || tmp.textContent.trim();
 }
 
-// ════════════════════════════════════════
-//  RENDER POST LIST
-// ════════════════════════════════════════
 function renderPostList() {
   const container = document.getElementById('post-list');
   if (!state.posts.length) {
     container.innerHTML = `<div class="empty-state"><div class="icon">📭</div>Nessun post trovato.</div>`;
     return;
   }
-
   const sorted = [...state.posts].sort((a,b) => (b.iso||'').localeCompare(a.iso||''));
   const byYear = {};
-  sorted.forEach(p => {
-    if (!byYear[p.year]) byYear[p.year] = [];
-    byYear[p.year].push(p);
-  });
+  sorted.forEach(p => { if (!byYear[p.year]) byYear[p.year] = []; byYear[p.year].push(p); });
   const years = Object.keys(byYear).sort((a,b) => b-a);
-
   container.innerHTML = years.map(yr => {
     const cards = byYear[yr].map(p => {
-      const tagHtml = p.tagClass
-        ? `<span class="tag-chip ${p.tagClass}">${p.tagLabel}</span>` : '';
+      const tagHtml = p.tagClass ? `<span class="tag-chip ${p.tagClass}">${p.tagLabel}</span>` : '';
       const bodyText = p.bodyHtml.replace(/<[^>]+>/g, '').trim();
       const isEditing = state.editingId === p.id;
       return `
@@ -615,7 +969,7 @@ function renderPostList() {
           </div>
           <div class="post-card-actions">
             <button class="btn-icon" onclick="editPost('${p.id}')" title="Modifica">✏️</button>
-            <button class="btn-icon del" onclick="deletePost('${p.id}')" title="Elimina">🗑️</button>
+            <button class="btn-icon del" onclick="deleteBachecaPost('${p.id}')" title="Elimina">🗑️</button>
           </div>
         </div>`;
     }).join('');
@@ -623,23 +977,20 @@ function renderPostList() {
   }).join('');
 }
 
-function updatePublishBar() {
+function updateBachecaBar() {
   const btn  = document.getElementById('publish-btn');
   const info = document.getElementById('publish-info');
   if (state.dirty) {
-    btn.disabled = false;
-    btn.classList.add('dirty');
+    btn.disabled = false; btn.classList.add('dirty');
     info.innerHTML = `<strong>${state.posts.length} post</strong> in attesa di pubblicazione`;
   } else {
-    btn.disabled = true;
-    btn.classList.remove('dirty');
-    info.innerHTML = `Nessuna modifica in sospeso`;
+    btn.disabled = true; btn.classList.remove('dirty');
+    info.textContent = 'Nessuna modifica in sospeso';
   }
 }
 
-// ════════════════════════════════════════
-//  FORM LOGIC
-// ════════════════════════════════════════
+function parseTagValue(cls, label) { if (!cls) return ''; return `${cls}|${label}`; }
+
 function openNewPostForm() {
   state.editingId = null;
   document.getElementById('form-title-label').textContent = 'Nuovo Post';
@@ -647,8 +998,7 @@ function openNewPostForm() {
   document.getElementById('f-tag').value   = '';
   document.getElementById('f-title').value = '';
   document.getElementById('f-body').value  = '';
-  const btn = document.querySelector('#post-form-wrap .btn-primary');
-  btn.textContent = 'Aggiungi Post';
+  document.getElementById('post-submit-btn').textContent = 'Aggiungi Post';
   document.getElementById('post-form-wrap').classList.add('open');
   document.getElementById('new-post-btn').style.display = 'none';
   document.getElementById('f-title').focus();
@@ -663,8 +1013,7 @@ function editPost(id) {
   document.getElementById('f-tag').value   = parseTagValue(post.tagClass, post.tagLabel);
   document.getElementById('f-title').value = post.title;
   document.getElementById('f-body').value  = bodyHtmlToText(post.bodyHtml);
-  const btn = document.querySelector('#post-form-wrap .btn-primary');
-  btn.textContent = 'Salva Modifiche';
+  document.getElementById('post-submit-btn').textContent = 'Salva Modifiche';
   document.getElementById('post-form-wrap').classList.add('open');
   document.getElementById('new-post-btn').style.display = 'none';
   document.getElementById('f-title').focus();
@@ -683,69 +1032,32 @@ function submitPost() {
   const tagVal   = document.getElementById('f-tag').value;
   const title    = document.getElementById('f-title').value.trim();
   const bodyText = document.getElementById('f-body').value;
-
   if (!dateIso)  { alert('Inserisci una data.'); return; }
   if (!title)    { alert('Inserisci un titolo.'); return; }
-
   const [tagClass, tagLabel] = tagVal ? tagVal.split('|') : ['', ''];
   const dateDisplay = toDisplay(dateIso);
   const year = parseInt(dateIso.split('-')[0]);
-  const bodyHtml = bodyText.trim()
-    ? textToBodyHtml(bodyText)
-    : '<p></p>';
-
+  const bodyHtml = bodyText.trim() ? textToBodyHtml(bodyText) : '<p></p>';
   if (state.editingId) {
     const idx = state.posts.findIndex(p => p.id === state.editingId);
-    if (idx !== -1) {
-      state.posts[idx] = { ...state.posts[idx], dateDisplay, iso: dateIso, year, tagClass, tagLabel, title, bodyHtml };
-    }
+    if (idx !== -1) state.posts[idx] = { ...state.posts[idx], dateDisplay, iso: dateIso, year, tagClass, tagLabel, title, bodyHtml };
   } else {
     state.posts.unshift({ id: `post-${Date.now()}`, dateDisplay, iso: dateIso, year, tagClass, tagLabel, title, bodyHtml });
   }
-
-  state.dirty    = true;
-  state.editingId = null;
-  cancelForm();
-  renderPostList();
-  updatePublishBar();
-  setStatus('warn', state.editingId ? 'Post modificato. Ricorda di pubblicare.' : 'Post aggiunto. Ricorda di pubblicare.');
+  state.dirty = true; state.editingId = null;
+  cancelForm(); renderPostList(); updateBachecaBar();
+  setStatus('warn', 'Post modificato. Ricorda di pubblicare.');
 }
 
-// ════════════════════════════════════════
-//  DELETE
-// ════════════════════════════════════════
-function deletePost(id) {
+function deleteBachecaPost(id) {
   const post = state.posts.find(p => p.id === id);
   if (!post) return;
-  state.deleteId = id;
-  document.getElementById('delete-date').textContent  = post.dateDisplay;
-  document.getElementById('delete-title').textContent = post.title;
-  showModal('overlay-delete');
-}
-
-function confirmDelete() {
-  if (!state.deleteId) return;
-  state.posts = state.posts.filter(p => p.id !== state.deleteId);
-  state.deleteId = null;
-  state.dirty = true;
-  closeModal('overlay-delete');
-  renderPostList();
-  updatePublishBar();
-  setStatus('warn', 'Post eliminato. Ricorda di pubblicare.');
-}
-
-// ════════════════════════════════════════
-//  GITHUB API
-// ════════════════════════════════════════
-function getToken() { return localStorage.getItem('lc_gh_token'); }
-
-async function ghFetch(path, opts = {}) {
-  const token = getToken();
-  const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`, {
-    headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json' },
-    ...opts,
+  openDeleteModal(post.title, post.dateDisplay, () => {
+    state.posts = state.posts.filter(p => p.id !== id);
+    state.dirty = true;
+    renderPostList(); updateBachecaBar();
+    setStatus('warn', 'Post eliminato. Ricorda di pubblicare.');
   });
-  return res;
 }
 
 async function loadBacheca() {
@@ -753,92 +1065,712 @@ async function loadBacheca() {
   if (!token) { showModal('overlay-token'); return; }
   setStatus('loading', 'Caricamento bacheca...');
   try {
-    const res = await ghFetch(BACHECA_PATH);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    state.sha          = data.sha;
-    state.originalHtml = decodeB64(data.content);
-    state.posts        = parsePosts(state.originalHtml);
-    state.dirty        = false;
-    renderPostList();
-    updatePublishBar();
+    const { html, sha } = await loadFile(BACHECA_PATH);
+    state.sha = sha; state.originalHtml = html;
+    state.posts = parsePosts(html); state.dirty = false;
+    renderPostList(); updateBachecaBar();
     setStatus('ok', `${state.posts.length} post caricati.`);
-  } catch(e) {
-    setStatus('err', `Errore: ${e.message}`);
-  }
+  } catch(e) { setStatus('err', `Errore: ${e.message}`); }
 }
 
-async function reloadBacheca() {
-  state.dirty = false;
-  await loadBacheca();
-}
+async function reloadBacheca() { state.dirty = false; await loadBacheca(); }
 
-// ════════════════════════════════════════
-//  PUBLISH (BACHECA)
-// ════════════════════════════════════════
-function openCommitModal() {
-  document.getElementById('commit-msg').value = 'Aggiornamento bacheca';
-  showModal('overlay-commit');
-  document.getElementById('commit-msg').focus();
-  document.getElementById('commit-msg').select();
-}
-
-let publishing = false;
-async function confirmCommit() {
-  if (publishing) return;
-  const token = getToken();
-  if (!token) { showModal('overlay-token'); return; }
-  const message = document.getElementById('commit-msg').value.trim() || 'Aggiornamento bacheca';
-  closeModal('overlay-commit');
-  publishing = true;
-  setStatus('loading', 'Pubblicazione in corso...');
+let bachecaPublishing = false;
+async function doBachecaPublish(message) {
+  if (bachecaPublishing) return;
+  bachecaPublishing = true;
+  setStatus('loading', 'Pubblicazione bacheca...');
   document.getElementById('publish-btn').disabled = true;
-
   try {
     const newHtml = injectPostsIntoHtml(state.originalHtml, state.posts);
-    const body = {
-      message,
-      content: encodeB64(newHtml),
-      sha: state.sha,
-      branch: BRANCH,
-    };
-    const res = await fetch(
-      `https://api.github.com/repos/${OWNER}/${REPO}/contents/${BACHECA_PATH}`,
-      {
-        method: 'PUT',
-        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      }
-    );
-    if (!res.ok) { const e = await res.json(); throw new Error(e.message || `HTTP ${res.status}`); }
-    const data = await res.json();
-    state.sha          = data.content.sha;
-    state.originalHtml = newHtml;
-    state.dirty        = false;
-    updatePublishBar();
-    setStatus('ok', `Pubblicato! Il sito si aggiornerà in circa 30 secondi.`);
-  } catch(e) {
-    setStatus('err', `Errore pubblicazione: ${e.message}`);
-  } finally {
-    publishing = false;
-    updatePublishBar();
-  }
+    state.sha = await saveFile(BACHECA_PATH, state.sha, newHtml, message || 'Aggiornamento bacheca');
+    state.originalHtml = newHtml; state.dirty = false;
+    updateBachecaBar();
+    setStatus('ok', 'Pubblicato! Il sito si aggiornerà in ~30 secondi.');
+  } catch(e) { setStatus('err', `Errore: ${e.message}`); }
+  finally { bachecaPublishing = false; updateBachecaBar(); }
 }
 
 // ════════════════════════════════════════
-//  EDITOR TAB
+//  ███╗   ██╗███████╗ ██████╗  ██████╗ ███████╗██╗
+//  ████╗  ██║██╔════╝██╔════╝ ██╔═══██╗╚══███╔╝██║
+//  ██╔██╗ ██║█████╗  ██║  ███╗██║   ██║  ███╔╝ ██║
+//  ██║╚██╗██║██╔══╝  ██║   ██║██║   ██║ ███╔╝  ██║
+//  ██║ ╚████║███████╗╚██████╔╝╚██████╔╝███████╗██║
+//  ╚═╝  ╚═══╝╚══════╝ ╚═════╝  ╚═════╝ ╚══════╝╚═╝
 // ════════════════════════════════════════
-let cm;
+
+function parseShops(html) {
+  const inner = extractSection(html, 'SHOPS_LIST_START', 'SHOPS_LIST_END');
+  const doc = new DOMParser().parseFromString(`<div>${inner}</div>`, 'text/html');
+  const root = doc.querySelector('div');
+  const shops = []; const kids = Array.from(root.children);
+  for (let i = 0; i < kids.length; i++) {
+    const el = kids[i];
+    if (!el.classList.contains('shop-card')) continue;
+    const webEl    = el.querySelector('a.shop-web');
+    const phoneEl  = el.querySelector('.shop-phone a');
+    const iframeEl = el.querySelector('.shop-map iframe');
+    const shop = {
+      id: `s${i}-${Date.now()}`,
+      name: el.querySelector('h2')?.textContent?.trim() || '',
+      websiteUrl: webEl?.getAttribute('href') || '',
+      websiteText: (webEl?.textContent || '').replace(/↗/g,'').trim(),
+      addrHtml: el.querySelector('address.shop-address')?.innerHTML?.trim() || '',
+      phone: phoneEl?.textContent?.trim() || '',
+      mapsSrc: iframeEl?.getAttribute('src') || '',
+      accessText: '',
+    };
+    const next = kids[i + 1];
+    if (next?.classList.contains('access-box')) shop.accessText = next.querySelector('p')?.textContent?.trim() || '';
+    shops.push(shop);
+  }
+  return shops;
+}
+
+function shopCardHtml(s) {
+  const telDigits = s.phone.replace(/[^\d]/g,'');
+  const telHref   = telDigits ? `tel:+39${telDigits}` : '#';
+  const webText   = s.websiteText || s.websiteUrl;
+  const mapsHtml  = s.mapsSrc
+    ? `<div class="shop-map"><iframe src="${s.mapsSrc}" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa ${escHtml(s.name)}"></iframe></div>`
+    : '';
+  return `        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div class="shop-header">
+                <h2>${escHtml(s.name)}</h2>
+                <a href="${s.websiteUrl}" target="_blank" rel="noopener" class="shop-web">${escHtml(webText)} ↗</a>
+              </div>
+              <div>
+                <address class="shop-address">
+                  ${addrTextToHtml(addrHtmlToText(s.addrHtml))}
+                </address>
+                <p class="shop-phone"><a href="${telHref}">${escHtml(s.phone)}</a></p>
+              </div>
+            </div>
+            ${mapsHtml}
+          </div>
+          <div class="shop-photo-row">
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>📷</span>Foto 1<br><em>Sostituire con foto</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>📷</span>Foto 2<br><em>Sostituire con foto</em></div></div>
+            <div class="shop-photo"><div class="shop-photo-placeholder"><span>📷</span>Foto 3<br><em>Sostituire con foto</em></div></div>
+          </div>
+        </div>`;
+}
+
+function generateShopsSection(shops) {
+  return shops.map(s => {
+    let h = shopCardHtml(s);
+    if (s.accessText) h += `\n\n        <div class="access-box">\n          <h4>Accesso Stradale</h4>\n          <p>${escHtml(s.accessText)}</p>\n        </div>`;
+    return h;
+  }).join('\n\n');
+}
+
+function renderShopList() {
+  const container = document.getElementById('shop-list');
+  if (!state.shops.length) {
+    container.innerHTML = `<div class="empty-state"><div class="icon">🏪</div>Nessun negozio trovato.</div>`;
+    return;
+  }
+  container.innerHTML = state.shops.map((s, i) => {
+    const isEditing = state.editingShopIdx === i;
+    return `<div class="item-row${isEditing ? ' editing' : ''}">
+      <div class="item-row-body">
+        <div class="item-row-name">${escHtml(s.name)}</div>
+        <div class="item-row-sub">${escHtml(addrHtmlToText(s.addrHtml))} · ${escHtml(s.phone)}</div>
+      </div>
+      <div class="item-row-actions">
+        <button class="btn-icon" onclick="openShopForm(${i})" title="Modifica">✏️</button>
+        <button class="btn-icon del" onclick="deleteShop(${i})" title="Elimina">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateShopBar() {
+  const btn  = document.getElementById('shop-publish-btn');
+  const info = document.getElementById('shop-publish-info');
+  if (state.shopsDirty) {
+    btn.disabled = false; btn.classList.add('dirty');
+    info.innerHTML = `<strong>${state.shops.length} negozi</strong> in attesa di pubblicazione`;
+  } else {
+    btn.disabled = true; btn.classList.remove('dirty');
+    info.textContent = 'Nessuna modifica in sospeso';
+  }
+}
+
+function openShopForm(idx) {
+  state.editingShopIdx = idx >= 0 ? idx : null;
+  const s = idx >= 0 ? state.shops[idx] : null;
+  document.getElementById('shop-form-title').textContent = s ? 'Modifica Negozio' : 'Nuovo Negozio';
+  document.getElementById('sf-name').value    = s?.name || '';
+  document.getElementById('sf-phone').value   = s?.phone || '';
+  document.getElementById('sf-url').value     = s?.websiteUrl || '';
+  document.getElementById('sf-urltext').value = s?.websiteText || '';
+  document.getElementById('sf-addr').value    = s ? addrHtmlToText(s.addrHtml) : '';
+  document.getElementById('sf-maps').value    = s?.mapsSrc || '';
+  document.getElementById('sf-access').value  = s?.accessText || '';
+  document.getElementById('shop-submit-btn').textContent = s ? 'Salva Modifiche' : 'Aggiungi Negozio';
+  document.getElementById('shop-form-wrap').classList.add('open');
+  document.getElementById('sf-name').focus();
+  renderShopList();
+}
+
+function cancelShopForm() {
+  state.editingShopIdx = null;
+  document.getElementById('shop-form-wrap').classList.remove('open');
+  renderShopList();
+}
+
+function submitShop() {
+  const name = document.getElementById('sf-name').value.trim();
+  if (!name) { alert('Inserisci il nome del negozio.'); return; }
+  const shop = {
+    id: state.editingShopIdx !== null ? state.shops[state.editingShopIdx].id : `s-${Date.now()}`,
+    name,
+    phone:       document.getElementById('sf-phone').value.trim(),
+    websiteUrl:  document.getElementById('sf-url').value.trim(),
+    websiteText: document.getElementById('sf-urltext').value.trim(),
+    addrHtml:    addrTextToHtml(document.getElementById('sf-addr').value),
+    mapsSrc:     document.getElementById('sf-maps').value.trim(),
+    accessText:  document.getElementById('sf-access').value.trim(),
+  };
+  if (state.editingShopIdx !== null) {
+    state.shops[state.editingShopIdx] = shop;
+  } else {
+    state.shops.push(shop);
+  }
+  state.shopsDirty = true;
+  cancelShopForm(); renderShopList(); updateShopBar();
+  setStatus('warn', 'Negozio aggiornato. Ricorda di pubblicare.');
+}
+
+function deleteShop(idx) {
+  const s = state.shops[idx];
+  openDeleteModal(s.name, 'Negozio', () => {
+    state.shops.splice(idx, 1);
+    state.shopsDirty = true;
+    renderShopList(); updateShopBar();
+    setStatus('warn', 'Negozio eliminato. Ricorda di pubblicare.');
+  });
+}
+
+async function loadShops() {
+  setStatus('loading', 'Caricamento negozi...');
+  try {
+    const { html, sha } = await loadFile(SHOPS_PATH);
+    state.shopsHtml = html; state.shopsSha = sha;
+    state.shops = parseShops(html); state.shopsDirty = false;
+    state.shopsLoaded = true;
+    renderShopList(); updateShopBar();
+    setStatus('ok', `${state.shops.length} negozi caricati.`);
+  } catch(e) { setStatus('err', `Errore negozi: ${e.message}`); }
+}
+
+async function reloadShops() { state.shopsDirty = false; state.shopsLoaded = false; await loadShops(); }
+
+let shopsPublishing = false;
+async function doShopsPublish(message) {
+  if (shopsPublishing) return;
+  shopsPublishing = true;
+  setStatus('loading', 'Pubblicazione negozi...');
+  document.getElementById('shop-publish-btn').disabled = true;
+  try {
+    const newHtml = injectSection(state.shopsHtml, 'SHOPS_LIST_START', 'SHOPS_LIST_END', generateShopsSection(state.shops));
+    state.shopsSha = await saveFile(SHOPS_PATH, state.shopsSha, newHtml, message || 'Aggiornamento negozi');
+    state.shopsHtml = newHtml; state.shopsDirty = false;
+    updateShopBar();
+    setStatus('ok', 'Negozi pubblicati! Il sito si aggiornerà in ~30 secondi.');
+  } catch(e) { setStatus('err', `Errore: ${e.message}`); }
+  finally { shopsPublishing = false; updateShopBar(); }
+}
+
+// ════════════════════════════════════════
+//  █████╗ ██╗      ██████╗  ██████╗  ██████╗██╗
+// ██╔══██╗██║     ██╔═══██╗██╔════╝ ██╔════╝██║
+// ███████║██║     ██║   ██║██║  ███╗██║  ███╗██║
+// ██╔══██║██║     ██║   ██║██║   ██║██║   ██║██║
+// ██║  ██║███████╗╚██████╔╝╚██████╔╝╚██████╔╝██║
+// ╚═╝  ╚═╝╚══════╝ ╚═════╝  ╚═════╝  ╚═════╝╚═╝
+// ════════════════════════════════════════
+
+function parseAccom(html) {
+  const inner = extractSection(html, 'ACCOM_LIST_START', 'ACCOM_LIST_END');
+  const doc = new DOMParser().parseFromString(`<div>${inner}</div>`, 'text/html');
+  const accoms = []; state.accomAccessBoxes = {}; let currentSection = '';
+  Array.from(doc.querySelector('div').children).forEach(el => {
+    if (el.tagName === 'H2' && el.classList.contains('accom-section-heading')) {
+      currentSection = el.textContent.trim();
+    } else if (el.classList.contains('shop-card')) {
+      accoms.push({
+        id: `a${accoms.length}-${Date.now()}`,
+        section: currentSection,
+        type: el.querySelector('.accom-type')?.textContent?.trim() || 'B&B',
+        name: el.querySelector('h2')?.textContent?.trim() || '',
+        addrText: el.querySelector('address.shop-address')?.textContent?.trim() || '',
+        contact: el.querySelector('.accom-contact')?.textContent?.trim() || '',
+        phone: el.querySelector('.shop-phone a')?.textContent?.trim() || '',
+        mapsSrc: el.querySelector('.shop-map iframe')?.getAttribute('src') || '',
+      });
+    } else if (el.classList.contains('access-box') && currentSection) {
+      state.accomAccessBoxes[currentSection] = el.outerHTML;
+    }
+  });
+  return accoms;
+}
+
+function accomCardHtml(a) {
+  const telDigits = a.phone.replace(/[^\d]/g,'');
+  const telHref   = telDigits ? `tel:+39${telDigits}` : '#';
+  const contactHtml = a.contact ? `\n              <p class="accom-contact">${escHtml(a.contact)}</p>` : '';
+  const mapsHtml = a.mapsSrc
+    ? `\n            <div class="shop-map"><iframe src="${a.mapsSrc}" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa ${escHtml(a.name)}"></iframe></div>`
+    : '';
+  return `        <div class="shop-card">
+          <div class="shop-card-inner">
+            <div class="shop-info">
+              <div class="shop-header">
+                <h2>${escHtml(a.name)}</h2>
+                <span class="accom-type">${escHtml(a.type)}</span>
+              </div>
+              <div>
+                <address class="shop-address">${escHtml(a.addrText)}</address>${contactHtml}
+                <p class="shop-phone"><a href="${telHref}">${escHtml(a.phone)}</a></p>
+              </div>
+            </div>${mapsHtml}
+          </div>
+        </div>`;
+}
+
+function generateAccomSection(accoms) {
+  const SECTIONS = ['Piani Resinelli', 'Altre Località'];
+  let html = '';
+  SECTIONS.forEach(sec => {
+    const cards = accoms.filter(a => a.section === sec);
+    if (!cards.length) return;
+    html += `\n        <h2 class="accom-section-heading">${sec}</h2>\n\n`;
+    cards.forEach(a => { html += accomCardHtml(a) + '\n\n'; });
+    if (state.accomAccessBoxes[sec]) html += '        ' + state.accomAccessBoxes[sec] + '\n\n';
+  });
+  return html;
+}
+
+function renderAccomList() {
+  const container = document.getElementById('accom-list');
+  if (!state.accoms.length) {
+    container.innerHTML = `<div class="empty-state"><div class="icon">🏕</div>Nessun alloggio trovato.</div>`;
+    return;
+  }
+  const SECTIONS = ['Piani Resinelli', 'Altre Località'];
+  container.innerHTML = SECTIONS.map(sec => {
+    const cards = state.accoms.filter((a,i) => a.section === sec);
+    if (!cards.length) return '';
+    const rows = state.accoms
+      .map((a, i) => a.section === sec ? { a, i } : null)
+      .filter(Boolean)
+      .map(({ a, i }) => {
+        const isEditing = state.editingAccomIdx === i;
+        return `<div class="item-row${isEditing ? ' editing' : ''}">
+          <div class="item-row-body">
+            <div class="item-row-name">${escHtml(a.name)} <small style="font-weight:400;color:var(--muted)">${escHtml(a.type)}</small></div>
+            <div class="item-row-sub">${escHtml(a.addrText)} · ${escHtml(a.phone)}</div>
+          </div>
+          <div class="item-row-actions">
+            <button class="btn-icon" onclick="openAccomForm(${i})" title="Modifica">✏️</button>
+            <button class="btn-icon del" onclick="deleteAccom(${i})" title="Elimina">🗑️</button>
+          </div>
+        </div>`;
+      }).join('');
+    return `<div class="group-label">${sec}</div>${rows}`;
+  }).join('');
+}
+
+function updateAccomBar() {
+  const btn  = document.getElementById('accom-publish-btn');
+  const info = document.getElementById('accom-publish-info');
+  if (state.accomDirty) {
+    btn.disabled = false; btn.classList.add('dirty');
+    info.innerHTML = `<strong>${state.accoms.length} alloggi</strong> in attesa di pubblicazione`;
+  } else {
+    btn.disabled = true; btn.classList.remove('dirty');
+    info.textContent = 'Nessuna modifica in sospeso';
+  }
+}
+
+function openAccomForm(idx) {
+  state.editingAccomIdx = idx >= 0 ? idx : null;
+  const a = idx >= 0 ? state.accoms[idx] : null;
+  document.getElementById('accom-form-title').textContent = a ? 'Modifica Alloggio' : 'Nuovo Alloggio';
+  document.getElementById('af-section').value = a?.section || 'Piani Resinelli';
+  document.getElementById('af-type').value    = a?.type || 'B&B';
+  document.getElementById('af-name').value    = a?.name || '';
+  document.getElementById('af-addr').value    = a?.addrText || '';
+  document.getElementById('af-contact').value = a?.contact || '';
+  document.getElementById('af-phone').value   = a?.phone || '';
+  document.getElementById('af-maps').value    = a?.mapsSrc || '';
+  document.getElementById('accom-submit-btn').textContent = a ? 'Salva Modifiche' : 'Aggiungi Alloggio';
+  document.getElementById('accom-form-wrap').classList.add('open');
+  document.getElementById('af-name').focus();
+  renderAccomList();
+}
+
+function cancelAccomForm() {
+  state.editingAccomIdx = null;
+  document.getElementById('accom-form-wrap').classList.remove('open');
+  renderAccomList();
+}
+
+function submitAccom() {
+  const name = document.getElementById('af-name').value.trim();
+  if (!name) { alert('Inserisci il nome della struttura.'); return; }
+  const accom = {
+    id: state.editingAccomIdx !== null ? state.accoms[state.editingAccomIdx].id : `a-${Date.now()}`,
+    section:  document.getElementById('af-section').value,
+    type:     document.getElementById('af-type').value,
+    name,
+    addrText: document.getElementById('af-addr').value.trim(),
+    contact:  document.getElementById('af-contact').value.trim(),
+    phone:    document.getElementById('af-phone').value.trim(),
+    mapsSrc:  document.getElementById('af-maps').value.trim(),
+  };
+  if (state.editingAccomIdx !== null) {
+    state.accoms[state.editingAccomIdx] = accom;
+  } else {
+    state.accoms.push(accom);
+  }
+  state.accomDirty = true;
+  cancelAccomForm(); renderAccomList(); updateAccomBar();
+  setStatus('warn', 'Alloggio aggiornato. Ricorda di pubblicare.');
+}
+
+function deleteAccom(idx) {
+  const a = state.accoms[idx];
+  openDeleteModal(a.name, a.section, () => {
+    state.accoms.splice(idx, 1);
+    state.accomDirty = true;
+    renderAccomList(); updateAccomBar();
+    setStatus('warn', 'Alloggio eliminato. Ricorda di pubblicare.');
+  });
+}
+
+async function loadAccom() {
+  setStatus('loading', 'Caricamento alloggi...');
+  try {
+    const { html, sha } = await loadFile(ACCOM_PATH);
+    state.accomHtml = html; state.accomSha = sha;
+    state.accoms = parseAccom(html); state.accomDirty = false;
+    state.accomLoaded = true;
+    renderAccomList(); updateAccomBar();
+    setStatus('ok', `${state.accoms.length} alloggi caricati.`);
+  } catch(e) { setStatus('err', `Errore alloggi: ${e.message}`); }
+}
+
+async function reloadAccom() { state.accomDirty = false; state.accomLoaded = false; await loadAccom(); }
+
+let accomPublishing = false;
+async function doAccomPublish(message) {
+  if (accomPublishing) return;
+  accomPublishing = true;
+  setStatus('loading', 'Pubblicazione alloggi...');
+  document.getElementById('accom-publish-btn').disabled = true;
+  try {
+    const newHtml = injectSection(state.accomHtml, 'ACCOM_LIST_START', 'ACCOM_LIST_END', generateAccomSection(state.accoms));
+    state.accomSha = await saveFile(ACCOM_PATH, state.accomSha, newHtml, message || 'Aggiornamento alloggi');
+    state.accomHtml = newHtml; state.accomDirty = false;
+    updateAccomBar();
+    setStatus('ok', 'Alloggi pubblicati! Il sito si aggiornerà in ~30 secondi.');
+  } catch(e) { setStatus('err', `Errore: ${e.message}`); }
+  finally { accomPublishing = false; updateAccomBar(); }
+}
+
+// ════════════════════════════════════════
+//  ██████╗ ██╗██╗     ██╗      ██████╗ ██╗     ███████╗
+//  ██╔══██╗██║██║     ██║     ██╔═══██╗██║     ██╔════╝
+//  ██████╔╝██║██║     ██║     ██║   ██║██║     █████╗
+//  ██╔═══╝ ██║██║     ██║     ██║   ██║██║     ██╔══╝
+//  ██║     ██║███████╗███████╗╚██████╔╝███████╗███████╗
+//  ╚═╝     ╚═╝╚══════╝╚══════╝ ╚═════╝ ╚══════╝╚══════╝
+// ════════════════════════════════════════
+
+function parsePillole(html) {
+  const inner = extractSection(html, 'PILLOLE_LIST_START', 'PILLOLE_LIST_END');
+  const doc = new DOMParser().parseFromString(`<div>${inner}</div>`, 'text/html');
+  return Array.from(doc.querySelectorAll('article.pillole-item')).map((art, i) => ({
+    id: `p${i}-${Date.now()}`,
+    datetime: art.querySelector('time.post-date')?.getAttribute('datetime') || '',
+    displayDate: art.querySelector('time.post-date')?.textContent?.trim() || '',
+    url: art.querySelector('h2.post-title a')?.getAttribute('href') || '',
+    title: (art.querySelector('h2.post-title a')?.textContent || '').replace(/↗/g,'').trim(),
+    description: art.querySelector('p.post-body')?.textContent?.trim() || '',
+  }));
+}
+
+function pilloleItemHtml(p) {
+  return `        <article class="pillole-item">
+          <time class="post-date" datetime="${p.datetime}">${p.displayDate}</time>
+          <h2 class="post-title"><a href="${p.url}" target="_blank" rel="noopener">${escHtml(p.title)} ↗</a></h2>
+          <p class="post-body">${escHtml(p.description)}</p>
+        </article>`;
+}
+
+function generatePilloleSection(pillole) {
+  return pillole.map(p => pilloleItemHtml(p)).join('\n\n');
+}
+
+function renderPilloleList() {
+  const container = document.getElementById('pillole-list');
+  if (!state.pillole.length) {
+    container.innerHTML = `<div class="empty-state"><div class="icon">📖</div>Nessuna pillola trovata.</div>`;
+    return;
+  }
+  container.innerHTML = state.pillole.map((p, i) => {
+    const isEditing = state.editingPilloleIdx === i;
+    return `<div class="item-row${isEditing ? ' editing' : ''}">
+      <div class="item-row-body">
+        <div class="item-row-name">${escHtml(p.title)}</div>
+        <div class="item-row-sub">${p.displayDate} · ${escHtml(p.description.slice(0,80))}${p.description.length > 80 ? '…' : ''}</div>
+      </div>
+      <div class="item-row-actions">
+        <button class="btn-icon" onclick="openPilloleForm(${i})" title="Modifica">✏️</button>
+        <button class="btn-icon del" onclick="deletePillola(${i})" title="Elimina">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updatePilloleBar() {
+  const btn  = document.getElementById('pillole-publish-btn');
+  const info = document.getElementById('pillole-publish-info');
+  if (state.pilloleDirty) {
+    btn.disabled = false; btn.classList.add('dirty');
+    info.innerHTML = `<strong>${state.pillole.length} pillole</strong> in attesa di pubblicazione`;
+  } else {
+    btn.disabled = true; btn.classList.remove('dirty');
+    info.textContent = 'Nessuna modifica in sospeso';
+  }
+}
+
+function openPilloleForm(idx) {
+  state.editingPilloleIdx = idx >= 0 ? idx : null;
+  const p = idx >= 0 ? state.pillole[idx] : null;
+  document.getElementById('pillole-form-title').textContent = p ? 'Modifica Pillola' : 'Nuova Pillola';
+  document.getElementById('pf-date').value  = p?.datetime || new Date().toISOString().slice(0,10);
+  document.getElementById('pf-url').value   = p?.url || '';
+  document.getElementById('pf-title').value = p?.title || '';
+  document.getElementById('pf-desc').value  = p?.description || '';
+  document.getElementById('pillole-submit-btn').textContent = p ? 'Salva Modifiche' : 'Aggiungi Pillola';
+  document.getElementById('pillole-form-wrap').classList.add('open');
+  document.getElementById('pf-title').focus();
+  renderPilloleList();
+}
+
+function cancelPilloleForm() {
+  state.editingPilloleIdx = null;
+  document.getElementById('pillole-form-wrap').classList.remove('open');
+  renderPilloleList();
+}
+
+function submitPillola() {
+  const title = document.getElementById('pf-title').value.trim();
+  if (!title) { alert('Inserisci il titolo.'); return; }
+  const dateIso = document.getElementById('pf-date').value;
+  const pillola = {
+    id: state.editingPilloleIdx !== null ? state.pillole[state.editingPilloleIdx].id : `p-${Date.now()}`,
+    datetime: dateIso,
+    displayDate: isoToSlash(dateIso),
+    url: document.getElementById('pf-url').value.trim(),
+    title,
+    description: document.getElementById('pf-desc').value.trim(),
+  };
+  if (state.editingPilloleIdx !== null) {
+    state.pillole[state.editingPilloleIdx] = pillola;
+  } else {
+    state.pillole.unshift(pillola);
+  }
+  state.pilloleDirty = true;
+  cancelPilloleForm(); renderPilloleList(); updatePilloleBar();
+  setStatus('warn', 'Pillola aggiornata. Ricorda di pubblicare.');
+}
+
+function deletePillola(idx) {
+  const p = state.pillole[idx];
+  openDeleteModal(p.title, p.displayDate, () => {
+    state.pillole.splice(idx, 1);
+    state.pilloleDirty = true;
+    renderPilloleList(); updatePilloleBar();
+    setStatus('warn', 'Pillola eliminata. Ricorda di pubblicare.');
+  });
+}
+
+async function loadPillole() {
+  setStatus('loading', 'Caricamento pillole...');
+  try {
+    const { html, sha } = await loadFile(PILLOLE_PATH);
+    state.pilloleHtml = html; state.pilloleSha = sha;
+    state.pillole = parsePillole(html); state.pilloleDirty = false;
+    state.pilloleLoaded = true;
+    renderPilloleList(); updatePilloleBar();
+    setStatus('ok', `${state.pillole.length} pillole caricate.`);
+  } catch(e) { setStatus('err', `Errore pillole: ${e.message}`); }
+}
+
+async function reloadPillole() { state.pilloleDirty = false; state.pilloleLoaded = false; await loadPillole(); }
+
+let pillolePublishing = false;
+async function doPillolePublish(message) {
+  if (pillolePublishing) return;
+  pillolePublishing = true;
+  setStatus('loading', 'Pubblicazione pillole...');
+  document.getElementById('pillole-publish-btn').disabled = true;
+  try {
+    const newHtml = injectSection(state.pilloleHtml, 'PILLOLE_LIST_START', 'PILLOLE_LIST_END', generatePilloleSection(state.pillole));
+    state.pilloleSha = await saveFile(PILLOLE_PATH, state.pilloleSha, newHtml, message || 'Aggiornamento pillole di storia');
+    state.pilloleHtml = newHtml; state.pilloleDirty = false;
+    updatePilloleBar();
+    setStatus('ok', 'Pillole pubblicate! Il sito si aggiornerà in ~30 secondi.');
+  } catch(e) { setStatus('err', `Errore: ${e.message}`); }
+  finally { pillolePublishing = false; updatePilloleBar(); }
+}
+
+// ════════════════════════════════════════
+//   █████╗ ██╗   ██╗████████╗ ██████╗ ██████╗ ██╗
+//  ██╔══██╗██║   ██║╚══██╔══╝██╔═══██╗██╔══██╗██║
+//  ███████║██║   ██║   ██║   ██║   ██║██████╔╝██║
+//  ██╔══██║██║   ██║   ██║   ██║   ██║██╔══██╗██║
+//  ██║  ██║╚██████╔╝   ██║   ╚██████╔╝██║  ██║██║
+//  ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝
+// ════════════════════════════════════════
+
+function parseAutori(html) {
+  const inner = extractSection(html, 'AUTORI_LIST_START', 'AUTORI_LIST_END');
+  const doc = new DOMParser().parseFromString(`<div>${inner}</div>`, 'text/html');
+  return Array.from(doc.querySelectorAll('.author-card')).map(card => ({
+    name:       card.querySelector('h2')?.textContent?.trim() || '',
+    role:       card.querySelector('.author-role')?.textContent?.trim() || '',
+    aliasInner: card.querySelector('.author-alias')?.innerHTML?.trim() || '',
+    bioHtml:    card.querySelector('.author-body')?.innerHTML?.trim() || '',
+  }));
+}
+
+function authorCardHtml(a) {
+  const aliasHtml = a.aliasInner ? `\n            <span class="author-alias">${a.aliasInner}</span>` : '';
+  return `        <div class="author-card">
+          <div class="author-meta">
+            <h2>${escHtml(a.name)}</h2>
+            <span class="author-role">${escHtml(a.role)}</span>${aliasHtml}
+          </div>
+          <div class="author-body prose">
+            ${a.bioHtml}
+          </div>
+        </div>`;
+}
+
+function generateAutoriSection(autori) {
+  return autori.map(a => authorCardHtml(a)).join('\n\n');
+}
+
+function renderAutoriList() {
+  const container = document.getElementById('autori-list');
+  if (!state.autori.length) {
+    container.innerHTML = `<div class="empty-state"><div class="icon">👥</div>Nessun autore trovato.</div>`;
+    return;
+  }
+  container.innerHTML = state.autori.map((a, i) => `
+    <div class="author-editor">
+      <div class="author-editor-name">${escHtml(a.name)}</div>
+      <div class="form-grid">
+        <div>
+          <label>Ruolo</label>
+          <input type="text" id="autori-role-${i}" value="${escHtml(a.role)}" oninput="markAutoriDirty()">
+        </div>
+        <div>
+          <label>Alias (HTML interno span, opzionale)</label>
+          <input type="text" id="autori-alias-${i}" value="${escHtml(a.aliasInner)}" oninput="markAutoriDirty()">
+        </div>
+      </div>
+      <div class="form-full">
+        <label>Biografia (HTML — usa &lt;p&gt;, &lt;a&gt;, &lt;em&gt;, &lt;strong&gt;)</label>
+        <textarea id="autori-bio-${i}" rows="5" oninput="markAutoriDirty()">${escHtml(a.bioHtml)}</textarea>
+      </div>
+    </div>`).join('');
+}
+
+function markAutoriDirty() {
+  if (!state.autoriDirty) {
+    state.autoriDirty = true;
+    updateAutoriBar();
+  }
+}
+
+function collectAutoriFromForm() {
+  return state.autori.map((a, i) => ({
+    ...a,
+    role:       document.getElementById(`autori-role-${i}`)?.value.trim() || a.role,
+    aliasInner: document.getElementById(`autori-alias-${i}`)?.value.trim() || '',
+    bioHtml:    document.getElementById(`autori-bio-${i}`)?.value.trim() || a.bioHtml,
+  }));
+}
+
+function updateAutoriBar() {
+  const btn  = document.getElementById('autori-publish-btn');
+  const info = document.getElementById('autori-publish-info');
+  if (state.autoriDirty) {
+    btn.disabled = false; btn.classList.add('dirty');
+    info.innerHTML = `<strong>${state.autori.length} autori</strong> con modifiche non pubblicate`;
+  } else {
+    btn.disabled = true; btn.classList.remove('dirty');
+    info.textContent = 'Nessuna modifica in sospeso';
+  }
+}
+
+async function loadAutori() {
+  setStatus('loading', 'Caricamento autori...');
+  try {
+    const { html, sha } = await loadFile(AUTORI_PATH);
+    state.autoriHtml = html; state.autoriSha = sha;
+    state.autori = parseAutori(html); state.autoriDirty = false;
+    state.autoriLoaded = true;
+    renderAutoriList(); updateAutoriBar();
+    setStatus('ok', `${state.autori.length} autori caricati.`);
+  } catch(e) { setStatus('err', `Errore autori: ${e.message}`); }
+}
+
+async function reloadAutori() { state.autoriDirty = false; state.autoriLoaded = false; await loadAutori(); }
+
+let autoriPublishing = false;
+async function doAutoriPublish(message) {
+  if (autoriPublishing) return;
+  autoriPublishing = true;
+  setStatus('loading', 'Pubblicazione autori...');
+  document.getElementById('autori-publish-btn').disabled = true;
+  // collect current form values before saving
+  const currentAutori = collectAutoriFromForm();
+  try {
+    const newHtml = injectSection(state.autoriHtml, 'AUTORI_LIST_START', 'AUTORI_LIST_END', generateAutoriSection(currentAutori));
+    state.autoriSha = await saveFile(AUTORI_PATH, state.autoriSha, newHtml, message || 'Aggiornamento autori');
+    state.autoriHtml = newHtml; state.autori = currentAutori; state.autoriDirty = false;
+    updateAutoriBar();
+    setStatus('ok', 'Autori pubblicati! Il sito si aggiornerà in ~30 secondi.');
+  } catch(e) { setStatus('err', `Errore: ${e.message}`); }
+  finally { autoriPublishing = false; updateAutoriBar(); }
+}
+
+// ════════════════════════════════════════
+//  EDITOR HTML
+// ════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', () => {
-  cm = CodeMirror.fromTextArea(document.getElementById('codemirror-editor'), {
+  const cm = CodeMirror.fromTextArea(document.getElementById('codemirror-editor'), {
     mode: 'htmlmixed', theme: 'ayu-dark', lineNumbers: true, lineWrapping: false,
     tabSize: 2, indentWithTabs: false,
-    extraKeys: { 'Ctrl-S': openEditorCommitModal, 'Cmd-S': openEditorCommitModal },
+    extraKeys: {
+      'Ctrl-S': () => { if (state.editorFile) openCommitModalWith(`Aggiornamento ${state.editorFile}`, doEditorPublish); },
+      'Cmd-S':  () => { if (state.editorFile) openCommitModalWith(`Aggiornamento ${state.editorFile}`, doEditorPublish); },
+    },
   });
   cm.setSize('100%', '100%');
   state.cm = cm;
 
-  // Auto-load bacheca on start
   const token = getToken();
   if (token) {
     document.getElementById('overlay-token').classList.add('hidden');
@@ -860,27 +1792,17 @@ async function reloadEditorFile() {
 }
 
 async function fetchEditorFile(path) {
-  const token = getToken();
-  if (!token) { showModal('overlay-token'); return; }
   setStatus('loading', `Caricamento ${path}...`);
   document.getElementById('editor-save-btn').disabled = true;
   try {
-    const res = await fetch(
-      `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`,
-      { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json' } }
-    );
-    if (!res.ok) { const e = await res.json(); throw new Error(e.message || `HTTP ${res.status}`); }
-    const data = await res.json();
-    state.editorFile = path;
-    state.editorSha  = data.sha;
-    cm.setValue(decodeB64(data.content));
-    cm.clearHistory();
-    document.getElementById('editor-save-btn').disabled  = false;
-    document.getElementById('preview-btn').disabled      = false;
+    const { html, sha } = await loadFile(path);
+    state.editorFile = path; state.editorSha = sha;
+    state.cm.setValue(html);
+    state.cm.clearHistory();
+    document.getElementById('editor-save-btn').disabled = false;
+    document.getElementById('preview-btn').disabled     = false;
     setStatus('ok', `Caricato: ${path}`);
-  } catch(e) {
-    setStatus('err', `Errore: ${e.message}`);
-  }
+  } catch(e) { setStatus('err', `Errore: ${e.message}`); }
 }
 
 function openPreview() {
@@ -888,104 +1810,15 @@ function openPreview() {
 }
 
 let editorPublishing = false;
-function openEditorCommitModal() {
-  if (!state.editorFile) return;
-  document.getElementById('commit-msg').value = `Aggiornamento ${state.editorFile}`;
-  // Repurpose commit modal for editor too
-  document.getElementById('confirm-commit-btn').onclick = confirmEditorCommit;
-  showModal('overlay-commit');
-}
-
-async function confirmEditorCommit() {
-  if (editorPublishing) return;
-  const token = getToken();
-  if (!token) { showModal('overlay-token'); return; }
-  const message = document.getElementById('commit-msg').value.trim() || `Aggiornamento ${state.editorFile}`;
-  closeModal('overlay-commit');
+async function doEditorPublish(message) {
+  if (editorPublishing || !state.editorFile) return;
   editorPublishing = true;
   setStatus('loading', 'Pubblicazione in corso...');
   try {
-    const body = { message, content: encodeB64(cm.getValue()), sha: state.editorSha, branch: BRANCH };
-    const res = await fetch(
-      `https://api.github.com/repos/${OWNER}/${REPO}/contents/${state.editorFile}`,
-      {
-        method: 'PUT',
-        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      }
-    );
-    if (!res.ok) { const e = await res.json(); throw new Error(e.message || `HTTP ${res.status}`); }
-    const data = await res.json();
-    state.editorSha = data.content.sha;
-    setStatus('ok', `Pubblicato! Il sito si aggiornerà in circa 30 secondi.`);
-  } catch(e) {
-    setStatus('err', `Errore: ${e.message}`);
-  } finally {
-    editorPublishing = false;
-  }
-}
-
-// Reset commit modal onclick to bacheca when switching tabs
-document.getElementById('confirm-commit-btn').onclick = confirmCommit;
-
-// ════════════════════════════════════════
-//  TABS
-// ════════════════════════════════════════
-function switchTab(name) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  const btn = document.querySelector(`.tab-btn[onclick="switchTab('${name}')"]`);
-  if (btn) btn.classList.add('active');
-  document.getElementById(`tab-${name}`)?.classList.add('active');
-  // Reset commit modal target
-  document.getElementById('confirm-commit-btn').onclick = name === 'bacheca' ? confirmCommit : confirmEditorCommit;
-}
-
-// ════════════════════════════════════════
-//  AUTH
-// ════════════════════════════════════════
-function saveToken() {
-  const t = document.getElementById('token-input').value.trim();
-  if (!t) return;
-  localStorage.setItem('lc_gh_token', t);
-  closeModal('overlay-token');
-  loadBacheca();
-}
-function logout() {
-  localStorage.removeItem('lc_gh_token');
-  state.posts = []; state.originalHtml = ''; state.sha = null; state.dirty = false;
-  renderPostList();
-  updatePublishBar();
-  document.getElementById('token-input').value = '';
-  showModal('overlay-token');
-}
-document.getElementById('token-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') saveToken();
-});
-
-// ════════════════════════════════════════
-//  UTILS
-// ════════════════════════════════════════
-function showModal(id)  { document.getElementById(id).classList.remove('hidden'); }
-function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-document.getElementById('overlay-commit').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal('overlay-commit'); });
-document.getElementById('overlay-delete').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal('overlay-delete'); });
-document.getElementById('commit-msg').addEventListener('keydown', e => { if (e.key === 'Escape') closeModal('overlay-commit'); });
-
-function setStatus(type, msg) {
-  const bar  = document.getElementById('status-bar');
-  const icon = document.getElementById('status-icon');
-  const text = document.getElementById('status-text');
-  bar.className = `status-bar ${type === 'ok' ? 'ok' : type === 'err' ? 'err' : type === 'warn' ? 'warn' : ''}`;
-  icon.innerHTML = type === 'loading' ? '<span class="spinner"></span>' : (type === 'ok' ? '●' : type === 'err' ? '✕' : '○');
-  text.textContent = msg;
-}
-
-function decodeB64(str) {
-  return decodeURIComponent(escape(atob(str.replace(/\n/g, ''))));
-}
-function encodeB64(str) {
-  return btoa(unescape(encodeURIComponent(str)));
+    state.editorSha = await saveFile(state.editorFile, state.editorSha, state.cm.getValue(), message || `Aggiornamento ${state.editorFile}`);
+    setStatus('ok', 'Pubblicato! Il sito si aggiornerà in ~30 secondi.');
+  } catch(e) { setStatus('err', `Errore: ${e.message}`); }
+  finally { editorPublishing = false; }
 }
 </script>
 </body>
