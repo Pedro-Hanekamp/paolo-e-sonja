@@ -5,55 +5,106 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Accomodation — LARIOCLIMB</title>
   <meta name="description" content="Posti letto e rifugi vicino alle falesie del Lecchese e del Lago di Como">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/style.css">
 
   <style>
-    /* -------------------------------------------------------
-       ACCOMODATION PAGE STYLES
-       Same card pattern as shops.html
-       ------------------------------------------------------- */
+    body { font-family: 'DM Sans', sans-serif; }
 
+    /* -------------------------------------------------------
+       QUICK-JUMP NAV
+       ------------------------------------------------------- */
+    .jump-nav {
+      background: var(--bg-alt);
+      border: 1px solid var(--divider);
+      border-radius: 8px;
+      padding: var(--space-xl) var(--space-2xl);
+      margin-bottom: var(--space-3xl);
+    }
+    .jump-nav-title {
+      font-family: 'Bebas Neue', var(--font-display, sans-serif);
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0 0 var(--space-md) 0;
+    }
+    .jump-nav-group {
+      margin-bottom: var(--space-lg);
+    }
+    .jump-nav-group:last-child { margin-bottom: 0; }
+    .jump-nav-group-label {
+      font-family: 'Bebas Neue', var(--font-display, sans-serif);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-light, #aaa);
+      margin-bottom: var(--space-sm);
+    }
+    .jump-nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .jump-nav-links a {
+      display: inline-block;
+      padding: 0.25em 0.7em;
+      border: 1px solid var(--divider);
+      border-radius: 4px;
+      font-size: 0.82rem;
+      color: var(--text);
+      text-decoration: none;
+      background: var(--bg);
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .jump-nav-links a:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* -------------------------------------------------------
+       SECTION HEADINGS
+       ------------------------------------------------------- */
+    .accom-section-heading {
+      font-family: 'Bebas Neue', var(--font-display, sans-serif);
+      font-size: 1.5rem;
+      letter-spacing: 0.06em;
+      color: var(--text);
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: var(--space-sm);
+      margin-bottom: var(--space-2xl);
+      margin-top: var(--space-3xl);
+    }
+    .accom-section-heading:first-of-type { margin-top: 0; }
+
+    /* -------------------------------------------------------
+       CARD LAYOUT
+       ------------------------------------------------------- */
     .accom-list {
       display: flex;
       flex-direction: column;
       gap: var(--space-3xl);
     }
 
-    /* Section heading for Piani Resinelli / Altre Località */
-    .accom-section-heading {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--divider);
-      padding-bottom: var(--space-sm);
-      margin-bottom: var(--space-2xl);
-      margin-top: var(--space-3xl);
-    }
-    .accom-section-heading:first-of-type {
-      margin-top: 0;
-    }
-
-    /* Card — identical to shops */
     .shop-card {
       border: 1px solid var(--divider);
-      border-radius: 6px;
+      border-radius: 8px;
       overflow: hidden;
       background: var(--bg);
+      scroll-margin-top: 110px;
     }
 
     .shop-card-inner {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0;
     }
 
     @media (max-width: 640px) {
-      .shop-card-inner {
-        grid-template-columns: 1fr;
-      }
+      .shop-card-inner { grid-template-columns: 1fr; }
     }
 
     .shop-info {
@@ -61,6 +112,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      gap: var(--space-lg);
     }
 
     .shop-header {
@@ -68,108 +120,161 @@
       align-items: baseline;
       gap: var(--space-md);
       flex-wrap: wrap;
-      margin-bottom: var(--space-xl);
+      margin-bottom: var(--space-sm);
     }
 
     .shop-header h2 {
-      font-family: var(--font-display);
-      font-size: 1.35rem;
-      font-weight: 600;
+      font-family: 'Bebas Neue', var(--font-display, sans-serif);
+      font-size: 1.45rem;
+      letter-spacing: 0.03em;
       color: var(--text);
       margin: 0;
     }
-
-    .shop-web {
-      font-size: 0.82rem;
-      color: var(--accent);
-      text-decoration: none;
-      letter-spacing: 0.02em;
-    }
-    .shop-web:hover { text-decoration: underline; }
 
     .shop-address {
       font-style: italic;
       color: var(--text-muted);
       line-height: 1.6;
-      margin-bottom: var(--space-md);
+      margin: 0 0 var(--space-sm) 0;
+      font-size: 0.9rem;
     }
 
-    .shop-phone {
-      margin: 0;
-    }
+    .shop-phone { margin: 0; }
     .shop-phone a {
       color: var(--accent);
       font-size: 0.95rem;
       text-decoration: none;
+      font-weight: 500;
     }
     .shop-phone a:hover { text-decoration: underline; }
 
     .shop-map {
       background: var(--bg-alt);
-      min-height: 260px;
+      min-height: 240px;
     }
-
     .shop-map iframe {
       width: 100%;
       height: 100%;
-      min-height: 260px;
+      min-height: 240px;
       border: 0;
       display: block;
     }
 
-    .shop-photo-row {
-      border-top: 1px solid var(--divider);
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0;
-    }
-
-    .shop-photo {
-      height: 160px;
-      overflow: hidden;
-      position: relative;
+    /* Type badge */
+    .accom-type {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.18em 0.6em;
+      border-radius: 99px;
       background: var(--bg-accent);
-      border-right: 1px solid var(--divider);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      margin-bottom: var(--space-sm);
     }
-    .shop-photo:last-child { border-right: 0; }
 
-    .shop-photo-placeholder {
+    /* Contact name */
+    .accom-contact {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      margin: 0 0 var(--space-sm) 0;
+    }
+
+    /* -------------------------------------------------------
+       PHOTO CAROUSEL
+       ------------------------------------------------------- */
+    .accom-carousel {
+      position: relative;
+      border-top: 1px solid var(--divider);
+      height: 200px;
+      overflow: hidden;
+      background: var(--bg-alt);
+    }
+
+    .carousel-track {
+      display: flex;
+      height: 100%;
+      transition: transform 0.35s cubic-bezier(0.25, 0, 0.1, 1);
+      will-change: transform;
+    }
+
+    .carousel-slide {
+      flex: 0 0 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .carousel-slide img {
       width: 100%;
       height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Prev / Next buttons */
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.45);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      line-height: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
+      transition: background 0.15s, opacity 0.15s;
+      z-index: 2;
+      padding: 0;
+    }
+    .carousel-btn:hover { background: rgba(0,0,0,0.7); }
+    .carousel-prev { left: 10px; }
+    .carousel-next { right: 10px; }
+
+    /* Dots */
+    .carousel-dots {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
       gap: 6px;
-      color: var(--text-light);
-      font-size: 0.78rem;
-      text-align: center;
-      padding: 12px;
+      z-index: 2;
     }
-    .shop-photo-placeholder span {
-      font-size: 1.6rem;
-      opacity: 0.35;
+    .carousel-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      cursor: pointer;
+      border: none;
+      padding: 0;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .carousel-dot.active {
+      background: #fff;
+      transform: scale(1.2);
     }
 
-    /* Type badge — B&B / Rifugio / Camping */
-    .accom-type {
-      display: inline-block;
+    /* Photo count badge */
+    .carousel-count {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.5);
+      color: #fff;
       font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      padding: 0.15em 0.55em;
-      border-radius: 99px;
-      background: var(--bg-accent);
-      color: var(--text-muted);
-      margin-bottom: var(--space-sm);
-    }
-
-    /* Contact name line */
-    .accom-contact {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      margin-bottom: var(--space-sm);
+      padding: 0.15em 0.5em;
+      border-radius: 4px;
+      z-index: 2;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -220,17 +325,55 @@
   <div class="container">
     <div class="site-main" style="max-width:900px;">
 
+      <!-- =====================================================
+           QUICK-JUMP NAV
+           ===================================================== -->
+      <nav class="jump-nav" aria-label="Salta a struttura">
+        <p class="jump-nav-title">Vai direttamente a</p>
+
+        <div class="jump-nav-group">
+          <p class="jump-nav-group-label">Piani Resinelli</p>
+          <div class="jump-nav-links">
+            <a href="#frassini">B&amp;B Ai Frassini</a>
+            <a href="#meridiana">Camping La Meridiana</a>
+            <a href="#casimiro-ferrari">Rifugio Casimiro Ferrari</a>
+            <a href="#sel">Rifugio S.E.L.</a>
+            <a href="#soldanella">Rifugio Soldanella</a>
+            <a href="#carlo-porta">Rifugio Carlo Porta</a>
+            <a href="#rosalba">Rifugio Rosalba</a>
+            <a href="#ristorante-2184">2184 Ristorante-Bar</a>
+          </div>
+        </div>
+
+        <div class="jump-nav-group">
+          <p class="jump-nav-group-label">Altre Località</p>
+          <div class="jump-nav-links">
+            <a href="#monte-barro">Ostello Monte Barro</a>
+            <a href="#piani-erna">B&amp;B Piani d'Erna</a>
+            <a href="#lago-dorato">B&amp;B Sul lago dorato</a>
+            <a href="#camping-grigna">Camping Grigna</a>
+            <a href="#stoppani">Rifugio Stoppani</a>
+            <a href="#camping-spiaggia">Camping Spiaggia</a>
+            <a href="#contrada-lunga">B&amp;B Contrada Lunga</a>
+            <a href="#torre-barbarossa">B&amp;B Torre Barbarossa</a>
+            <a href="#lago-segrino">Cascina Lago Segrino</a>
+            <a href="#lavigna">B&amp;B LaVigna</a>
+            <a href="#antica-officina">B&amp;B L'Antica Officina</a>
+            <a href="#borgo-camporeso">Antico Borgo Camporeso</a>
+            <a href="#bonacina">Alla Bonacina B&amp;B</a>
+          </div>
+        </div>
+      </nav>
+
       <div class="accom-list">
-        <!-- ACCOM_LIST_START -->
 
         <!-- ====================================================
              PIANI RESINELLI
              ==================================================== -->
         <h2 class="accom-section-heading">Piani Resinelli</h2>
 
-
         <!-- B&B Ai Frassini -->
-        <div class="shop-card">
+        <div class="shop-card" id="frassini">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -238,31 +381,34 @@
                 <div class="shop-header">
                   <h2>B&amp;B Ai Frassini</h2>
                 </div>
-                <address class="shop-address">
-                  Piani Resinelli — LC
-                </address>
+                <address class="shop-address">Piani Resinelli — LC</address>
                 <p class="accom-contact">Nicola &amp; Marilena</p>
               </div>
               <p class="shop-phone"><a href="tel:+390341590022">0341-590022</a></p>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=B%26B+Ai+Frassini+Piani+Resinelli&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa B&B Ai Frassini">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Piani+Resinelli+Lecco&output=embed&z=14" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa B&B Ai Frassini"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=75" alt="Camera accogliente" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1531366936798-ef57ea5701ec?auto=format&fit=crop&w=800&q=75" alt="Prato alpino" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=800&q=75" alt="Lago di Como" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1566073771259-e94d1a3e8e32?auto=format&fit=crop&w=900&q=80" alt="Camera B&B" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1531366936798-ef57ea5701ec?auto=format&fit=crop&w=900&q=80" alt="Prato alpino ai Piani Resinelli" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1518841473617-b5d0c28c2c32?auto=format&fit=crop&w=900&q=80" alt="Casa di montagna" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- Camping La Meridiana -->
-        <div class="shop-card">
+        <div class="shop-card" id="meridiana">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -270,31 +416,34 @@
                 <div class="shop-header">
                   <h2>Camping La Meridiana</h2>
                 </div>
-                <address class="shop-address">
-                  Piani Resinelli — LC
-                </address>
+                <address class="shop-address">Piani Resinelli — LC</address>
                 <p class="accom-contact">Ivana &amp; Claudio De Gasperi</p>
               </div>
               <p class="shop-phone"><a href="tel:+390341590000">0341-590000</a></p>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=Camping+La+Meridiana+Piani+Resinelli&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa Camping La Meridiana">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Camping+La+Meridiana+Piani+Resinelli&output=embed&z=15" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa Camping La Meridiana"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=75" alt="Campeggio in montagna" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1531366936798-ef57ea5701ec?auto=format&fit=crop&w=800&q=75" alt="Prato alpino" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1487730116645-74489c55374b?auto=format&fit=crop&w=800&q=75" alt="Area boschiva" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=900&q=80" alt="Campeggio in montagna" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1563299798-ef7c8e37ea53?auto=format&fit=crop&w=900&q=80" alt="Tende al campeggio" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=900&q=80" alt="Fuoco da campo" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- La Baita Rifugio Casimiro Ferrari -->
-        <div class="shop-card">
+        <div class="shop-card" id="casimiro-ferrari">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -302,31 +451,34 @@
                 <div class="shop-header">
                   <h2>La Baita — Rifugio Casimiro Ferrari</h2>
                 </div>
-                <address class="shop-address">
-                  Piani Resinelli — LC
-                </address>
+                <address class="shop-address">Piani Resinelli — LC</address>
                 <p class="accom-contact">Laura Ferrari</p>
               </div>
               <p class="shop-phone"><a href="tel:+390341590288">0341-590288</a></p>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=Rifugio+Casimiro+Ferrari+Piani+Resinelli&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa Rifugio Casimiro Ferrari">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Rifugio+Casimiro+Ferrari+Piani+Resinelli&output=embed&z=15" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa Rifugio Casimiro Ferrari"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1544198365-f5d60b6d8190?auto=format&fit=crop&w=800&q=75" alt="Rifugio alpino" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=75" alt="Vetta alpina" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=800&q=75" alt="Lago di Como" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80" alt="Rifugio alpino" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1445363692815-ebcd599f7621?auto=format&fit=crop&w=900&q=80" alt="Interno accogliente del rifugio" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=900&q=80" alt="Panorama montagna" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- Rifugio S.E.L. -->
-        <div class="shop-card">
+        <div class="shop-card" id="sel">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -334,31 +486,34 @@
                 <div class="shop-header">
                   <h2>Rifugio S.E.L.</h2>
                 </div>
-                <address class="shop-address">
-                  Piani Resinelli — LC
-                </address>
+                <address class="shop-address">Piani Resinelli — LC</address>
                 <p class="accom-contact">Marco Airoldi</p>
               </div>
               <p class="shop-phone"><a href="tel:+390341590163">0341-590163</a></p>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=Rifugio+SEL+Piani+Resinelli&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa Rifugio S.E.L.">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Rifugio+SEL+Piani+Resinelli&output=embed&z=15" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa Rifugio S.E.L."></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1544198365-f5d60b6d8190?auto=format&fit=crop&w=800&q=75" alt="Rifugio di montagna" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1531366936798-ef57ea5701ec?auto=format&fit=crop&w=800&q=75" alt="Paesaggio alpino" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=75" alt="Cime alpine" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?auto=format&fit=crop&w=900&q=80" alt="Rifugio in legno alpino" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=900&q=80" alt="Panorama montagna" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=900&q=80" alt="Montagne innevate" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- Rifugio Soldanella -->
-        <div class="shop-card">
+        <div class="shop-card" id="soldanella">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -366,31 +521,34 @@
                 <div class="shop-header">
                   <h2>Rifugio Soldanella</h2>
                 </div>
-                <address class="shop-address">
-                  Piani Resinelli — LC
-                </address>
+                <address class="shop-address">Piani Resinelli — LC</address>
                 <p class="accom-contact">Mauro Taramelli</p>
               </div>
               <p class="shop-phone"><a href="tel:+390341531132">0341-531132</a></p>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=Rifugio+Soldanella+Piani+Resinelli&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa Rifugio Soldanella">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Rifugio+Soldanella+Piani+Resinelli&output=embed&z=15" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa Rifugio Soldanella"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=75" alt="Panorama alpino" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1544198365-f5d60b6d8190?auto=format&fit=crop&w=800&q=75" alt="Rifugio accogliente" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=75" alt="Dolomiti" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1484910292437-025e5d15ce58?auto=format&fit=crop&w=900&q=80" alt="Rifugio di pietra in quota" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80" alt="Rifugio alpino" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=900&q=80" alt="Vista panoramica montagna" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- Rifugio Carlo Porta -->
-        <div class="shop-card">
+        <div class="shop-card" id="carlo-porta">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -398,30 +556,33 @@
                 <div class="shop-header">
                   <h2>Rifugio Carlo Porta</h2>
                 </div>
-                <address class="shop-address">
-                  Piani Resinelli — LC
-                </address>
+                <address class="shop-address">Piani Resinelli — LC</address>
                 <p class="accom-contact">C.A.I. Milano — Raffaele Palladino</p>
               </div>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=Rifugio+Carlo+Porta+Piani+Resinelli&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa Rifugio Carlo Porta">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Rifugio+Carlo+Porta+Piani+Resinelli&output=embed&z=15" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa Rifugio Carlo Porta"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=75" alt="Parete alpina" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1544198365-f5d60b6d8190?auto=format&fit=crop&w=800&q=75" alt="Rifugio CAI" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=800&q=75" alt="Arrampicata in zona" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?auto=format&fit=crop&w=900&q=80" alt="Rifugio alpino CAI" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=900&q=80" alt="Cime alpine" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=900&q=80" alt="Paesaggio montano" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- Rifugio Rosalba -->
-        <div class="shop-card">
+        <div class="shop-card" id="rosalba">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -429,75 +590,73 @@
                 <div class="shop-header">
                   <h2>Rifugio Rosalba</h2>
                 </div>
-                <address class="shop-address">
-                  Piani Resinelli — LC
-                </address>
+                <address class="shop-address">Piani Resinelli — LC</address>
                 <p class="accom-contact">C.A.I. Milano — Mauro Cariboni</p>
               </div>
               <p class="shop-phone"><a href="tel:+390341732393">0341-732393</a></p>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=Rifugio+Rosalba+Piani+Resinelli&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa Rifugio Rosalba">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Rifugio+Rosalba+Grigna&output=embed&z=14" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa Rifugio Rosalba"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1544198365-f5d60b6d8190?auto=format&fit=crop&w=800&q=75" alt="Rifugio Rosalba" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=75" alt="Alpi lombarde" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=800&q=75" alt="Vista sul lago" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1484910292437-025e5d15ce58?auto=format&fit=crop&w=900&q=80" alt="Rifugio in alta quota" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1445363692815-ebcd599f7621?auto=format&fit=crop&w=900&q=80" alt="Accoglienza rifugio" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=900&q=80" alt="Creste alpine Grigna" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- 2184 Ristorante-Pizzeria-Bar -->
-        <div class="shop-card">
+        <div class="shop-card" id="ristorante-2184">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
-                <span class="accom-type">Ristorante / Bar</span>
+                <span class="accom-type">Ristorante</span>
                 <div class="shop-header">
                   <h2>2184 Ristorante-Pizzeria-Bar</h2>
                 </div>
-                <address class="shop-address">
-                  Piani Resinelli — LC
-                </address>
+                <address class="shop-address">Piani Resinelli — LC</address>
                 <p class="accom-contact">Marco Anghileri</p>
               </div>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=2184+Ristorante+Piani+Resinelli&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa 2184 Ristorante">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=2184+Ristorante+Piani+Resinelli&output=embed&z=15" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa 2184 Ristorante"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=75" alt="Vista dalle Alpi" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=75" alt="Paesaggio montano" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=800&q=75" alt="Lago di Como dall'alto" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=900&q=80" alt="Terrazza ristorante di montagna" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=80" alt="Interno ristorante" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=80" alt="Cucina di montagna" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
-        <!-- Access box — Piani Resinelli -->
-        <div class="access-box">
-          <h4>Accesso Stradale — Piani Resinelli</h4>
-          <p>Da Lecco: seguire la SS583 in direzione Ballabio. A Ballabio alta, imboccare la strada provinciale per i Piani Resinelli (indicazioni chiare). Salita di circa 8 km con curve. Parcheggio ampio disponibile sul pianoro. Distanza da Lecco: ~15 km, 25-30 minuti.</p>
-        </div>
-
-
         <!-- ====================================================
-             ALTRE LOCALITA'
+             ALTRE LOCALITÀ
              ==================================================== -->
         <h2 class="accom-section-heading">Altre Località</h2>
 
-
         <!-- Ostello Parco Monte Barro -->
-        <div class="shop-card">
+        <div class="shop-card" id="monte-barro">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -505,30 +664,33 @@
                 <div class="shop-header">
                   <h2>Ostello Parco Monte Barro</h2>
                 </div>
-                <address class="shop-address">
-                  Galbiate — LC
-                </address>
+                <address class="shop-address">Galbiate — LC</address>
               </div>
               <p class="shop-phone"><a href="tel:+390341540512">0341-540512</a></p>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=Ostello+Parco+Monte+Barro+Galbiate&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa Ostello Parco Monte Barro">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Parco+Monte+Barro+Galbiate&output=embed&z=14" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa Ostello Monte Barro"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1531366936798-ef57ea5701ec?auto=format&fit=crop&w=800&q=75" alt="Parco naturale" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=800&q=75" alt="Vista lago" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=800&q=75" alt="Borgo lombardo" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1449495169669-7b118f960251?auto=format&fit=crop&w=900&q=80" alt="Sentiero nel bosco del parco" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=900&q=80" alt="Natura e colline" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1487730116645-74489c55374b?auto=format&fit=crop&w=900&q=80" alt="Bosco e verde" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- B&B Funivia Piani d'Erna -->
-        <div class="shop-card">
+        <div class="shop-card" id="piani-erna">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -536,30 +698,33 @@
                 <div class="shop-header">
                   <h2>B&amp;B Funivia Piani d'Erna</h2>
                 </div>
-                <address class="shop-address">
-                  Lecco
-                </address>
+                <address class="shop-address">Lecco</address>
               </div>
               <p class="shop-phone"><a href="tel:+390341499244">0341-499244</a></p>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=Funivia+Piani+Erna+Lecco&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa B&B Funivia Piani d'Erna">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Funivia+Piani+Erna+Lecco&output=embed&z=14" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa B&B Funivia Piani d'Erna"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=75" alt="Camera B&B" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=75" alt="Vista montagna" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=800&q=75" alt="Lago di Como" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&w=900&q=80" alt="Lago di Como vista aerea" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=900&q=80" alt="Vista montana sopra Lecco" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1566073771259-e94d1a3e8e32?auto=format&fit=crop&w=900&q=80" alt="Camera B&B con vista" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- B&B Sul lago dorato -->
-        <div class="shop-card">
+        <div class="shop-card" id="lago-dorato">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -567,30 +732,33 @@
                 <div class="shop-header">
                   <h2>B&amp;B Sul lago dorato</h2>
                 </div>
-                <address class="shop-address">
-                  Lecco
-                </address>
+                <address class="shop-address">Lecco</address>
               </div>
               <p class="shop-phone"><a href="tel:+393383831690">338-3831690</a></p>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=B%26B+Sul+lago+dorato+Lecco&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa B&B Sul lago dorato">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Lungolago+Lecco&output=embed&z=14" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa B&B Sul lago dorato"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=800&q=75" alt="Lago di Como" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=75" alt="Camera B&B" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1523906921935-5e3aad5d4e72?auto=format&fit=crop&w=800&q=75" alt="Paese sul lago" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&w=900&q=80" alt="Lago di Como al tramonto" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80" alt="Villaggio lacustre italiano" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1566073771259-e94d1a3e8e32?auto=format&fit=crop&w=900&q=80" alt="Camera accogliente B&B" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- Camping Residence Grigna -->
-        <div class="shop-card">
+        <div class="shop-card" id="camping-grigna">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -598,30 +766,33 @@
                 <div class="shop-header">
                   <h2>Camping Residence Grigna</h2>
                 </div>
-                <address class="shop-address">
-                  Ballabio — LC
-                </address>
+                <address class="shop-address">Ballabio — LC</address>
               </div>
               <p class="shop-phone"><a href="tel:+390341232045">0341-232045</a></p>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=Camping+Residence+Grigna+Ballabio&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa Camping Residence Grigna">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Ballabio+Lecco&output=embed&z=14" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa Camping Residence Grigna"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=75" alt="Camping tende" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=75" alt="Grigna montagna" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1531366936798-ef57ea5701ec?auto=format&fit=crop&w=800&q=75" alt="Area verde alpina" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=900&q=80" alt="Camping con vista sulle Grigne" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1563299798-ef7c8e37ea53?auto=format&fit=crop&w=900&q=80" alt="Area campeggio montagna" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=900&q=80" alt="Grigne viste dal campeggio" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- Rifugio Stoppani -->
-        <div class="shop-card">
+        <div class="shop-card" id="stoppani">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -629,29 +800,32 @@
                 <div class="shop-header">
                   <h2>Rifugio Stoppani</h2>
                 </div>
-                <address class="shop-address">
-                  Monte Resegone — LC
-                </address>
+                <address class="shop-address">Monte Resegone — LC</address>
               </div>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=Rifugio+Stoppani+Resegone&output=embed&z=14"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa Rifugio Stoppani">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Rifugio+Stoppani+Resegone&output=embed&z=14" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa Rifugio Stoppani"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1544198365-f5d60b6d8190?auto=format&fit=crop&w=800&q=75" alt="Rifugio alpino" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=75" alt="Alpi italiane" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=800&q=75" alt="Arrampicata in falesia" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80" alt="Rifugio sul Resegone" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?auto=format&fit=crop&w=900&q=80" alt="Rifugio alpino di montagna" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=900&q=80" alt="Cima del Resegone" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- Camping Spiaggia -->
-        <div class="shop-card">
+        <div class="shop-card" id="camping-spiaggia">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -659,29 +833,32 @@
                 <div class="shop-header">
                   <h2>Camping Spiaggia</h2>
                 </div>
-                <address class="shop-address">
-                  Abbadia Lariana — LC
-                </address>
+                <address class="shop-address">Abbadia Lariana — LC</address>
               </div>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=Camping+Spiaggia+Abbadia+Lariana&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa Camping Spiaggia">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Abbadia+Lariana+Lago+di+Como&output=embed&z=14" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa Camping Spiaggia Abbadia Lariana"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=75" alt="Camping" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=800&q=75" alt="Lago di Como" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1523906921935-5e3aad5d4e72?auto=format&fit=crop&w=800&q=75" alt="Lago e paese" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&w=900&q=80" alt="Lago di Como da riva" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=900&q=80" alt="Camping sul lago" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1487730116645-74489c55374b?auto=format&fit=crop&w=900&q=80" alt="Area verde campeggio" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- B&B Contrada Lunga -->
-        <div class="shop-card">
+        <div class="shop-card" id="contrada-lunga">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -689,29 +866,32 @@
                 <div class="shop-header">
                   <h2>B&amp;B Contrada Lunga</h2>
                 </div>
-                <address class="shop-address">
-                  Abbadia Lariana — LC
-                </address>
+                <address class="shop-address">Abbadia Lariana — LC</address>
               </div>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=Contrada+Lunga+Abbadia+Lariana&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa B&B Contrada Lunga">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Abbadia+Lariana+Lecco&output=embed&z=14" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa B&B Contrada Lunga"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=75" alt="Camera B&B" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=800&q=75" alt="Lago di Como" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=800&q=75" alt="Paese italiano" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80" alt="Paese lacustre italiano" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&w=900&q=80" alt="Lago di Como" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1566073771259-e94d1a3e8e32?auto=format&fit=crop&w=900&q=80" alt="Camera B&B" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- B&B Alla Torre del Barbarossa -->
-        <div class="shop-card">
+        <div class="shop-card" id="torre-barbarossa">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -719,29 +899,32 @@
                 <div class="shop-header">
                   <h2>B&amp;B Alla Torre del Barbarossa</h2>
                 </div>
-                <address class="shop-address">
-                  Mandello del Lario — LC
-                </address>
+                <address class="shop-address">Mandello del Lario — LC</address>
               </div>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=Torre+del+Barbarossa+Mandello+del+Lario&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa B&B Alla Torre del Barbarossa">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Mandello+del+Lario+Lago+di+Como&output=embed&z=14" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa B&B Torre del Barbarossa"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=800&q=75" alt="Paese storico" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1523906921935-5e3aad5d4e72?auto=format&fit=crop&w=800&q=75" alt="Paese sul lago" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=75" alt="Camera B&B" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=900&q=80" alt="Torre storica e borgo" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&w=900&q=80" alt="Vista sul lago da Mandello" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1566073771259-e94d1a3e8e32?auto=format&fit=crop&w=900&q=80" alt="Camera storica B&B" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- Cascina Lago Segrino -->
-        <div class="shop-card">
+        <div class="shop-card" id="lago-segrino">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -749,30 +932,33 @@
                 <div class="shop-header">
                   <h2>Cascina Lago Segrino</h2>
                 </div>
-                <address class="shop-address">
-                  Canzo — CO
-                </address>
+                <address class="shop-address">Canzo — CO</address>
               </div>
               <p class="shop-phone"><a href="tel:+393337801770">333-7801770</a></p>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=Cascina+Lago+Segrino+Canzo&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa Cascina Lago Segrino">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Lago+Segrino+Canzo&output=embed&z=14" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa Cascina Lago Segrino"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1523906921935-5e3aad5d4e72?auto=format&fit=crop&w=800&q=75" alt="Lago Segrino" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=800&q=75" alt="Cascina rurale" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1531366936798-ef57ea5701ec?auto=format&fit=crop&w=800&q=75" alt="Natura verde" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=900&q=80" alt="Campagna italiana vista aerea" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=900&q=80" alt="Cascina lombarda" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80" alt="Paesaggio rurale lombardo" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- B&B LaVigna -->
-        <div class="shop-card">
+        <div class="shop-card" id="lavigna">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -780,31 +966,34 @@
                 <div class="shop-header">
                   <h2>B&amp;B LaVigna</h2>
                 </div>
-                <address class="shop-address">
-                  Primaluna — LC
-                </address>
+                <address class="shop-address">Primaluna — Valsassina — LC</address>
                 <p class="accom-contact">Paola Fazzini</p>
               </div>
               <p class="shop-phone"><a href="tel:+390341981148">0341-981148</a></p>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=B%26B+LaVigna+Primaluna&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa B&B LaVigna">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Primaluna+Valsassina+Lecco&output=embed&z=14" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa B&B LaVigna"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=75" alt="Camera B&B" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1531366936798-ef57ea5701ec?auto=format&fit=crop&w=800&q=75" alt="Paesaggio verde" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=75" alt="Vista montagna" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1531366936798-ef57ea5701ec?auto=format&fit=crop&w=900&q=80" alt="Valle alpina in Valsassina" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80" alt="Campagna e vigna di montagna" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1566073771259-e94d1a3e8e32?auto=format&fit=crop&w=900&q=80" alt="Camera B&B LaVigna" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- B&B L'Antica Officina -->
-        <div class="shop-card">
+        <div class="shop-card" id="antica-officina">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -812,30 +1001,33 @@
                 <div class="shop-header">
                   <h2>B&amp;B L'Antica Officina</h2>
                 </div>
-                <address class="shop-address">
-                  Mandello del Lario — LC
-                </address>
+                <address class="shop-address">Mandello del Lario — LC</address>
               </div>
               <p class="shop-phone"><a href="tel:+393349569005">334-9569005</a></p>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=L%27Antica+Officina+Mandello+del+Lario&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa B&B L'Antica Officina">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Mandello+del+Lario&output=embed&z=14" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa B&B L'Antica Officina"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=800&q=75" alt="Paese storico" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1523906921935-5e3aad5d4e72?auto=format&fit=crop&w=800&q=75" alt="Lago e paese" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=75" alt="Camera B&B" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=900&q=80" alt="Edificio storico convertito" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80" alt="Paese sul lago" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1566073771259-e94d1a3e8e32?auto=format&fit=crop&w=900&q=80" alt="Camera dell'antica officina" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- Antico Borgo Camporeso -->
-        <div class="shop-card">
+        <div class="shop-card" id="borgo-camporeso">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -843,29 +1035,32 @@
                 <div class="shop-header">
                   <h2>Antico Borgo Camporeso</h2>
                 </div>
-                <address class="shop-address">
-                  Galbiate — LC
-                </address>
+                <address class="shop-address">Galbiate — LC</address>
               </div>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=Antico+Borgo+Camporeso+Galbiate&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa Antico Borgo Camporeso">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=Galbiate+Lecco&output=embed&z=14" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa Antico Borgo Camporeso"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=800&q=75" alt="Borgo antico" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1531366936798-ef57ea5701ec?auto=format&fit=crop&w=800&q=75" alt="Natura verde" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=75" alt="Camera" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=900&q=80" alt="Borgo rurale lombardo" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=900&q=80" alt="Antico borgo in pietra" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80" alt="Campagna intorno al borgo" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
         <!-- Alla Bonacina B&B -->
-        <div class="shop-card">
+        <div class="shop-card" id="bonacina">
           <div class="shop-card-inner">
             <div class="shop-info">
               <div>
@@ -873,45 +1068,32 @@
                 <div class="shop-header">
                   <h2>Alla Bonacina B&amp;B</h2>
                 </div>
-                <address class="shop-address">
-                  Lecco
-                </address>
+                <address class="shop-address">Lecco</address>
               </div>
               <p class="shop-phone"><a href="tel:+393338918951">333-8918951</a></p>
             </div>
             <div class="shop-map">
-              <iframe
-                src="https://maps.google.com/maps?q=Alla+Bonacina+Lecco&output=embed&z=15"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Mappa Alla Bonacina B&B">
-              </iframe>
+              <iframe src="https://maps.google.com/maps?q=La+Bonacina+Lecco&output=embed&z=14" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa Alla Bonacina B&B"></iframe>
             </div>
           </div>
-          <div class="shop-photo-row">
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=800&q=75" alt="Lago di Como" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=75" alt="Camera B&B" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="shop-photo"><img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=800&q=75" alt="Paese italiano" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="accom-carousel" data-current="0">
+            <div class="carousel-track">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&w=900&q=80" alt="Lago di Como" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=900&q=80" alt="Lecco sul lago" loading="lazy"></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1566073771259-e94d1a3e8e32?auto=format&fit=crop&w=900&q=80" alt="Camera B&B accogliente" loading="lazy"></div>
+            </div>
+            <button class="carousel-btn carousel-prev" aria-label="Foto precedente">&#8249;</button>
+            <button class="carousel-btn carousel-next" aria-label="Foto successiva">&#8250;</button>
+            <div class="carousel-dots">
+              <button class="carousel-dot active" aria-label="Foto 1"></button>
+              <button class="carousel-dot" aria-label="Foto 2"></button>
+              <button class="carousel-dot" aria-label="Foto 3"></button>
+            </div>
+            <div class="carousel-count">1 / 3</div>
           </div>
         </div>
 
-
-        <!-- Access box — Altre Località -->
-        <div class="access-box">
-          <h4>Accesso Stradale — Altre Località</h4>
-          <p>
-            <strong>Galbiate / Parco Monte Barro:</strong> SS36 dir. Como, uscita Galbiate. Seguire le indicazioni per Galbiate centro o Parco Monte Barro.<br>
-            <strong>Lecco città (B&amp;B):</strong> Accessibile direttamente dall'uscita Lecco Nord della SS36.<br>
-            <strong>Ballabio (Camping Grigna):</strong> SS583 da Lecco, uscita Ballabio — circa 10 minuti da Lecco.<br>
-            <strong>Abbadia Lariana:</strong> SS36 in direzione Lecco / Sondrio, uscita Abbadia Lariana — lago a vista.<br>
-            <strong>Mandello del Lario:</strong> SS36 / SS583, uscita Mandello — 15 km da Lecco in direzione Como/Colico.<br>
-            <strong>Canzo / Lago Segrino:</strong> SP342 da Erba in direzione Canzo, circa 30 km da Lecco.<br>
-            <strong>Primaluna:</strong> SS36 dir. Valtellina, uscita Bellano / Valle San Martino, poi SP62 per Primaluna — circa 25 km da Lecco.
-          </p>
-        </div>
-
-        <!-- ACCOM_LIST_END -->
-      </div><!-- end accom-list -->
-
+      </div><!-- /.accom-list -->
     </div>
   </div>
 </main>
@@ -955,5 +1137,53 @@
 </footer>
 
 <script src="assets/nav.js"></script>
+<script>
+  /* -------------------------------------------------------
+     CAROUSEL — handles all .accom-carousel on the page
+     ------------------------------------------------------- */
+  document.querySelectorAll('.accom-carousel').forEach(function(carousel) {
+    var track   = carousel.querySelector('.carousel-track');
+    var slides  = carousel.querySelectorAll('.carousel-slide');
+    var dots    = carousel.querySelectorAll('.carousel-dot');
+    var count   = carousel.querySelector('.carousel-count');
+    var total   = slides.length;
+    var current = 0;
+
+    function goTo(idx) {
+      // Clamp and wrap
+      if (idx < 0) idx = total - 1;
+      if (idx >= total) idx = 0;
+      current = idx;
+      track.style.transform = 'translateX(-' + (current * 100) + '%)';
+      dots.forEach(function(d, i) {
+        d.classList.toggle('active', i === current);
+      });
+      if (count) count.textContent = (current + 1) + ' / ' + total;
+    }
+
+    // Prev / Next buttons
+    var prevBtn = carousel.querySelector('.carousel-prev');
+    var nextBtn = carousel.querySelector('.carousel-next');
+    if (prevBtn) prevBtn.addEventListener('click', function() { goTo(current - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function() { goTo(current + 1); });
+
+    // Dot buttons
+    dots.forEach(function(dot, i) {
+      dot.addEventListener('click', function() { goTo(i); });
+    });
+
+    // Touch / swipe support
+    var touchStartX = null;
+    carousel.addEventListener('touchstart', function(e) {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    carousel.addEventListener('touchend', function(e) {
+      if (touchStartX === null) return;
+      var diff = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) goTo(diff > 0 ? current + 1 : current - 1);
+      touchStartX = null;
+    });
+  });
+</script>
 </body>
 </html>
