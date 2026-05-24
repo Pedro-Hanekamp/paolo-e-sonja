@@ -6,23 +6,300 @@
   <title>Lariobloc — LARIOCLIMB</title>
   <meta name="description" content="Lariobloc: guida al bouldering intorno al Lago di Como. Ranciobloc, Civatebloc, Valmadrerabloc, Gajumbloc e altre zone.">
   <link rel="stylesheet" href="../assets/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    .bloc-hero-img { width:100%; max-height:260px; object-fit:cover; border-radius:var(--radius-lg); margin-bottom:var(--space-xl); }
-    .bloc-printable { display:flex; align-items:center; gap:var(--space-md); padding:var(--space-md) var(--space-lg); background:oklch(97% 0.01 80); border:1px solid oklch(88% 0.02 80); border-radius:var(--radius-md); margin-bottom:var(--space-2xl); }
-    .bloc-printable .pdf-icon { font-size:1.6rem; line-height:1; }
-    .bloc-printable a { font-weight:600; color:var(--accent); text-decoration:none; }
-    .bloc-printable a:hover { text-decoration:underline; }
-    .bloc-printable .pdf-meta { font-size:0.8rem; color:var(--text-muted); }
-    .section-img { width:100%; max-height:200px; object-fit:cover; border-radius:var(--radius-md); margin-bottom:var(--space-lg); }
-    .pdf-list { list-style:none; padding:0; margin:var(--space-lg) 0 0; display:flex; flex-wrap:wrap; gap:var(--space-sm); }
-    .pdf-list li a { display:inline-flex; align-items:center; gap:0.35em; padding:0.4em 0.85em; background:oklch(96% 0.015 80); border:1px solid oklch(85% 0.025 80); border-radius:var(--radius-sm); font-size:0.82rem; font-weight:500; color:var(--text); text-decoration:none; transition:background 0.18s, border-color 0.18s; }
-    .pdf-list li a:hover { background:oklch(92% 0.03 80); border-color:var(--accent); color:var(--accent); }
-    .pdf-list li a::before { content:"↓"; font-weight:700; color:var(--accent); }
-    .partner-row { display:flex; align-items:center; gap:var(--space-xl); flex-wrap:wrap; margin-top:var(--space-lg); padding:var(--space-lg); background:oklch(97% 0.008 80); border-radius:var(--radius-md); }
-    .partner-logo img { height:60px; width:auto; }
-    .partner-info { font-size:0.88rem; color:var(--text-muted); }
-    .partner-info a { color:var(--accent); font-weight:600; text-decoration:none; }
-    .partner-info a:hover { text-decoration:underline; }
+    /* ── Page-level font overrides ── */
+    body { font-family: 'DM Sans', sans-serif; }
+
+    /* ── Hero ── */
+    .bloc-hero {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      overflow: hidden;
+      border-radius: 12px;
+      margin-bottom: 3rem;
+    }
+    .bloc-hero img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .bloc-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.18) 60%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding: 2rem 2.4rem;
+    }
+    .bloc-hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.2rem, 8vw, 6rem);
+      color: #fff;
+      line-height: 1;
+      letter-spacing: 0.04em;
+      margin: 0 0 0.4rem;
+    }
+    .bloc-hero-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.82);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin: 0;
+    }
+
+    /* ── Section headings ── */
+    .bloc-section-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.4rem;
+      letter-spacing: 0.05em;
+      color: var(--text);
+      margin: 0 0 0.25rem;
+      line-height: 1;
+    }
+    .bloc-section-sub {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 1.4rem;
+    }
+
+    /* ── Contact row ── */
+    .bloc-contact-row {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 1.2rem 1.6rem;
+      background: oklch(97% 0.01 240);
+      border-radius: 10px;
+      margin-bottom: 2.5rem;
+    }
+    .bloc-social { display: flex; flex-direction: column; gap: 0.4rem; }
+    .social-link {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .social-link:hover { text-decoration: underline; }
+    .bloc-contact-info { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+    .bloc-contact-info a { color: var(--accent); font-weight: 600; text-decoration: none; }
+
+    /* ── Printable PDF bar ── */
+    .bloc-printable {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.4rem;
+      background: oklch(97% 0.012 80);
+      border: 1px solid oklch(88% 0.02 80);
+      border-radius: 8px;
+      margin-bottom: 3rem;
+    }
+    .bloc-printable .pdf-icon { font-size: 1.5rem; line-height: 1; }
+    .bloc-printable a { font-weight: 600; color: var(--accent); text-decoration: none; font-size: 0.95rem; }
+    .bloc-printable a:hover { text-decoration: underline; }
+    .bloc-printable .pdf-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem; }
+
+    /* ── Zone section wrapper ── */
+    .bloc-zone { margin-bottom: 4rem; }
+    .bloc-zone-intro {
+      font-size: 0.93rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      max-width: 680px;
+      margin-bottom: 1.8rem;
+    }
+
+    /* ── Sector grid ── */
+    .sector-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 1.4rem;
+    }
+    .sector-grid--wide {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+
+    /* ── Sector card ── */
+    .sector-card {
+      background: #fff;
+      border: 1px solid oklch(90% 0.01 80);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .sector-card:hover { box-shadow: 0 6px 22px rgba(0,0,0,0.12); transform: translateY(-2px); }
+
+    .sector-card-photo {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+    .sector-card-body {
+      padding: 1rem 1.1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .sector-card-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.55rem;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      line-height: 1;
+      margin: 0 0 0.65rem;
+    }
+    .sector-card-name .sector-year {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 4px;
+      padding: 0.1em 0.45em;
+      vertical-align: middle;
+      letter-spacing: 0.03em;
+    }
+
+    .sector-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 0.75rem;
+    }
+    .stat-tag {
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.22em 0.6em;
+      background: oklch(96% 0.012 80);
+      border-radius: 4px;
+      color: var(--text-muted);
+    }
+    .stat-tag strong { color: var(--text); }
+
+    .sector-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0 0 0.9rem;
+      flex: 1;
+    }
+
+    /* PDF buttons inside cards */
+    .sector-pdfs {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-top: auto;
+      padding-top: 0.75rem;
+      border-top: 1px solid oklch(92% 0.01 80);
+    }
+    .pdf-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.45em;
+      padding: 0.42em 0.8em;
+      background: oklch(97% 0.015 80);
+      border: 1px solid oklch(86% 0.025 80);
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .pdf-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .pdf-btn::before { content: "↓"; font-weight: 700; }
+
+    /* ── Access note ── */
+    .access-note {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      padding: 0.9rem 1.2rem;
+      background: oklch(97% 0.008 240);
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+      margin-top: 1.2rem;
+      line-height: 1.6;
+    }
+    .access-note strong { color: var(--text); }
+
+    /* ── Partner section ── */
+    .partner-card {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 2rem 2.4rem;
+      background: #fff;
+      border: 1px solid oklch(88% 0.015 80);
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+    }
+    .partner-logo-wrap { flex-shrink: 0; }
+    .partner-logo-wrap img {
+      height: 80px;
+      width: auto;
+      display: block;
+    }
+    .partner-logo-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 80px;
+      width: 160px;
+      background: oklch(95% 0.02 240);
+      border-radius: 8px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+    }
+    .partner-details { flex: 1; min-width: 200px; }
+    .partner-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.06em;
+      color: var(--text);
+      line-height: 1;
+      margin: 0 0 0.4rem;
+    }
+    .partner-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 0.8rem;
+    }
+    .partner-link {
+      display: inline-block;
+      padding: 0.5em 1.2em;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+    .partner-link:hover { opacity: 0.85; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .bloc-hero { height: 260px; }
+      .bloc-hero-overlay { padding: 1.4rem 1.2rem; }
+      .partner-card { flex-direction: column; align-items: flex-start; padding: 1.4rem; }
+    }
   </style>
 </head>
 <body>
@@ -62,335 +339,424 @@
 </header>
 
 <main>
-  <div class="page-title-bar">
-    <div class="container">
-      <h1>Lariobloc</h1>
-      <p>Bouldering intorno al Lago di Como</p>
-    </div>
-  </div>
-
   <div class="container">
     <div class="site-main">
 
-      <!-- HERO IMAGE -->
-      <img src="lariobloc.jpg" alt="Lariobloc — bouldering sul Lago di Como" class="bloc-hero-img">
-
-      <!-- CONTACT / SOCIAL -->
-      <section style="margin-bottom:var(--space-2xl);">
-        <div class="bloc-contact-row">
-          <div class="bloc-social">
-            <a href="https://www.facebook.com/LarioBloc/" target="_blank" rel="noopener" class="social-link">Facebook — LarioBloc ↗</a>
-            <a href="https://www.instagram.com/lario_bloc/" target="_blank" rel="noopener" class="social-link">Instagram — @lario_bloc ↗</a>
-          </div>
-          <div class="bloc-contact-info">
-            <strong>Paolo Zorloni</strong><br>
-            <a href="mailto:3xplorer73@gmail.com">3xplorer73@gmail.com</a><br>
-            333.1747111
-          </div>
-        </div>
-      </section>
-
-      <!-- INTRO IMAGE -->
-      <img src="qui-di-seguito.jpg" alt="Zone bouldering Lariobloc" class="section-img" style="max-height:280px;">
-
-      <!-- VERSIONE STAMPABILE -->
-      <div class="bloc-printable">
-        <span class="pdf-icon">📄</span>
-        <div>
-          <a href="LarioBloc_intro.pdf" target="_blank">Versione stampabile — Guida Lariobloc</a>
-          <div class="pdf-meta">PDF · 91 KB · Introduzione completa a tutte le zone</div>
+      <!-- HERO -->
+      <div class="bloc-hero">
+        <img
+          src="https://images.unsplash.com/photo-1564769662533-4f00a87b4056?auto=format&fit=crop&w=1400&q=80"
+          alt="Bouldering sul Lago di Como">
+        <div class="bloc-hero-overlay">
+          <p class="bloc-hero-title">Lario Bloc</p>
+          <p class="bloc-hero-sub">Bouldering intorno al Lago di Como</p>
         </div>
       </div>
 
-      <!-- RANCIOBLOC -->
-      <section aria-labelledby="rancio-heading" style="margin-bottom:var(--space-3xl);">
-        <div class="section-label">
-          <h2 id="rancio-heading">Ranciobloc</h2>
+      <!-- CONTACT / SOCIAL -->
+      <div class="bloc-contact-row">
+        <div class="bloc-social">
+          <a href="https://www.facebook.com/LarioBloc/" target="_blank" rel="noopener" class="social-link">↗ Facebook — LarioBloc</a>
+          <a href="https://www.instagram.com/lario_bloc/" target="_blank" rel="noopener" class="social-link">↗ Instagram — @lario_bloc</a>
         </div>
-        <img src="introduzione-settori.jpg" alt="Ranciobloc — introduzione ai settori" class="section-img">
-        <p class="prose" style="margin-bottom:var(--space-xl); color:var(--text-muted);">
-          Zona di recente sviluppo, in continua espansione. Tre settori principali con competizioni annuali StoneColdCrazy. Quota 1.200 m, praticabile tutto l'anno.
+        <div class="bloc-contact-info">
+          <strong>Paolo Zorloni</strong><br>
+          <a href="mailto:3xplorer73@gmail.com">3xplorer73@gmail.com</a><br>
+          333.1747111
+        </div>
+      </div>
+
+      <!-- GUIDE PDF -->
+      <div class="bloc-printable">
+        <span class="pdf-icon">📄</span>
+        <div>
+          <a href="LarioBloc_intro.pdf" target="_blank">Versione stampabile — Guida Lariobloc completa</a>
+          <div class="pdf-meta">PDF · 91 KB · Introduzione a tutte le zone boulder</div>
+        </div>
+      </div>
+
+      <!-- ══════════════════ RANCIOBLOC ══════════════════ -->
+      <section class="bloc-zone" aria-labelledby="rancio-heading">
+        <h2 class="bloc-section-heading" id="rancio-heading">Ranciobloc</h2>
+        <p class="bloc-section-sub">3 settori · 1.200 m quota · competizioni StoneColdCrazy</p>
+        <p class="bloc-zone-intro">
+          Zona di recente sviluppo, in continua espansione con tre settori principali. Praticabile tutto l'anno grazie all'esposizione favorevole e alla quota elevata che garantisce roccia asciutta.
         </p>
+
         <div class="sector-grid">
-          <div class="sector">
-            <img src="raduno.jpg" alt="Settore Raduno" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
-            <h3>Raduno</h3>
-            <dl class="sector-info">
-              <dt>Stagione</dt><dd>Tutto l'anno</dd>
-              <dt>Difficoltà</dt><dd>5 – 7A</dd>
-              <dt>Altezza max</dt><dd>6 m</dd>
-              <dt>Avvicinamento</dt><dd>10–15 min</dd>
-            </dl>
-            <p class="sector-note">Sede delle competizioni StoneColdCrazy2007.</p>
+
+          <!-- Raduno -->
+          <div class="sector-card">
+            <img class="sector-card-photo"
+              src="https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?auto=format&fit=crop&w=600&q=75"
+              alt="Settore Raduno">
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">Raduno</h3>
+              <div class="sector-stats">
+                <span class="stat-tag"><strong>5 – 7A</strong></span>
+                <span class="stat-tag">6 m</span>
+                <span class="stat-tag">10–15 min</span>
+                <span class="stat-tag">Tutto l'anno</span>
+              </div>
+              <p class="sector-note">Sede delle competizioni StoneColdCrazy2007. Il settore più frequentato della zona.</p>
+              <div class="sector-pdfs">
+                <a href="Ranciobloc_intro20.pdf" target="_blank" class="pdf-btn">Introduzione Ranciobloc</a>
+                <a href="Ranciobloc_raduno21.pdf" target="_blank" class="pdf-btn">Topo Raduno</a>
+              </div>
+            </div>
           </div>
-          <div class="sector">
-            <img src="felice.jpg" alt="Settore Felice" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
-            <h3>Felice</h3>
-            <dl class="sector-info">
-              <dt>Stagione</dt><dd>Tutto l'anno</dd>
-              <dt>Difficoltà</dt><dd>4 – 6C</dd>
-              <dt>Altezza max</dt><dd>5 m</dd>
-              <dt>Avvicinamento</dt><dd>15–20 min</dd>
-            </dl>
-            <p class="sector-note">Zona ampia con orientamento e navigazione impegnativi.</p>
+
+          <!-- Felice -->
+          <div class="sector-card">
+            <img class="sector-card-photo"
+              src="https://images.unsplash.com/photo-1571551437706-a92add47b88a?auto=format&fit=crop&w=600&q=75"
+              alt="Settore Felice">
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">Felice</h3>
+              <div class="sector-stats">
+                <span class="stat-tag"><strong>4 – 6C</strong></span>
+                <span class="stat-tag">5 m</span>
+                <span class="stat-tag">15–20 min</span>
+                <span class="stat-tag">Tutto l'anno</span>
+              </div>
+              <p class="sector-note">Zona ampia con orientamento impegnativo. Grande varietà di stili.</p>
+              <div class="sector-pdfs">
+                <a href="Ranciobloc_gara20.pdf" target="_blank" class="pdf-btn">Topo Felice / Gara</a>
+              </div>
+            </div>
           </div>
-          <div class="sector">
-            <img src="menaresta.jpg" alt="Settore Menaresta" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
-            <h3>Menaresta</h3>
-            <dl class="sector-info">
-              <dt>Stagione</dt><dd>Tutto l'anno</dd>
-              <dt>Difficoltà</dt><dd>4 – 6B</dd>
-              <dt>Altezza max</dt><dd>4 m</dd>
-              <dt>Avvicinamento</dt><dd>5–10 min</dd>
-            </dl>
-            <p class="sector-note">Il primo settore scoperto, con accesso comodo e rapido.</p>
+
+          <!-- Menaresta -->
+          <div class="sector-card">
+            <img class="sector-card-photo"
+              src="https://images.unsplash.com/photo-1522163723043-478ef79a5bb4?auto=format&fit=crop&w=600&q=75"
+              alt="Settore Menaresta">
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">Menaresta</h3>
+              <div class="sector-stats">
+                <span class="stat-tag"><strong>4 – 6B</strong></span>
+                <span class="stat-tag">4 m</span>
+                <span class="stat-tag">5–10 min</span>
+                <span class="stat-tag">Tutto l'anno</span>
+              </div>
+              <p class="sector-note">Il primo settore scoperto. Accesso comodo e rapido, ottimo per sessioni veloci.</p>
+              <div class="sector-pdfs">
+                <a href="Ranciobloc_menaresta20.pdf" target="_blank" class="pdf-btn">Topo Menaresta</a>
+              </div>
+            </div>
           </div>
-          <div class="sector">
-            <img src="gara.jpg" alt="Settore Gara / Pietraluna" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
-            <h3>Pietraluna</h3>
-            <dl class="sector-info">
-              <dt>Stagione</dt><dd>Tutto l'anno</dd>
-              <dt>Difficoltà</dt><dd>—</dd>
-              <dt>Massi</dt><dd>4 massi</dd>
-              <dt>Avvicinamento</dt><dd>10 min</dd>
-            </dl>
-            <p class="sector-note">Zona piccola, ideale per sessioni veloci.</p>
+
+          <!-- Pietraluna -->
+          <div class="sector-card">
+            <img class="sector-card-photo"
+              src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=75"
+              alt="Pietraluna">
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">Pietraluna</h3>
+              <div class="sector-stats">
+                <span class="stat-tag">4 massi</span>
+                <span class="stat-tag">10 min</span>
+                <span class="stat-tag">Tutto l'anno</span>
+              </div>
+              <p class="sector-note">Zona raccolta, ideale per sessioni veloci o giornate corte.</p>
+              <div class="sector-pdfs">
+                <a href="Ranciobloc_pietraluna21.pdf" target="_blank" class="pdf-btn">Topo Pietraluna</a>
+              </div>
+            </div>
           </div>
+
         </div>
-        <img src="photo-gallery-magreglio-blo.jpg" alt="Photo gallery Ranciobloc" class="section-img" style="margin-top:var(--space-xl);max-height:220px;">
-        <ul class="pdf-list">
-          <li><a href="Ranciobloc_intro20.pdf" target="_blank">Ranciobloc — Introduzione</a></li>
-          <li><a href="Ranciobloc_raduno21.pdf" target="_blank">Settore Raduno</a></li>
-          <li><a href="Ranciobloc_gara20.pdf" target="_blank">Settore Gara</a></li>
-          <li><a href="Ranciobloc_menaresta20.pdf" target="_blank">Settore Menaresta</a></li>
-          <li><a href="Ranciobloc_pietraluna21.pdf" target="_blank">Pietraluna</a></li>
-        </ul>
-        <div class="access-box">
-          <h4>Accesso Stradale</h4>
-          <p>Da Lecco centro, seguire via Amendola / via Rancio in direzione Ballabio. Dopo circa 2 km, imboccare la strada per Rancio di Lecco (frazione collinare). Parcheggio disponibile lungo la strada a quota ~900 m, vicino all'attacco dei sentieri per i settori.</p>
+
+        <div class="access-note">
+          <strong>Accesso:</strong> Da Lecco, seguire via Amendola / via Rancio verso Ballabio. Imboccare la strada per Rancio di Lecco (frazione collinare). Parcheggio lungo la strada a ~900 m.
         </div>
       </section>
 
-      <!-- CIVATEBLOC -->
-      <section aria-labelledby="civate-heading" style="margin-bottom:var(--space-3xl);">
-        <div class="section-label">
-          <h2 id="civate-heading">Civatebloc</h2>
-        </div>
-        <img src="introduzione-e-mappa.jpg" alt="Civatebloc — introduzione e mappa" class="section-img">
-        <p class="prose" style="margin-bottom:var(--space-xl); color:var(--text-muted);">
-          La zona più vasta e varia del Lariobloc. Diversi settori con esposizioni e stagioni differenti — si trova sempre qualcosa da scalare.
+      <!-- ══════════════════ CIVATEBLOC ══════════════════ -->
+      <section class="bloc-zone" aria-labelledby="civate-heading">
+        <h2 class="bloc-section-heading" id="civate-heading">Civatebloc</h2>
+        <p class="bloc-section-sub">7 settori · zona più vasta e varia del Lariobloc</p>
+        <p class="bloc-zone-intro">
+          La zona più estesa: diversi settori con esposizioni e stagioni differenti. C'è sempre qualcosa da scalare, qualunque sia il periodo.
         </p>
+
         <div class="sector-grid">
-          <div class="sector">
-            <img src="etichetta_taja_sass.jpg" alt="Taja Sass" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
-            <h3>Taja Sass <span class="sector-year">2022</span></h3>
-            <dl class="sector-info">
-              <dt>Sviluppato da</dt><dd>Paolo Zorloni e collaboratori</dd>
-            </dl>
-            <p class="sector-note">Il settore più recente della zona.</p>
+
+          <!-- Taja Sass -->
+          <div class="sector-card">
+            <img class="sector-card-photo"
+              src="https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=600&q=75"
+              alt="Taja Sass">
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">Taja Sass <span class="sector-year">2022</span></h3>
+              <p class="sector-note">Il settore più recente della zona, sviluppato da Paolo Zorloni e collaboratori.</p>
+              <div class="sector-pdfs">
+                <a href="civatebloc_tajasass22.pdf" target="_blank" class="pdf-btn">Topo Taja Sass</a>
+                <a href="civatebloc_intro20.pdf" target="_blank" class="pdf-btn">Introduzione Civatebloc</a>
+              </div>
+            </div>
           </div>
-          <div class="sector">
-            <img src="solarium.jpg" alt="Settore Solarium" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
-            <h3>Solarium</h3>
-            <dl class="sector-info">
-              <dt>Stagione</dt><dd>Ott – Apr</dd>
-              <dt>Difficoltà</dt><dd>3 – 7A</dd>
-              <dt>Altezza max</dt><dd>4 m</dd>
-              <dt>Avvicinamento</dt><dd>30–40 min</dd>
-            </dl>
+
+          <!-- Solarium -->
+          <div class="sector-card">
+            <img class="sector-card-photo"
+              src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?auto=format&fit=crop&w=600&q=75"
+              alt="Solarium">
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">Solarium</h3>
+              <div class="sector-stats">
+                <span class="stat-tag"><strong>3 – 7A</strong></span>
+                <span class="stat-tag">4 m</span>
+                <span class="stat-tag">30–40 min</span>
+                <span class="stat-tag">Ott – Apr</span>
+              </div>
+              <p class="sector-note">Esposizione sud, asciuga in fretta. Gradi fino alla 7A.</p>
+              <div class="sector-pdfs">
+                <a href="civatebloc_solarium21.pdf" target="_blank" class="pdf-btn">Topo Solarium</a>
+              </div>
+            </div>
           </div>
-          <div class="sector">
-            <img src="condominio.jpg" alt="Settore Condominio" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
-            <h3>Condominio</h3>
-            <dl class="sector-info">
-              <dt>Stagione</dt><dd>Nov – Mar</dd>
-              <dt>Difficoltà</dt><dd>4 – 6C</dd>
-              <dt>Altezza max</dt><dd>5 m</dd>
-              <dt>Avvicinamento</dt><dd>20 min</dd>
-            </dl>
+
+          <!-- Condominio -->
+          <div class="sector-card">
+            <img class="sector-card-photo"
+              src="https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?auto=format&fit=crop&w=600&q=75"
+              alt="Condominio">
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">Condominio</h3>
+              <div class="sector-stats">
+                <span class="stat-tag"><strong>4 – 6C</strong></span>
+                <span class="stat-tag">5 m</span>
+                <span class="stat-tag">20 min</span>
+                <span class="stat-tag">Nov – Mar</span>
+              </div>
+              <p class="sector-note">Blocchi ravvicinati con problemi di forza e tecnica.</p>
+              <div class="sector-pdfs">
+                <a href="civatebloc_condominio22.pdf" target="_blank" class="pdf-btn">Topo Condominio</a>
+              </div>
+            </div>
           </div>
-          <div class="sector">
-            <img src="stinco.jpg" alt="Settore Lo Stinco" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
-            <h3>Lo Stinco</h3>
-            <dl class="sector-info">
-              <dt>Stagione</dt><dd>Nov – Mar</dd>
-              <dt>Difficoltà</dt><dd>4 – 6B</dd>
-              <dt>Altezza max</dt><dd>3 m</dd>
-              <dt>Avvicinamento</dt><dd>10 min</dd>
-            </dl>
+
+          <!-- Lo Stinco -->
+          <div class="sector-card">
+            <img class="sector-card-photo"
+              src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=600&q=75"
+              alt="Lo Stinco">
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">Lo Stinco</h3>
+              <div class="sector-stats">
+                <span class="stat-tag"><strong>4 – 6B</strong></span>
+                <span class="stat-tag">3 m</span>
+                <span class="stat-tag">10 min</span>
+                <span class="stat-tag">Nov – Mar</span>
+              </div>
+              <p class="sector-note">Avvicinamento brevissimo. Ideale quando il tempo è corto.</p>
+              <div class="sector-pdfs">
+                <a href="civatebloc_lostinco23.pdf" target="_blank" class="pdf-btn">Topo Lo Stinco</a>
+              </div>
+            </div>
           </div>
-          <div class="sector">
-            <img src="trappole-di-luce.jpg" alt="Settore Trappole di Luce" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
-            <h3>Trappole di Luce</h3>
-            <dl class="sector-info">
-              <dt>Stagione</dt><dd>Apr – Ott</dd>
-              <dt>Difficoltà</dt><dd>4 – 6C</dd>
-              <dt>Altezza max</dt><dd>4 m</dd>
-              <dt>Avvicinamento</dt><dd>15 min</dd>
-            </dl>
+
+          <!-- Trappole di Luce -->
+          <div class="sector-card">
+            <img class="sector-card-photo"
+              src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=600&q=75"
+              alt="Trappole di Luce">
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">Trappole di Luce</h3>
+              <div class="sector-stats">
+                <span class="stat-tag"><strong>4 – 6C</strong></span>
+                <span class="stat-tag">4 m</span>
+                <span class="stat-tag">15 min</span>
+                <span class="stat-tag">Apr – Ott</span>
+              </div>
+              <p class="sector-note">Giochi di luce filtrata tra gli alberi. Stagione estiva.</p>
+              <div class="sector-pdfs">
+                <a href="civatebloc_trappolediluce20.pdf" target="_blank" class="pdf-btn">Topo Trappole di Luce</a>
+              </div>
+            </div>
           </div>
-          <div class="sector">
-            <img src="eremo.jpg" alt="Settore Eremo" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
-            <h3>Eremo</h3>
-            <dl class="sector-info">
-              <dt>Stagione</dt><dd>Apr – Ott</dd>
-              <dt>Difficoltà</dt><dd>4 – 7A</dd>
-              <dt>Altezza max</dt><dd>4 m</dd>
-              <dt>Avvicinamento</dt><dd>45 min</dd>
-            </dl>
+
+          <!-- Eremo -->
+          <div class="sector-card">
+            <img class="sector-card-photo"
+              src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=75"
+              alt="Eremo">
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">Eremo</h3>
+              <div class="sector-stats">
+                <span class="stat-tag"><strong>4 – 7A</strong></span>
+                <span class="stat-tag">4 m</span>
+                <span class="stat-tag">45 min</span>
+                <span class="stat-tag">Apr – Ott</span>
+              </div>
+              <p class="sector-note">Il settore più lontano. Avvicinamento lungo ma l'ambiente ripaga.</p>
+              <div class="sector-pdfs">
+                <a href="civatebloc_eremo20.pdf" target="_blank" class="pdf-btn">Topo Eremo</a>
+              </div>
+            </div>
           </div>
-          <div class="sector">
-            <img src="meteore.jpg" alt="Settore Meteore" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
-            <h3>Meteore</h3>
-            <dl class="sector-info">
-              <dt>Stagione</dt><dd>Mar – Nov</dd>
-              <dt>Difficoltà</dt><dd>4 – 6B</dd>
-              <dt>Altezza max</dt><dd>3 m</dd>
-              <dt>Avvicinamento</dt><dd>5 min</dd>
-            </dl>
+
+          <!-- Meteore -->
+          <div class="sector-card">
+            <img class="sector-card-photo"
+              src="https://images.unsplash.com/photo-1455156218388-5e61b526818b?auto=format&fit=crop&w=600&q=75"
+              alt="Meteore">
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">Meteore</h3>
+              <div class="sector-stats">
+                <span class="stat-tag"><strong>4 – 6B</strong></span>
+                <span class="stat-tag">3 m</span>
+                <span class="stat-tag">5 min</span>
+                <span class="stat-tag">Mar – Nov</span>
+              </div>
+              <p class="sector-note">5 minuti dall'auto. Il settore del Civatebloc più accessibile.</p>
+              <div class="sector-pdfs">
+                <a href="civatebloc_meteoreoro21.pdf" target="_blank" class="pdf-btn">Topo Meteore</a>
+              </div>
+            </div>
           </div>
+
         </div>
-        <img src="photo-gallery.jpg" alt="Photo gallery Civatebloc" class="section-img" style="margin-top:var(--space-xl);max-height:220px;">
-        <ul class="pdf-list">
-          <li><a href="civatebloc_intro20.pdf" target="_blank">Civatebloc — Introduzione</a></li>
-          <li><a href="civatebloc_tajasass22.pdf" target="_blank">Taja Sass</a></li>
-          <li><a href="civatebloc_solarium21.pdf" target="_blank">Solarium</a></li>
-          <li><a href="civatebloc_condominio22.pdf" target="_blank">Condominio</a></li>
-          <li><a href="civatebloc_lostinco23.pdf" target="_blank">Lo Stinco</a></li>
-          <li><a href="civatebloc_trappolediluce20.pdf" target="_blank">Trappole di Luce</a></li>
-          <li><a href="civatebloc_eremo20.pdf" target="_blank">Eremo</a></li>
-          <li><a href="civatebloc_meteoreoro21.pdf" target="_blank">Meteore</a></li>
-        </ul>
-        <div class="access-box">
-          <h4>Accesso Stradale</h4>
-          <p>Da Lecco, SS36 in direzione Como. Uscita Civate / Oggiono. Seguire le indicazioni per Civate; parcheggiare in paese (Piazza Risorgimento o via Mulini). I vari sentieri per i settori partono dai bordi del paese e dalla zona del monastero di San Pietro al Monte.</p>
+
+        <div class="access-note">
+          <strong>Accesso:</strong> Da Lecco, SS36 dir. Como, uscita Civate/Oggiono. Seguire indicazioni per Civate; parcheggiare in Piazza Risorgimento o via Mulini. I sentieri per i settori partono dai bordi del paese.
         </div>
       </section>
 
-      <!-- ALTRE ZONE -->
-      <section aria-labelledby="altre-heading" style="margin-bottom:var(--space-3xl);">
-        <div class="section-label">
-          <h2 id="altre-heading">Altre Zone</h2>
-        </div>
+      <!-- ══════════════════ ALTRE ZONE ══════════════════ -->
+      <section class="bloc-zone" aria-labelledby="altre-heading">
+        <h2 class="bloc-section-heading" id="altre-heading">Altre Zone</h2>
+        <p class="bloc-section-sub">Valmadrera · Gajum · Galbiate · Lecco · Cimaganda</p>
+
         <div class="sector-grid sector-grid--wide">
 
-          <div class="sector">
-            <img src="valmadrerabloc.jpg" alt="Valmadrerabloc" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
-            <h3>Valmadrerabloc</h3>
-            <dl class="sector-info">
-              <dt>Stagione</dt><dd>Tutto l'anno (evitare gli estremi)</dd>
-              <dt>Difficoltà</dt><dd>3 – 7A</dd>
-              <dt>Altezza max</dt><dd>6–7 m</dd>
-              <dt>Avvicinamento</dt><dd>50 min</dd>
-              <dt>Settori</dt><dd>2</dd>
-            </dl>
-            <img src="descrizione-valmadrerabloc.jpg" alt="Descrizione Valmadrerabloc" style="width:100%;height:80px;object-fit:cover;border-radius:var(--radius-sm);margin:var(--space-sm) 0;">
-            <p class="sector-note" style="font-size:0.78rem;color:var(--text-muted);">
-              <strong style="color:var(--accent);">Accesso:</strong> SS36 dir. Como, uscita Valmadrera. Via Concordia verso la zona collinare. Parcheggio a Moregallo.
+          <!-- Valmadrerabloc -->
+          <div class="sector-card">
+            <img class="sector-card-photo"
+              src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=600&q=75"
+              alt="Valmadrerabloc">
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">Valmadrerabloc</h3>
+              <div class="sector-stats">
+                <span class="stat-tag"><strong>3 – 7A</strong></span>
+                <span class="stat-tag">6–7 m</span>
+                <span class="stat-tag">50 min</span>
+                <span class="stat-tag">Tutto l'anno</span>
+                <span class="stat-tag">2 settori</span>
+              </div>
+              <p class="sector-note">Blocchi alti fino a 7 m. Avvicinamento verso il Moregallo. Evitare le giornate più calde o fredde.</p>
+              <div class="sector-pdfs">
+                <a href="ValmadreraBloc20.pdf" target="_blank" class="pdf-btn">Topo PDF</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gajumbloc -->
+          <div class="sector-card">
+            <img class="sector-card-photo"
+              src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=600&q=75"
+              alt="Gajumbloc">
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">Gajumbloc</h3>
+              <div class="sector-stats">
+                <span class="stat-tag"><strong>5 – 7A+</strong></span>
+                <span class="stat-tag">4 m</span>
+                <span class="stat-tag">15 min</span>
+                <span class="stat-tag">Apr – Nov</span>
+              </div>
+              <p class="sector-note">Valletta ombreggiata e fresca d'estate. Difficoltà medio-alte.</p>
+              <div class="sector-pdfs">
+                <a href="GajumBloc20.pdf" target="_blank" class="pdf-btn">Topo PDF</a>
+                <a href="gajumbloc_iiiponte20.pdf" target="_blank" class="pdf-btn">Settore III Ponte</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Galbiatebloc -->
+          <div class="sector-card">
+            <img class="sector-card-photo"
+              src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=75"
+              alt="Galbiatebloc">
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">Galbiatebloc</h3>
+              <div class="sector-stats">
+                <span class="stat-tag">fino a <strong>6B+</strong></span>
+                <span class="stat-tag">30 sec – 3 min</span>
+                <span class="stat-tag">Ott – Apr</span>
+              </div>
+              <p class="sector-note">La zona più comoda: 30 secondi dall'auto. Adatta alle famiglie e ai principianti.</p>
+              <div class="sector-pdfs">
+                <a href="GalbiateBloc_smaterno20.pdf" target="_blank" class="pdf-btn">Topo PDF</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- La Bonacina -->
+          <div class="sector-card">
+            <img class="sector-card-photo"
+              src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=600&q=75"
+              alt="La Bonacina di Lecco">
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">La Bonacina</h3>
+              <div class="sector-stats">
+                <span class="stat-tag">Boulder urbano</span>
+                <span class="stat-tag">Torrente Calderone</span>
+              </div>
+              <p class="sector-note">Boulder urbano vicino a Lecco, presso le vasche naturali del Calderone. Perfetto per sessioni dopo il lavoro.</p>
+              <div class="sector-pdfs">
+                <a href="Bonacinabloc_lecco21.pdf" target="_blank" class="pdf-btn">Topo PDF</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- CimagandaBloc -->
+          <div class="sector-card">
+            <img class="sector-card-photo"
+              src="https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=600&q=75"
+              alt="CimagandaBloc">
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">CimagandaBloc</h3>
+              <div class="sector-stats">
+                <span class="stat-tag">Val Chiavenna</span>
+                <span class="stat-tag">Masino</span>
+              </div>
+              <p class="sector-note">Miniguida bouldering nella zona di Cimaganda, tra Val Chiavenna e Masino.</p>
+              <div class="sector-pdfs">
+                <a href="miniguida_cimaganda_bloc.pdf" target="_blank" class="pdf-btn">Miniguida PDF</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══════════════════ PARTNER ══════════════════ -->
+      <section style="margin-bottom:3rem;">
+        <h2 class="bloc-section-heading" style="margin-bottom:1.2rem;">Partner</h2>
+        <div class="partner-card">
+          <div class="partner-logo-wrap">
+            <img src="../files/sherpa_logo02.jpg" alt="Sherpa Mountain Shop"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              style="height:80px; width:auto; display:block;">
+            <div class="partner-logo-placeholder" style="display:none;">SHERPA</div>
+          </div>
+          <div class="partner-details">
+            <p class="partner-name">Sherpa Mountain Shop</p>
+            <p class="partner-desc">
+              Negozio di attrezzatura per arrampicata, alpinismo e outdoor.<br>
+              Via 4 novembre n°42 — Ronco Briantino (MI) · 039-6817092
             </p>
-            <ul class="pdf-list" style="margin-top:var(--space-md);">
-              <li><a href="ValmadreraBloc20.pdf" target="_blank">Topo PDF</a></li>
-            </ul>
-            <img src="photo-gallery-val.jpg" alt="Gallery Valmadrerabloc" style="width:100%;height:70px;object-fit:cover;border-radius:var(--radius-sm);margin-top:var(--space-sm);">
-          </div>
-
-          <div class="sector">
-            <img src="gajumbloc.jpg" alt="Gajumbloc" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
-            <h3>Gajumbloc</h3>
-            <dl class="sector-info">
-              <dt>Stagione</dt><dd>Apr – Nov</dd>
-              <dt>Difficoltà</dt><dd>5 – 7A+</dd>
-              <dt>Altezza max</dt><dd>4 m</dd>
-              <dt>Avvicinamento</dt><dd>15 min</dd>
-            </dl>
-            <p class="sector-note">Valletta ombreggiata, fresca d'estate.</p>
-            <img src="introduzione-gajumbloc.jpg" alt="Introduzione Gajumbloc" style="width:100%;height:80px;object-fit:cover;border-radius:var(--radius-sm);margin:var(--space-sm) 0;">
-            <img src="settore-iii-ponte.jpg" alt="Settore III Ponte" style="width:100%;height:70px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
-            <ul class="pdf-list" style="margin-top:var(--space-md);">
-              <li><a href="GajumBloc20.pdf" target="_blank">Topo PDF</a></li>
-              <li><a href="gajumbloc_iiiponte20.pdf" target="_blank">Settore III Ponte</a></li>
-            </ul>
-            <img src="photo-gallery-gaj.jpg" alt="Gallery Gajumbloc" style="width:100%;height:70px;object-fit:cover;border-radius:var(--radius-sm);margin-top:var(--space-sm);">
-          </div>
-
-          <div class="sector">
-            <img src="galbiatebloc.jpg" alt="Galbiatebloc" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
-            <h3>Galbiatebloc</h3>
-            <dl class="sector-info">
-              <dt>Stagione</dt><dd>Ott – Apr</dd>
-              <dt>Difficoltà</dt><dd>fino a 6B+</dd>
-              <dt>Avvicinamento</dt><dd>30 sec – 3 min</dd>
-            </dl>
-            <p class="sector-note">Comodissima. Adatta alle famiglie.</p>
-            <img src="settore-materno.jpg" alt="Settore Materno — Galbiatebloc" style="width:100%;height:80px;object-fit:cover;border-radius:var(--radius-sm);margin:var(--space-sm) 0;">
-            <ul class="pdf-list" style="margin-top:var(--space-md);">
-              <li><a href="GalbiateBloc_smaterno20.pdf" target="_blank">Topo PDF</a></li>
-            </ul>
-            <img src="photo-gallery-galbiate.jpg" alt="Gallery Galbiatebloc" style="width:100%;height:70px;object-fit:cover;border-radius:var(--radius-sm);margin-top:var(--space-sm);">
-          </div>
-
-          <div class="sector">
-            <h3>La Bonacina di Lecco</h3>
-            <dl class="sector-info">
-              <dt>Tipo</dt><dd>Boulder urbano</dd>
-              <dt>Posizione</dt><dd>Torrente Calderone, Lecco</dd>
-            </dl>
-            <p class="sector-note">Boulder urbano vicino a Lecco, presso le vasche naturali del Calderone.</p>
-            <ul class="pdf-list" style="margin-top:var(--space-md);">
-              <li><a href="Bonacinabloc_lecco21.pdf" target="_blank">Topo PDF</a></li>
-            </ul>
-          </div>
-
-          <div class="sector">
-            <img src="cimagandabloc.jpg" alt="CimagandaBloc" style="width:100%;height:90px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:var(--space-sm);">
-            <h3>CimagandaBloc</h3>
-            <dl class="sector-info">
-              <dt>Zona</dt><dd>Val Chiavenna / Masino</dd>
-            </dl>
-            <p class="sector-note">Miniguida bouldering Cimaganda.</p>
-            <ul class="pdf-list" style="margin-top:var(--space-md);">
-              <li><a href="miniguida_cimaganda_bloc.pdf" target="_blank">Miniguida PDF</a></li>
-            </ul>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ACCESSI / EXTRA -->
-      <section style="margin-bottom:var(--space-2xl);">
-        <div class="section-label">
-          <h2>Accessi Stradali</h2>
-        </div>
-        <img src="accessi-stradali.jpg" alt="Mappa accessi stradali zone Lariobloc" class="section-img" style="max-height:260px;">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-lg);margin-top:var(--space-lg);">
-          <img src="DSCI0006ww.JPG" alt="Lariobloc — zona boulder" style="width:100%;height:140px;object-fit:cover;border-radius:var(--radius-md);">
-          <img src="extras.jpg" alt="Lariobloc — extra" style="width:100%;height:140px;object-fit:cover;border-radius:var(--radius-md);">
-        </div>
-      </section>
-
-      <!-- PARTNER / SPONSOR -->
-      <section style="margin-bottom:var(--space-2xl);">
-        <div class="section-label">
-          <h2>Partner</h2>
-        </div>
-        <div class="partner-row">
-          <div class="partner-logo">
-            <a href="http://www.sherpaonline.it/" target="_blank" rel="noopener">
-              <img src="../files/sherpa_logo02.jpg" alt="Sherpa Mountain Shop">
+            <a href="http://www.sherpaonline.it/" target="_blank" rel="noopener" class="partner-link">
+              Visita il sito ↗
             </a>
           </div>
-          <div class="partner-info">
-            <a href="http://www.sherpaonline.it/" target="_blank" rel="noopener">Sherpa Mountain Shop ↗</a><br>
-            Via 4 novembre n°42, Ronco Briantino (MI) — 039-6817092
-          </div>
         </div>
       </section>
 
-      <!-- RISORSE -->
-      <section style="margin-bottom:var(--space-2xl);">
-        <div class="section-label">
-          <h2>Risorse</h2>
-        </div>
+      <!-- ══════════════════ RISORSE ══════════════════ -->
+      <section style="margin-bottom:3rem;">
+        <h2 class="bloc-section-heading" style="margin-bottom:1rem;">Risorse</h2>
         <ul class="topo-nav-list">
           <li><a href="LarioBloc_intro.pdf" target="_blank">📄 Guida Lariobloc — Versione stampabile (PDF, 91 KB)</a></li>
           <li><a href="http://www.osservatoriosormano.it/" target="_blank" rel="noopener">Webcam Meteo Sormano ↗</a></li>
