@@ -2108,10 +2108,10 @@ function generateLarioblocSection(zones) {
 async function loadLariobloc() {
   setStatus('loading', 'Caricamento Lariobloc...');
   try {
-    const { content, sha } = await loadFile(LARIOBLOC_PATH);
-    state.larioblocHtml = content;
+    const { html, sha } = await loadFile(LARIOBLOC_PATH);
+    state.larioblocHtml = html;
     state.larioblocSha  = sha;
-    state.larioblocZones = parseLariobloc(content);
+    state.larioblocZones = parseLariobloc(html);
     state.larioblocLoaded = true;
     renderLarioblocList();
     setStatus('ok', 'Lariobloc caricato.');
