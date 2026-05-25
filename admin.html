@@ -326,6 +326,7 @@
     <button class="tab-btn" onclick="switchTab('alloggi')">🏕 Alloggi</button>
     <button class="tab-btn" onclick="switchTab('pillole')">📖 Pillole</button>
     <button class="tab-btn" onclick="switchTab('autori')">👥 Autori</button>
+    <button class="tab-btn" onclick="switchTab('lariobloc')">🪨 Lariobloc</button>
     <button class="tab-btn" onclick="switchTab('editor')">🛠 Editor HTML</button>
   </div>
   <div class="spacer"></div>
@@ -617,6 +618,97 @@
 </div>
 
 <!-- ══════════════════════════════════════
+     TAB: LARIOBLOC
+══════════════════════════════════════ -->
+<div class="tab-content" id="tab-lariobloc">
+  <div class="section-wrap">
+
+    <!-- Zone list -->
+    <div id="lariobloc-list">
+      <div class="empty-state"><div class="icon">⏳</div>Caricamento Lariobloc...</div>
+    </div>
+
+    <!-- Zone editor (hidden until a zone is selected) -->
+    <div id="lariobloc-zone-editor" style="display:none;margin-top:2rem;padding:1.5rem;background:oklch(97% 0.005 80);border-radius:12px;border:1px solid oklch(88% 0.01 80);">
+      <h3 style="margin:0 0 1.2rem;font-size:1rem;font-weight:700;color:oklch(30% 0.02 80);" id="lbz-editor-title">Modifica Zona</h3>
+
+      <label style="display:block;font-size:12px;font-weight:600;margin-bottom:.3rem;color:oklch(40% 0.02 80);">Nome zona</label>
+      <input id="lbz-heading" type="text" style="width:100%;padding:8px 10px;border:1px solid oklch(85% 0.01 80);border-radius:8px;font-size:13px;margin-bottom:1rem;box-sizing:border-box;" oninput="markLarioblocDirty()">
+
+      <label style="display:block;font-size:12px;font-weight:600;margin-bottom:.3rem;color:oklch(40% 0.02 80);">Sottotitolo</label>
+      <input id="lbz-sub" type="text" style="width:100%;padding:8px 10px;border:1px solid oklch(85% 0.01 80);border-radius:8px;font-size:13px;margin-bottom:1rem;box-sizing:border-box;" oninput="markLarioblocDirty()">
+
+      <label style="display:block;font-size:12px;font-weight:600;margin-bottom:.3rem;color:oklch(40% 0.02 80);">Introduzione</label>
+      <textarea id="lbz-intro" rows="3" style="width:100%;padding:8px 10px;border:1px solid oklch(85% 0.01 80);border-radius:8px;font-size:13px;margin-bottom:1rem;box-sizing:border-box;resize:vertical;" oninput="markLarioblocDirty()"></textarea>
+
+      <!-- Sector list within zone -->
+      <div style="margin-top:0.5rem;">
+        <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem;">
+          <span style="font-size:12px;font-weight:700;color:oklch(40% 0.02 80);text-transform:uppercase;letter-spacing:.05em;">Settori</span>
+          <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px;" onclick="addLarioblocSector()">+ Aggiungi settore</button>
+        </div>
+        <div id="lbz-sectors"></div>
+      </div>
+
+      <div style="display:flex;gap:.8rem;margin-top:1.2rem;">
+        <button class="btn btn-publish" onclick="saveLarioblocZoneEdit()">✓ Salva zona</button>
+        <button class="btn btn-ghost" onclick="cancelLarioblocZoneEdit()">Annulla</button>
+      </div>
+    </div>
+
+    <!-- Sector editor (nested) -->
+    <div id="lariobloc-sector-editor" style="display:none;margin-top:1.5rem;padding:1.2rem;background:oklch(95% 0.008 100);border-radius:10px;border:1px solid oklch(85% 0.015 100);">
+      <h4 style="margin:0 0 1rem;font-size:.9rem;font-weight:700;color:oklch(30% 0.02 80);" id="lbs-editor-title">Modifica Settore</h4>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;">
+        <div>
+          <label style="display:block;font-size:11px;font-weight:600;margin-bottom:.25rem;color:oklch(40% 0.02 80);">Nome settore</label>
+          <input id="lbs-name" type="text" style="width:100%;padding:7px 9px;border:1px solid oklch(85% 0.01 80);border-radius:7px;font-size:12px;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;font-weight:600;margin-bottom:.25rem;color:oklch(40% 0.02 80);">Gradi (es. 5 – 7A)</label>
+          <input id="lbs-grades" type="text" style="width:100%;padding:7px 9px;border:1px solid oklch(85% 0.01 80);border-radius:7px;font-size:12px;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;font-weight:600;margin-bottom:.25rem;color:oklch(40% 0.02 80);">Altezza</label>
+          <input id="lbs-height" type="text" placeholder="es. 6 m" style="width:100%;padding:7px 9px;border:1px solid oklch(85% 0.01 80);border-radius:7px;font-size:12px;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;font-weight:600;margin-bottom:.25rem;color:oklch(40% 0.02 80);">Avvicinamento</label>
+          <input id="lbs-approach" type="text" placeholder="es. 10–15 min" style="width:100%;padding:7px 9px;border:1px solid oklch(85% 0.01 80);border-radius:7px;font-size:12px;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;font-weight:600;margin-bottom:.25rem;color:oklch(40% 0.02 80);">Stagione</label>
+          <input id="lbs-season" type="text" placeholder="es. Tutto l'anno" style="width:100%;padding:7px 9px;border:1px solid oklch(85% 0.01 80);border-radius:7px;font-size:12px;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;font-weight:600;margin-bottom:.25rem;color:oklch(40% 0.02 80);">Anno sviluppo</label>
+          <input id="lbs-year" type="text" placeholder="es. 2022" style="width:100%;padding:7px 9px;border:1px solid oklch(85% 0.01 80);border-radius:7px;font-size:12px;box-sizing:border-box;">
+        </div>
+      </div>
+
+      <div style="margin-top:.8rem;">
+        <label style="display:block;font-size:11px;font-weight:600;margin-bottom:.25rem;color:oklch(40% 0.02 80);">Note</label>
+        <textarea id="lbs-note" rows="2" style="width:100%;padding:7px 9px;border:1px solid oklch(85% 0.01 80);border-radius:7px;font-size:12px;box-sizing:border-box;resize:vertical;"></textarea>
+      </div>
+
+      <div style="display:flex;gap:.6rem;margin-top:.8rem;">
+        <button class="btn btn-publish" style="font-size:12px;padding:6px 14px;" onclick="saveLarioblocSectorEdit()">✓ Salva</button>
+        <button class="btn btn-ghost" style="font-size:12px;padding:6px 14px;" onclick="cancelLarioblocSectorEdit()">Annulla</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="publish-bar">
+    <div class="publish-info" id="lariobloc-publish-info">Nessuna modifica in sospeso</div>
+    <div class="spacer"></div>
+    <button class="btn btn-ghost" onclick="reloadLariobloc()" style="font-size:12px;padding:6px 12px;">↺ Ricarica</button>
+    <button class="btn btn-publish" id="lariobloc-publish-btn" onclick="openCommitModalWith('Aggiornamento Lariobloc', doLarioblocPublish)" disabled>🚀 Pubblica</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
      TAB: EDITOR HTML
 ══════════════════════════════════════ -->
 <div class="tab-content" id="tab-editor">
@@ -667,8 +759,9 @@ const BACHECA_PATH = 'bacheca/index.html';
 const SHOPS_PATH   = 'shops.html';
 const ACCOM_PATH   = 'accomodation.html';
 const PILLOLE_PATH = 'pillole/pillole.html';
-const AUTORI_PATH  = 'autori.html';
-const PREVIEW_BASE = 'https://pedro-hanekamp.github.io/paolo-e-sonja/';
+const AUTORI_PATH     = 'autori.html';
+const LARIOBLOC_PATH  = 'lariobloc/index.html';
+const PREVIEW_BASE = 'https://larioclimb.paolo-sonja.net/'; // update to your Turbify domain
 
 // ════════════════════════════════════════
 //  STATE
@@ -684,6 +777,8 @@ const state = {
   pillole: [], pilloleHtml: '', pilloleSha: null, pilloleDirty: false, pilloleLoaded: false, editingPilloleIdx: null,
   // Autori
   autori: [], autoriHtml: '', autoriSha: null, autoriDirty: false, autoriLoaded: false,
+  // Lariobloc
+  larioblocZones: [], larioblocHtml: '', larioblocSha: null, larioblocDirty: false, larioblocLoaded: false, editingLarioblocZone: null, editingLarioblocSector: null,
   // Editor
   editorFile: null, editorSha: null, cm: null,
 };
@@ -798,8 +893,9 @@ function switchTab(name) {
   document.getElementById(`tab-${name}`)?.classList.add('active');
   if (name === 'negozi'  && !state.shopsLoaded)   loadShops();
   if (name === 'alloggi' && !state.accomLoaded)    loadAccom();
-  if (name === 'pillole' && !state.pilloleLoaded)  loadPillole();
-  if (name === 'autori'  && !state.autoriLoaded)   loadAutori();
+  if (name === 'pillole'    && !state.pilloleLoaded)    loadPillole();
+  if (name === 'autori'     && !state.autoriLoaded)     loadAutori();
+  if (name === 'lariobloc'  && !state.larioblocLoaded)  loadLariobloc();
 }
 
 // ════════════════════════════════════════
@@ -1807,6 +1903,244 @@ async function fetchEditorFile(path) {
 
 function openPreview() {
   if (state.editorFile) window.open(PREVIEW_BASE + state.editorFile, '_blank');
+}
+
+// ════════════════════════════════════════
+//  LARIOBLOC
+// ════════════════════════════════════════
+
+function parseLariobloc(html) {
+  const section = extractSection(html, 'LARIOBLOC_ZONES_START', 'LARIOBLOC_ZONES_END');
+  const doc = new DOMParser().parseFromString(`<div>${section}</div>`, 'text/html');
+  const zones = [];
+  doc.querySelectorAll('.bloc-zone').forEach(zoneEl => {
+    const heading = zoneEl.querySelector('.bloc-section-heading')?.textContent.trim() || '';
+    const sub     = zoneEl.querySelector('.bloc-section-sub')?.textContent.trim() || '';
+    const intro   = zoneEl.querySelector('.bloc-zone-intro')?.textContent.trim() || '';
+    const sectors = [];
+    zoneEl.querySelectorAll('.sector-card').forEach(card => {
+      const name     = card.querySelector('.sector-card-name')?.textContent.trim() || '';
+      const stats    = [...card.querySelectorAll('.stat-tag')].map(s => s.textContent.trim());
+      const note     = card.querySelector('.sector-note')?.textContent.trim() || '';
+      const year     = card.querySelector('.sector-year-badge')?.textContent.trim() || '';
+      const photo    = card.querySelector('.sector-card-photo')?.getAttribute('src') || '';
+      const pdfs     = [...card.querySelectorAll('.pdf-btn')].map(a => ({ label: a.textContent.trim(), href: a.getAttribute('href') }));
+      // stats order: grades, height, approach, season
+      sectors.push({ name, grades: stats[0]||'', height: stats[1]||'', approach: stats[2]||'', season: stats[3]||'', note, year, photo, pdfs });
+    });
+    zones.push({ heading, sub, intro, sectors });
+  });
+  return zones;
+}
+
+function renderLarioblocList() {
+  const el = document.getElementById('lariobloc-list');
+  if (!state.larioblocZones.length) {
+    el.innerHTML = '<div class="empty-state"><div class="icon">🪨</div>Nessuna zona trovata.</div>';
+    return;
+  }
+  el.innerHTML = state.larioblocZones.map((z, zi) => `
+    <div style="margin-bottom:1.8rem;padding:1.2rem;background:#fff;border-radius:12px;border:1px solid oklch(89% 0.01 80);">
+      <div style="display:flex;align-items:flex-start;gap:.8rem;">
+        <div style="flex:1;">
+          <div style="font-size:1rem;font-weight:700;color:oklch(25% 0.02 80);">${z.heading}</div>
+          <div style="font-size:12px;color:oklch(50% 0.02 80);margin-top:2px;">${z.sub}</div>
+          <div style="font-size:12px;color:oklch(45% 0.02 80);margin-top:.4rem;font-style:italic;">${z.intro.substring(0,120)}${z.intro.length>120?'…':''}</div>
+        </div>
+        <button class="btn btn-ghost" style="font-size:12px;padding:5px 12px;flex-shrink:0;" onclick="editLarioblocZone(${zi})">✏ Modifica</button>
+      </div>
+      <div style="margin-top:.8rem;display:flex;flex-wrap:wrap;gap:.4rem;">
+        ${z.sectors.map((s,si) => `
+          <span style="background:oklch(94% 0.01 80);border-radius:20px;padding:3px 10px;font-size:11px;display:flex;align-items:center;gap:.4rem;">
+            ${s.name}
+            <button onclick="editLarioblocZoneSector(${zi},${si})" style="background:none;border:none;cursor:pointer;font-size:11px;color:oklch(50% 0.02 80);padding:0;">✏</button>
+            <button onclick="deleteLarioblocSector(${zi},${si})" style="background:none;border:none;cursor:pointer;font-size:11px;color:oklch(55% 0.15 25);padding:0;">✕</button>
+          </span>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function editLarioblocZone(zi) {
+  state.editingLarioblocZone = zi;
+  const z = state.larioblocZones[zi];
+  document.getElementById('lbz-editor-title').textContent = `Modifica Zona: ${z.heading}`;
+  document.getElementById('lbz-heading').value  = z.heading;
+  document.getElementById('lbz-sub').value       = z.sub;
+  document.getElementById('lbz-intro').value     = z.intro;
+  renderLbzSectors(z.sectors);
+  document.getElementById('lariobloc-zone-editor').style.display = 'block';
+  document.getElementById('lariobloc-zone-editor').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderLbzSectors(sectors) {
+  const el = document.getElementById('lbz-sectors');
+  if (!sectors.length) { el.innerHTML = '<div style="font-size:12px;color:oklch(55% 0.02 80);font-style:italic;">Nessun settore. Aggiungi uno.</div>'; return; }
+  el.innerHTML = sectors.map((s,si) => `
+    <div style="display:flex;align-items:center;gap:.6rem;padding:.5rem .8rem;background:#fff;border-radius:8px;border:1px solid oklch(90% 0.01 80);margin-bottom:.4rem;">
+      <span style="flex:1;font-size:12px;font-weight:600;color:oklch(30% 0.02 80);">${s.name}</span>
+      <span style="font-size:11px;color:oklch(50% 0.02 80);">${s.grades}</span>
+      <button class="btn btn-ghost" style="font-size:11px;padding:3px 9px;" onclick="editLarioblocZoneSector(${state.editingLarioblocZone},${si})">✏</button>
+      <button class="btn btn-ghost" style="font-size:11px;padding:3px 9px;color:oklch(55% 0.15 25);" onclick="deleteLarioblocSector(${state.editingLarioblocZone},${si})">✕</button>
+    </div>
+  `).join('');
+}
+
+function saveLarioblocZoneEdit() {
+  const zi = state.editingLarioblocZone;
+  state.larioblocZones[zi].heading = document.getElementById('lbz-heading').value.trim();
+  state.larioblocZones[zi].sub     = document.getElementById('lbz-sub').value.trim();
+  state.larioblocZones[zi].intro   = document.getElementById('lbz-intro').value.trim();
+  cancelLarioblocZoneEdit();
+  renderLarioblocList();
+  markLarioblocDirty();
+}
+
+function cancelLarioblocZoneEdit() {
+  state.editingLarioblocZone = null;
+  document.getElementById('lariobloc-zone-editor').style.display = 'none';
+  document.getElementById('lariobloc-sector-editor').style.display = 'none';
+}
+
+function editLarioblocZoneSector(zi, si) {
+  state.editingLarioblocZone   = zi;
+  state.editingLarioblocSector = si;
+  const s = state.larioblocZones[zi].sectors[si];
+  document.getElementById('lbs-editor-title').textContent = `Settore: ${s.name}`;
+  document.getElementById('lbs-name').value     = s.name;
+  document.getElementById('lbs-grades').value   = s.grades;
+  document.getElementById('lbs-height').value   = s.height;
+  document.getElementById('lbs-approach').value = s.approach;
+  document.getElementById('lbs-season').value   = s.season;
+  document.getElementById('lbs-year').value     = s.year;
+  document.getElementById('lbs-note').value     = s.note;
+  document.getElementById('lariobloc-sector-editor').style.display = 'block';
+  document.getElementById('lariobloc-zone-editor').style.display   = 'block';
+  document.getElementById('lariobloc-sector-editor').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function saveLarioblocSectorEdit() {
+  const zi = state.editingLarioblocZone;
+  const si = state.editingLarioblocSector;
+  const s  = state.larioblocZones[zi].sectors[si];
+  s.name     = document.getElementById('lbs-name').value.trim();
+  s.grades   = document.getElementById('lbs-grades').value.trim();
+  s.height   = document.getElementById('lbs-height').value.trim();
+  s.approach = document.getElementById('lbs-approach').value.trim();
+  s.season   = document.getElementById('lbs-season').value.trim();
+  s.year     = document.getElementById('lbs-year').value.trim();
+  s.note     = document.getElementById('lbs-note').value.trim();
+  cancelLarioblocSectorEdit();
+  if (state.editingLarioblocZone !== null) renderLbzSectors(state.larioblocZones[state.editingLarioblocZone].sectors);
+  renderLarioblocList();
+  markLarioblocDirty();
+}
+
+function cancelLarioblocSectorEdit() {
+  state.editingLarioblocSector = null;
+  document.getElementById('lariobloc-sector-editor').style.display = 'none';
+}
+
+function addLarioblocSector() {
+  const zi = state.editingLarioblocZone;
+  if (zi === null) return;
+  state.larioblocZones[zi].sectors.push({ name: 'Nuovo Settore', grades: '', height: '', approach: '', season: '', year: '', note: '', photo: '', pdfs: [] });
+  const si = state.larioblocZones[zi].sectors.length - 1;
+  renderLbzSectors(state.larioblocZones[zi].sectors);
+  markLarioblocDirty();
+  editLarioblocZoneSector(zi, si);
+}
+
+function deleteLarioblocSector(zi, si) {
+  if (!confirm(`Eliminare settore "${state.larioblocZones[zi].sectors[si].name}"?`)) return;
+  state.larioblocZones[zi].sectors.splice(si, 1);
+  renderLarioblocList();
+  if (state.editingLarioblocZone === zi) renderLbzSectors(state.larioblocZones[zi].sectors);
+  markLarioblocDirty();
+}
+
+function markLarioblocDirty() {
+  state.larioblocDirty = true;
+  document.getElementById('lariobloc-publish-info').textContent = 'Modifiche non pubblicate';
+  document.getElementById('lariobloc-publish-info').style.color = 'oklch(60% 0.18 55)';
+  document.getElementById('lariobloc-publish-btn').disabled = false;
+}
+
+function updateLarioblocBar() {
+  if (!state.larioblocDirty) {
+    document.getElementById('lariobloc-publish-info').textContent = 'Nessuna modifica in sospeso';
+    document.getElementById('lariobloc-publish-info').style.color = '';
+    document.getElementById('lariobloc-publish-btn').disabled = true;
+  }
+}
+
+function generateLarioblocSection(zones) {
+  return zones.map(z => `
+      <!-- ══════════════════ ${z.heading.toUpperCase()} ══════════════════ -->
+      <section class="bloc-zone" aria-labelledby="${z.heading.toLowerCase().replace(/\s+/g,'-')}-heading">
+        <h2 class="bloc-section-heading" id="${z.heading.toLowerCase().replace(/\s+/g,'-')}-heading">${z.heading}</h2>
+        <p class="bloc-section-sub">${z.sub}</p>
+        <p class="bloc-zone-intro">
+          ${z.intro}
+        </p>
+
+        <div class="sector-grid">
+          ${z.sectors.map(s => `<div class="sector-card">
+            ${s.photo ? `<img class="sector-card-photo" src="${s.photo}" alt="${s.name}">` : ''}
+            <div class="sector-card-body">
+              <h3 class="sector-card-name">${s.name}</h3>
+              ${s.year ? `<span class="sector-year-badge">${s.year}</span>` : ''}
+              <div class="sector-stats">
+                ${s.grades   ? `<span class="stat-tag"><strong>${s.grades}</strong></span>` : ''}
+                ${s.height   ? `<span class="stat-tag">${s.height}</span>` : ''}
+                ${s.approach ? `<span class="stat-tag">${s.approach}</span>` : ''}
+                ${s.season   ? `<span class="stat-tag">${s.season}</span>` : ''}
+              </div>
+              ${s.note ? `<p class="sector-note">${s.note}</p>` : ''}
+              ${s.pdfs && s.pdfs.length ? `<div class="sector-pdfs">${s.pdfs.map(p => `<a href="${p.href}" target="_blank" class="pdf-btn">${p.label}</a>`).join('')}</div>` : ''}
+            </div>
+          </div>`).join('\n          ')}
+        </div>
+      </section>`).join('\n');
+}
+
+async function loadLariobloc() {
+  setStatus('loading', 'Caricamento Lariobloc...');
+  try {
+    const { content, sha } = await loadFile(LARIOBLOC_PATH);
+    state.larioblocHtml = content;
+    state.larioblocSha  = sha;
+    state.larioblocZones = parseLariobloc(content);
+    state.larioblocLoaded = true;
+    renderLarioblocList();
+    setStatus('ok', 'Lariobloc caricato.');
+  } catch(e) { setStatus('err', `Errore Lariobloc: ${e.message}`); }
+}
+
+async function reloadLariobloc() {
+  state.larioblocLoaded = false;
+  state.larioblocDirty  = false;
+  cancelLarioblocZoneEdit();
+  updateLarioblocBar();
+  document.getElementById('lariobloc-list').innerHTML = '<div class="empty-state"><div class="icon">⏳</div>Ricaricamento...</div>';
+  await loadLariobloc();
+}
+
+let larioblocPublishing = false;
+async function doLarioblocPublish(message) {
+  if (larioblocPublishing) return;
+  larioblocPublishing = true;
+  setStatus('loading', 'Pubblicazione Lariobloc...');
+  try {
+    const newContent = injectSection(state.larioblocHtml, 'LARIOBLOC_ZONES_START', 'LARIOBLOC_ZONES_END', '\n' + generateLarioblocSection(state.larioblocZones) + '\n      ');
+    state.larioblocSha = await saveFile(LARIOBLOC_PATH, state.larioblocSha, newContent, message || 'Aggiornamento Lariobloc');
+    state.larioblocHtml  = newContent;
+    state.larioblocDirty = false;
+    updateLarioblocBar();
+    setStatus('ok', 'Lariobloc pubblicato! Il sito si aggiornerà in ~30 secondi.');
+  } catch(e) { setStatus('err', `Errore: ${e.message}`); }
+  finally { larioblocPublishing = false; }
 }
 
 let editorPublishing = false;

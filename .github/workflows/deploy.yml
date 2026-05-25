@@ -1,0 +1,29 @@
+name: Deploy to Turbify
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:   # allows manual trigger from GitHub UI
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Deploy via FTP to Turbify
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server:   ${{ secrets.TURBIFY_FTP_HOST }}
+          username: ${{ secrets.TURBIFY_FTP_USER }}
+          password: ${{ secrets.TURBIFY_FTP_PASS }}
+          # Turbify usually serves from /public_html — confirm in their control panel
+          server-dir: /public_html/
+          # Exclude dev/config files that don't belong on the server
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            README.md
