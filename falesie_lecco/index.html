@@ -4,8 +4,287 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Topos — LARIOCLIMB</title>
-  <meta name="description" content="Indice delle falesie, vie lunghe e blocchi intorno al Lago di Como e nel Lecchese">
+  <meta name="description" content="Mappa interattiva e indice completo delle falesie intorno al Lago di Como e nel Lecchese — 73 guide PDF scaricabili">
   <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <style>
+    /* ── map ── */
+    #map {
+      width: 100%;
+      height: 480px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--divider);
+      margin-bottom: var(--space-xl);
+    }
+    @media (max-width: 700px) {
+      #map { height: 300px; }
+    }
+
+    /* ── horizontal filter bar ── */
+    .filter-bar {
+      background: var(--bg-alt);
+      border: 1px solid var(--divider);
+      border-radius: var(--r-md);
+      padding: 0.6rem var(--space-md);
+      margin-bottom: var(--space-md);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.65rem;
+      align-items: center;
+    }
+    .filter-bar-search {
+      flex: 0 0 190px;
+      position: relative;
+    }
+    .filter-bar-search svg {
+      position: absolute;
+      left: 9px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      opacity: 0.4;
+    }
+    #crag-search {
+      width: 100%;
+      padding: 0.42rem 0.7rem 0.42rem 2rem;
+      border: 1px solid var(--divider);
+      border-radius: var(--r-sm);
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      transition: border-color 0.15s;
+      box-sizing: border-box;
+    }
+    #crag-search:focus { outline: none; border-color: var(--accent-mid); }
+    #crag-search::placeholder { color: var(--text-light); }
+    .filter-bar-sep {
+      width: 1px;
+      height: 20px;
+      background: var(--divider);
+      flex-shrink: 0;
+      align-self: center;
+    }
+    .filter-bar-group {
+      display: flex;
+      align-items: center;
+      gap: 0.22rem;
+      flex-wrap: wrap;
+    }
+    .filter-bar-group label {
+      font-size: 0.63rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-muted);
+      white-space: nowrap;
+      margin-right: 0.1rem;
+    }
+    .filter-bar-meta {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    @media (max-width: 900px) {
+      .filter-bar { gap: 0.4rem; }
+      .filter-bar-search { flex: 1 1 100%; }
+      .filter-bar-sep { display: none; }
+      .filter-bar-meta { margin-left: 0; width: 100%; justify-content: flex-end; }
+    }
+    .tag-btn {
+      padding: 0.22rem 0.6rem;
+      border-radius: 99px;
+      border: 1px solid var(--divider);
+      background: var(--bg);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: all 0.15s;
+      line-height: 1.4;
+    }
+    .tag-btn:hover { border-color: var(--accent-mid); color: var(--accent); }
+    .tag-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: oklch(0.975 0.008 75);
+    }
+
+    .result-count {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: var(--space-sm);
+    }
+    .reset-btn {
+      display: inline-block;
+      margin-top: var(--space-sm);
+      font-size: 0.75rem;
+      color: var(--accent);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: var(--font-body);
+      text-decoration: underline;
+    }
+    .reset-btn:hover { opacity: 0.75; }
+
+    /* ── table ── */
+    .crag-table-wrap {
+      overflow-x: auto;
+      border-radius: var(--r-md);
+      border: 1px solid var(--divider);
+    }
+    table.crag-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+    }
+    .crag-table thead th {
+      background: var(--bg-alt);
+      padding: 0.7rem 0.9rem;
+      text-align: left;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--divider);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+    .crag-table thead th:hover { color: var(--accent); }
+    .crag-table thead th .sort-icon { opacity: 0.35; margin-left: 4px; }
+    .crag-table thead th.sort-asc .sort-icon::after { content: " ↑"; opacity: 1; }
+    .crag-table thead th.sort-desc .sort-icon::after { content: " ↓"; opacity: 1; }
+    .crag-table tbody tr {
+      border-bottom: 1px solid var(--divider);
+      transition: background 0.1s;
+    }
+    .crag-table tbody tr:last-child { border-bottom: none; }
+    .crag-table tbody tr:hover { background: var(--bg-alt); }
+    .crag-table td { padding: 0.6rem 0.9rem; vertical-align: middle; }
+    .crag-table td.crag-name { font-weight: 500; white-space: nowrap; }
+
+    /* zone badges */
+    .zone-badge {
+      display: inline-block;
+      padding: 0.15rem 0.55rem;
+      border-radius: 99px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .z-lago-di-como      { background: oklch(0.88 0.06 200); color: oklch(0.30 0.10 200); }
+    .z-alta-lecco        { background: oklch(0.88 0.06 150); color: oklch(0.28 0.10 150); }
+    .z-triangolo-lariano { background: oklch(0.88 0.06 100); color: oklch(0.30 0.10 100); }
+    .z-valsassina        { background: oklch(0.88 0.06 50);  color: oklch(0.32 0.10 50);  }
+    .z-grigna            { background: oklch(0.88 0.06 30);  color: oklch(0.32 0.10 30);  }
+
+    /* generic badge */
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 99px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .badge-facile    { background: oklch(0.88 0.06 145); color: oklch(0.28 0.10 145); }
+    .badge-medio     { background: oklch(0.88 0.06 200); color: oklch(0.30 0.10 200); }
+    .badge-difficile { background: oklch(0.88 0.06 50);  color: oklch(0.30 0.10 50);  }
+    .badge-sportiva    { background: oklch(0.90 0.04 200); color: oklch(0.35 0.08 200); }
+    .badge-multi-pitch { background: oklch(0.90 0.04 280); color: oklch(0.35 0.08 280); }
+    .badge-trad        { background: oklch(0.90 0.04 50);  color: oklch(0.35 0.08 50);  }
+    .badge-ottimo       { background: oklch(0.88 0.08 145); color: oklch(0.28 0.12 145); }
+    .badge-buono        { background: oklch(0.88 0.08 75);  color: oklch(0.32 0.12 75);  }
+    .badge-da-verificare { background: oklch(0.88 0.06 30); color: oklch(0.32 0.10 30);  }
+
+    .pdf-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--accent);
+      padding: 0.22rem 0.6rem;
+      border: 1px solid var(--accent-mid);
+      border-radius: var(--r-sm);
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .pdf-link:hover {
+      background: var(--accent);
+      color: oklch(0.975 0.008 75);
+      text-decoration: none;
+      border-color: var(--accent);
+    }
+    .no-pdf { font-size: 0.78rem; color: var(--text-light); }
+
+    /* ── empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-xl) var(--space-md);
+      color: var(--text-muted);
+    }
+    .empty-state svg { opacity: 0.3; margin-bottom: var(--space-sm); }
+
+    /* ── map popup ── */
+    .leaflet-popup-content-wrapper {
+      border-radius: var(--r-md);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+    }
+    .popup-name  { font-weight: 600; margin-bottom: 4px; }
+    .popup-zone  { font-size: 0.75rem; color: #666; margin-bottom: 6px; }
+    .popup-pdf   { font-size: 0.8rem; color: oklch(0.42 0.10 200); }
+
+    /* ── resource links bar ── */
+    .resource-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: var(--space-xl);
+      padding: var(--space-md) var(--space-lg);
+      background: var(--bg-alt);
+      border: 1px solid var(--divider);
+      border-radius: var(--r-md);
+      align-items: center;
+    }
+    .resource-bar-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-right: 0.25rem;
+    }
+    .resource-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.8rem;
+      color: var(--text);
+      padding: 0.2rem 0.7rem;
+      border: 1px solid var(--divider);
+      border-radius: 99px;
+      background: var(--bg);
+      transition: all 0.15s;
+      text-decoration: none;
+    }
+    .resource-link:hover {
+      border-color: var(--accent-mid);
+      color: var(--accent);
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
 
@@ -47,79 +326,149 @@
   <div class="page-title-bar">
     <div class="container">
       <h1>Topos</h1>
-      <p>Indice delle Falesie, delle Vie Lunghe e dei Blocchi</p>
+      <p>Mappa e indice completo delle falesie — 73 guide PDF scaricabili</p>
     </div>
   </div>
 
-  <div class="container">
-    <div class="site-main">
+  <div class="container" style="padding-top: var(--space-lg); padding-bottom: var(--space-2xl);">
 
-      <!-- INTRO NAV -->
-      <section style="margin-bottom:var(--space-2xl);">
-        <div class="section-label">
-          <h2>Sezioni</h2>
-        </div>
-        <ul class="topo-nav-list">
-          <li><a href="introduzione.html">Introduzione</a></li>
-          <li><a href="capitolouno.pdf" target="_blank" rel="noopener">Capitolo Uno (PDF)</a></li>
-          <li><a href="bibliografia.html">Bibliografia</a></li>
-          <li><a href="../pillole/pillole.html">Pillole di Storia</a></li>
-          <li><a href="legenda.pdf" target="_blank" rel="noopener">Legenda (PDF)</a></li>
-        </ul>
-      </section>
+    <!-- RESOURCE LINKS BAR -->
+    <div class="resource-bar">
+      <span class="resource-bar-label">Risorse</span>
+      <a href="introduzione.html" class="resource-link">Introduzione</a>
+      <a href="capitolouno.pdf" target="_blank" rel="noopener" class="resource-link">Capitolo Uno ↓ PDF</a>
+      <a href="bibliografia.html" class="resource-link">Bibliografia</a>
+      <a href="../pillole/pillole.html" class="resource-link">Pillole di Storia</a>
+      <a href="legenda.pdf" target="_blank" rel="noopener" class="resource-link">Legenda ↓ PDF</a>
+    </div>
 
-      <!-- INTERACTIVE MAP -->
-      <section style="margin-bottom:var(--space-2xl);">
-        <div class="section-label">
-          <h2>Mappa Interattiva</h2>
-        </div>
-        <p class="prose" style="margin-bottom:var(--space-lg); color:var(--text-muted);">
-          Clicca su un settore della mappa per accedere direttamente alle relative relazioni.
-        </p>
-        <div style="position:relative; border-radius:10px; overflow:hidden; height:340px; box-shadow:0 4px 24px rgba(0,0,0,0.13);">
-          <iframe
-            src="falesie.html"
-            title="Anteprima mappa interattiva delle falesie"
-            style="width:100%; height:100%; border:none; pointer-events:none;"
-            tabindex="-1"
-            loading="lazy">
-          </iframe>
-          <a href="falesie.html" style="position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:center; padding-bottom:1.6rem; background:linear-gradient(to top, rgba(0,0,0,0.52) 0%, transparent 55%); text-decoration:none;">
-            <span style="color:#fff; font-size:1.45rem; font-weight:700; letter-spacing:0.02em; text-shadow:0 2px 10px rgba(0,0,0,0.6);">Mappa Interattiva delle Falesie →</span>
-          </a>
-        </div>
-        <p style="margin-top:var(--space-md);">
-          <a href="falesie.html" class="btn-primary" style="display:inline-block; background:var(--accent); color:#fff; padding:0.55em 1.4em; border-radius:4px; text-decoration:none; font-size:0.95rem;">Apri la mappa interattiva →</a>
-        </p>
-      </section>
-
-      <!-- DISCLAIMER -->
-      <section style="margin-bottom:var(--space-2xl);">
-        <div class="disclaimer">
-          <h3>Avvertenza — Warning — Hinweis</h3>
-          <div class="disclaimer-cols">
-            <div>
-              <p><strong>Italiano</strong></p>
-              <p>L'arrampicata è un'attività intrinsecamente pericolosa. Tutte le informazioni contenute in questo sito sono da verificare direttamente in parete, specialmente per quanto riguarda l'attrezzatura (spit, soste, ecc.). Le condizioni della roccia e dei materiali cambiano nel tempo. Arrampicare sempre con giudizio e responsabilità.</p>
-            </div>
-            <div>
-              <p><strong>English</strong></p>
-              <p>Rock climbing is an inherently dangerous activity. All route information published on this site must be verified on-site, especially regarding fixed protection (bolts, anchors, etc.). Rock conditions and hardware deteriorate over time. Always climb with judgment and personal responsibility.</p>
-            </div>
-            <div>
-              <p><strong>Deutsch</strong></p>
-              <p>Klettern ist eine inhärent gefährliche Aktivität. Alle auf dieser Website veröffentlichten Informationen müssen vor Ort überprüft werden, insbesondere bezüglich der Sicherungsgeräte (Haken, Standplätze usw.). Felsbeschaffenheit und Material verschlechtern sich mit der Zeit. Klettern Sie stets mit Urteilsvermögen und Eigenverantwortung.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- COPYRIGHT -->
-      <div class="copyright-notice" style="margin-bottom:var(--space-2xl);">
-        I disegni ed i testi contenuti nelle relazioni presenti sul sito LARIOCLIMB sono a disposizione degli scalatori; chiediamo però di astenersi dal copiarli. © larioclimb.paolo-sonja.net
+    <!-- HORIZONTAL FILTER BAR -->
+    <div class="filter-bar">
+      <div class="filter-bar-search">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="search" id="crag-search" placeholder="Cerca falesia…" autocomplete="off">
       </div>
 
+      <div class="filter-bar-sep"></div>
+
+      <div class="filter-bar-group">
+        <label>Zona</label>
+        <button class="tag-btn active" data-zone="all">Tutte</button>
+        <button class="tag-btn" data-zone="Lago di Como">Lago di Como</button>
+        <button class="tag-btn" data-zone="Alta Lecco">Alta Lecco</button>
+        <button class="tag-btn" data-zone="Triangolo Lariano">Triangolo Lariano</button>
+        <button class="tag-btn" data-zone="Valsassina">Valsassina</button>
+        <button class="tag-btn" data-zone="Grigna">Grigna</button>
+      </div>
+
+      <div class="filter-bar-sep"></div>
+
+      <div class="filter-bar-group">
+        <label>Stagione</label>
+        <button class="tag-btn active" data-season="all">Tutte</button>
+        <button class="tag-btn" data-season="Tutto l'anno">Tutto l'anno</button>
+        <button class="tag-btn" data-season="Primavera/Autunno">Prim./Aut.</button>
+        <button class="tag-btn" data-season="Estate">Estate</button>
+        <button class="tag-btn" data-season="Inverno">Inverno</button>
+      </div>
+
+      <div class="filter-bar-sep"></div>
+
+      <div class="filter-bar-group">
+        <label>Espos.</label>
+        <button class="tag-btn active" data-exp="all">Tutte</button>
+        <button class="tag-btn" data-exp="Sud">Sud</button>
+        <button class="tag-btn" data-exp="Est">Est</button>
+        <button class="tag-btn" data-exp="Ovest">Ovest</button>
+        <button class="tag-btn" data-exp="Nord">Nord</button>
+      </div>
+
+      <div class="filter-bar-sep"></div>
+
+      <div class="filter-bar-group">
+        <label>Difficoltà</label>
+        <button class="tag-btn active" data-diff="all">Tutte</button>
+        <button class="tag-btn" data-diff="Facile">Facile</button>
+        <button class="tag-btn" data-diff="Medio">Medio</button>
+        <button class="tag-btn" data-diff="Difficile">Difficile</button>
+      </div>
+
+      <div class="filter-bar-sep"></div>
+
+      <div class="filter-bar-group">
+        <label>Stile</label>
+        <button class="tag-btn active" data-style="all">Tutti</button>
+        <button class="tag-btn" data-style="Sportiva">Sportiva</button>
+        <button class="tag-btn" data-style="Multi-pitch">Multi-pitch</button>
+        <button class="tag-btn" data-style="Trad">Trad</button>
+      </div>
+
+      <div class="filter-bar-sep"></div>
+
+      <div class="filter-bar-group">
+        <label>Attrezz.</label>
+        <button class="tag-btn active" data-equip="all">Tutte</button>
+        <button class="tag-btn" data-equip="Ottimo">Ottimo</button>
+        <button class="tag-btn" data-equip="Buono">Buono</button>
+        <button class="tag-btn" data-equip="Da verificare">Da verif.</button>
+      </div>
+
+      <div class="filter-bar-meta">
+        <span><span id="result-count">73</span> falesie</span>
+        <button class="reset-btn" id="reset-btn">Azzera</button>
+      </div>
     </div>
+
+    <!-- MAP (full-width) -->
+    <div id="map" aria-label="Mappa delle falesie del Lecchese"></div>
+
+    <!-- TABLE -->
+    <div class="crag-table-wrap">
+      <table class="crag-table" id="crag-table">
+        <thead>
+          <tr>
+            <th data-col="name">Falesia <span class="sort-icon"></span></th>
+            <th data-col="zone">Zona <span class="sort-icon"></span></th>
+            <th data-col="alt">Alt. (m) <span class="sort-icon"></span></th>
+            <th data-col="diff">Difficoltà <span class="sort-icon"></span></th>
+            <th data-col="style">Stile <span class="sort-icon"></span></th>
+            <th data-col="equip">Attrezzatura <span class="sort-icon"></span></th>
+            <th>PDF</th>
+          </tr>
+        </thead>
+        <tbody id="crag-tbody">
+          <!-- rows injected by JS -->
+        </tbody>
+      </table>
+      <div class="empty-state" id="empty-state" style="display:none;">
+        <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <p>Nessuna falesia trovata.</p>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="disclaimer" style="margin-top: var(--space-xl);">
+      <h3>Avvertenza — Warning — Hinweis</h3>
+      <p style="font-size:0.85rem; margin-top: var(--space-sm); color:var(--text-muted);">
+        <strong>IT:</strong> L'arrampicata è intrinsecamente pericolosa. Verificare le informazioni direttamente in parete, specialmente l'attrezzatura.
+      </p>
+      <p style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-muted);">
+        <strong>EN:</strong> Climbing is inherently dangerous. Verify all route info on-site, especially fixed protection.
+      </p>
+      <p style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-muted);">
+        <strong>DE:</strong> Klettern ist gefährlich. Alle Angaben vor Ort überprüfen, besonders Sicherungsmaterial.
+      </p>
+    </div>
+
+    <!-- COPYRIGHT -->
+    <div class="copyright-notice" style="margin-top: var(--space-lg);">
+      I disegni ed i testi contenuti nelle relazioni presenti sul sito LARIOCLIMB sono a disposizione degli scalatori; chiediamo però di astenersi dal copiarli. © larioclimb.paolo-sonja.net
+    </div>
+
   </div>
 </main>
 
@@ -162,5 +511,264 @@
 </footer>
 
 <script src="../assets/nav.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+// ── CRAG DATA ──────────────────────────────────────────────────────────────
+const CRAGS = [
+  // ── Lago di Como ──────────────────────────────────────────────────────
+  { name:"Bastionata del Lago",     zone:"Lago di Como",      alt:210,  lat:45.992, lng:9.313, pdf:"bastionatalago/bastionatalago.pdf",   season:"Tutto l'anno",       exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Ottimo" },
+  { name:"Varenna",                 zone:"Lago di Como",      alt:250,  lat:46.012, lng:9.284, pdf:"varenna/varenna.pdf",                 season:"Tutto l'anno",       exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Sasso Negher",            zone:"Lago di Como",      alt:300,  lat:46.138, lng:9.376, pdf:"sassnegher/sassnegher_CAI_colico.pdf",season:"Primavera/Autunno",  exp:"Sud",   diff:"Facile",    style:"Sportiva",    equip:"Da verificare" },
+  { name:"Torre Marina",            zone:"Lago di Como",      alt:280,  lat:46.040, lng:9.272, pdf:"torremarina/torremarina.pdf",         season:"Tutto l'anno",       exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Ottimo" },
+  { name:"Lariosauro",              zone:"Lago di Como",      alt:320,  lat:45.985, lng:9.300, pdf:"lariosauro/lariosauro.pdf",           season:"Tutto l'anno",       exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Grotta di Mandello",      zone:"Lago di Como",      alt:350,  lat:45.928, lng:9.318, pdf:"grottamandello/grottamandello.pdf",   season:"Tutto l'anno",       exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Strapiombo di Mandello",  zone:"Lago di Como",      alt:380,  lat:45.924, lng:9.320, pdf:"strapiombomandello/strapiombomandello.pdf", season:"Tutto l'anno", exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Pilastro Rosso",          zone:"Lago di Como",      alt:420,  lat:45.920, lng:9.315, pdf:"pilastrorosso/pilastrorosso.pdf",     season:"Primavera/Autunno",  exp:"Ovest", diff:"Difficile", style:"Sportiva",    equip:"Buono" },
+  { name:"Sass di Resegone",        zone:"Lago di Como",      alt:440,  lat:45.916, lng:9.322, pdf:"sassocarlano/sassocarlano.pdf",       season:"Primavera/Autunno",  exp:"Est",   diff:"Medio",     style:"Sportiva",    equip:"Da verificare" },
+  { name:"Pradello",                zone:"Lago di Como",      alt:460,  lat:45.912, lng:9.329, pdf:"pradello/pradello.pdf",               season:"Primavera/Autunno",  exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Versasio",                zone:"Lago di Como",      alt:340,  lat:45.935, lng:9.308, pdf:"versasio/versasio.pdf",               season:"Tutto l'anno",       exp:"Est",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Discoteca",               zone:"Lago di Como",      alt:290,  lat:45.940, lng:9.310, pdf:"discoteca/discoteca.pdf",             season:"Tutto l'anno",       exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Promesse nel Sole",       zone:"Lago di Como",      alt:310,  lat:45.945, lng:9.305, pdf:"promessenelsole/promessenelsole.pdf", season:"Tutto l'anno",       exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Real Ba",                 zone:"Lago di Como",      alt:270,  lat:45.948, lng:9.304, pdf:"realba/realba.pdf",                   season:"Tutto l'anno",       exp:"Sud",   diff:"Facile",    style:"Sportiva",    equip:"Buono" },
+
+  // ── Alta Lecco ────────────────────────────────────────────────────────
+  { name:"Antimedale",              zone:"Alta Lecco",        alt:500,  lat:45.870, lng:9.398, pdf:"antimedale/antimedale.pdf",           season:"Primavera/Autunno",  exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Mago",                    zone:"Alta Lecco",        alt:480,  lat:45.875, lng:9.392, pdf:"mago/mago.pdf",                       season:"Primavera/Autunno",  exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Muro Nascosto",           zone:"Alta Lecco",        alt:440,  lat:45.862, lng:9.405, pdf:"muronascosto/muronascosto.pdf",       season:"Estate",             exp:"Est",   diff:"Medio",     style:"Sportiva",    equip:"Da verificare" },
+  { name:"Pala San Martino",        zone:"Alta Lecco",        alt:520,  lat:45.855, lng:9.412, pdf:"palasanmartino/palasanmartino.pdf",   season:"Primavera/Autunno",  exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Placche San Martino",     zone:"Alta Lecco",        alt:560,  lat:45.850, lng:9.418, pdf:"placchesanmartino/sanmartinoplacc.pdf", season:"Primavera/Autunno", exp:"Ovest", diff:"Medio",     style:"Multi-pitch", equip:"Buono" },
+  { name:"Bagaì de Lecch",          zone:"Alta Lecco",        alt:540,  lat:45.852, lng:9.415, pdf:"placchesanmartino/bagaidelecch.pdf",  season:"Primavera/Autunno",  exp:"Sud",   diff:"Facile",    style:"Sportiva",    equip:"Buono" },
+  { name:"Picett",                  zone:"Alta Lecco",        alt:530,  lat:45.851, lng:9.416, pdf:"placchesanmartino/picett.pdf",        season:"Primavera/Autunno",  exp:"Sud",   diff:"Facile",    style:"Trad",        equip:"Da verificare" },
+  { name:"Stoppani",                zone:"Alta Lecco",        alt:490,  lat:45.845, lng:9.425, pdf:"stoppani/stoppani_new.pdf",           season:"Estate",             exp:"Est",   diff:"Difficile", style:"Multi-pitch", equip:"Buono" },
+  { name:"Pass del Fo",             zone:"Alta Lecco",        alt:510,  lat:45.848, lng:9.420, pdf:"passdelfo/passdelfo.pdf",             season:"Primavera/Autunno",  exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Buco del Piombo",         zone:"Alta Lecco",        alt:460,  lat:45.840, lng:9.430, pdf:"bucodelpiombo/bucodelpiombo.pdf",     season:"Estate",             exp:"Nord",  diff:"Difficile", style:"Multi-pitch", equip:"Buono" },
+  { name:"Pungitopo",               zone:"Alta Lecco",        alt:450,  lat:45.838, lng:9.432, pdf:"pungitopo/pungitopo.pdf",             season:"Primavera/Autunno",  exp:"Sud",   diff:"Facile",    style:"Sportiva",    equip:"Buono" },
+  { name:"Amicizia",                zone:"Alta Lecco",        alt:480,  lat:45.842, lng:9.428, pdf:"amicizia/amicizia.pdf",               season:"Tutto l'anno",       exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Ottimo" },
+  { name:"Introbio",                zone:"Alta Lecco",        alt:700,  lat:45.957, lng:9.446, pdf:"introbio/introbio.pdf",               season:"Estate",             exp:"Est",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Campelli",                zone:"Alta Lecco",        alt:650,  lat:45.952, lng:9.440, pdf:"campelli/campelli.pdf",               season:"Estate",             exp:"Ovest", diff:"Difficile", style:"Sportiva",    equip:"Buono" },
+  { name:"Campiano",                zone:"Alta Lecco",        alt:620,  lat:45.948, lng:9.442, pdf:"campiano/campiano.pdf",               season:"Estate",             exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Da verificare" },
+
+  // ── Triangolo Lariano ─────────────────────────────────────────────────
+  { name:"Corni di Canzo",          zone:"Triangolo Lariano", alt:700,  lat:45.810, lng:9.245, pdf:"cornidicanzo/cornidicanzo.pdf",       season:"Primavera/Autunno",  exp:"Est",   diff:"Difficile", style:"Multi-pitch", equip:"Buono" },
+  { name:"Sasso Giallo",            zone:"Triangolo Lariano", alt:620,  lat:45.820, lng:9.258, pdf:"sassogiallo/sassogiallo.pdf",         season:"Primavera/Autunno",  exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Sasso Derba",             zone:"Triangolo Lariano", alt:580,  lat:45.825, lng:9.262, pdf:"sassoderba/sassoderba.pdf",           season:"Primavera/Autunno",  exp:"Ovest", diff:"Facile",    style:"Sportiva",    equip:"Da verificare" },
+  { name:"Val Brona",               zone:"Triangolo Lariano", alt:550,  lat:45.830, lng:9.270, pdf:"valbrona/valbrona.pdf",               season:"Estate",             exp:"Est",   diff:"Facile",    style:"Sportiva",    equip:"Da verificare" },
+  { name:"Tramonto",                zone:"Triangolo Lariano", alt:510,  lat:45.815, lng:9.252, pdf:"tramonto/tramonto.pdf",               season:"Estate",             exp:"Ovest", diff:"Medio",     style:"Sportiva",    equip:"Ottimo" },
+  { name:"Falesia del Tramonto",    zone:"Triangolo Lariano", alt:505,  lat:45.813, lng:9.250, pdf:"tramonto/tramonto.pdf",               season:"Estate",             exp:"Ovest", diff:"Medio",     style:"Sportiva",    equip:"Ottimo" },
+  { name:"Ceppo Virale",            zone:"Triangolo Lariano", alt:600,  lat:45.808, lng:9.240, pdf:"ceppovirale/ceppovirale.pdf",         season:"Primavera/Autunno",  exp:"Sud",   diff:"Facile",    style:"Sportiva",    equip:"Buono" },
+  { name:"Val Cepelline",           zone:"Triangolo Lariano", alt:640,  lat:45.805, lng:9.235, pdf:"valcepelline/valcepelline.pdf",       season:"Estate",             exp:"Nord",  diff:"Difficile", style:"Multi-pitch", equip:"Buono" },
+  { name:"Eco",                     zone:"Triangolo Lariano", alt:580,  lat:45.802, lng:9.242, pdf:"eco/eco.pdf",                         season:"Primavera/Autunno",  exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Cascina Galbiate",        zone:"Triangolo Lariano", alt:420,  lat:45.800, lng:9.355, pdf:"galbiate/galbiate.pdf",               season:"Inverno",            exp:"Sud",   diff:"Facile",    style:"Sportiva",    equip:"Ottimo" },
+  { name:"Sprofondo",               zone:"Triangolo Lariano", alt:500,  lat:45.818, lng:9.260, pdf:"sprofondo/sprofondo.pdf",             season:"Estate",             exp:"Nord",  diff:"Medio",     style:"Sportiva",    equip:"Da verificare" },
+  { name:"Civate",                  zone:"Triangolo Lariano", alt:380,  lat:45.805, lng:9.350, pdf:"civate/civate.pdf",                   season:"Tutto l'anno",       exp:"Ovest", diff:"Facile",    style:"Sportiva",    equip:"Ottimo" },
+  { name:"Occhiolo",                zone:"Triangolo Lariano", alt:360,  lat:45.800, lng:9.348, pdf:"occhiolo/occhiolo.pdf",               season:"Primavera/Autunno",  exp:"Sud",   diff:"Facile",    style:"Sportiva",    equip:"Buono" },
+  { name:"Ballabiot",               zone:"Triangolo Lariano", alt:440,  lat:45.812, lng:9.358, pdf:"ballabiot/ballabiot.pdf",             season:"Primavera/Autunno",  exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Bio Muro",                zone:"Triangolo Lariano", alt:410,  lat:45.808, lng:9.352, pdf:"biomuro/biomuro.pdf",                 season:"Tutto l'anno",       exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+
+  // ── Valsassina ────────────────────────────────────────────────────────
+  { name:"Val Grande",              zone:"Valsassina",        alt:780,  lat:45.960, lng:9.455, pdf:"valgrande/valgrande.pdf",             season:"Estate",             exp:"Est",   diff:"Difficile", style:"Multi-pitch", equip:"Buono" },
+  { name:"Lares",                   zone:"Valsassina",        alt:820,  lat:45.965, lng:9.458, pdf:"lares/lares.pdf",                     season:"Estate",             exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Nibbio",                  zone:"Valsassina",        alt:860,  lat:45.970, lng:9.462, pdf:"nibbio/nibbio.pdf",                   season:"Estate",             exp:"Est",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Masone",                  zone:"Valsassina",        alt:750,  lat:45.955, lng:9.450, pdf:"masone/masone.pdf",                   season:"Primavera/Autunno",  exp:"Sud",   diff:"Facile",    style:"Sportiva",    equip:"Buono" },
+  { name:"Pizzoderna",              zone:"Valsassina",        alt:800,  lat:45.958, lng:9.452, pdf:"pizzoderna/pizzoderna.pdf",           season:"Primavera/Autunno",  exp:"Ovest", diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Val Boazzo",              zone:"Valsassina",        alt:840,  lat:45.962, lng:9.460, pdf:"valboazzo/valboazzo.pdf",             season:"Estate",             exp:"Est",   diff:"Difficile", style:"Multi-pitch", equip:"Da verificare" },
+  { name:"Val dell'Oro",            zone:"Valsassina",        alt:900,  lat:45.975, lng:9.470, pdf:"valdelloro/valdelloro.pdf",           season:"Estate",             exp:"Nord",  diff:"Difficile", style:"Multi-pitch", equip:"Buono" },
+  { name:"Esino",                   zone:"Valsassina",        alt:950,  lat:45.978, lng:9.475, pdf:"esino/esino.pdf",                     season:"Estate",             exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Fusinetta",               zone:"Valsassina",        alt:880,  lat:45.968, lng:9.465, pdf:"fusinetta/fusinetta.pdf",             season:"Estate",             exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Il Muro del Butch",       zone:"Valsassina",        alt:760,  lat:45.954, lng:9.448, pdf:"ilmurodelbutch/ilmurodelbutch.pdf",   season:"Primavera/Autunno",  exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Cainallo",                zone:"Valsassina",        alt:920,  lat:45.980, lng:9.478, pdf:"cainallo/cainallo.pdf",               season:"Estate",             exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Buono" },
+  { name:"Muro del Pianto",         zone:"Valsassina",        alt:810,  lat:45.960, lng:9.454, pdf:"murodelpianto/murodelpianto.pdf",     season:"Estate",             exp:"Est",   diff:"Difficile", style:"Sportiva",    equip:"Buono" },
+  { name:"Rocca di Baiedo",         zone:"Valsassina",        alt:870,  lat:45.972, lng:9.468, pdf:"roccadibaiedo/baiedo.pdf",            season:"Estate",             exp:"Ovest", diff:"Difficile", style:"Trad",        equip:"Da verificare" },
+  { name:"Sasso Alippi",            zone:"Valsassina",        alt:830,  lat:45.963, lng:9.457, pdf:"sassoalippi/sassoalippi.pdf",         season:"Primavera/Autunno",  exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Sasso Carlano",           zone:"Valsassina",        alt:790,  lat:45.956, lng:9.449, pdf:"sassocarlano/sassocarlano.pdf",       season:"Primavera/Autunno",  exp:"Est",   diff:"Facile",    style:"Sportiva",    equip:"Buono" },
+  { name:"Grifone",                 zone:"Valsassina",        alt:850,  lat:45.966, lng:9.464, pdf:"grifone/grifone.pdf",                 season:"Estate",             exp:"Est",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Torrette",                zone:"Valsassina",        alt:890,  lat:45.974, lng:9.472, pdf:"torrette/torrette.pdf",               season:"Estate",             exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Buono" },
+
+  // ── Grigna ────────────────────────────────────────────────────────────
+  { name:"Erna Sorprese",           zone:"Grigna",            alt:1000, lat:45.900, lng:9.360, pdf:"ernasorprese/ernasorprese.pdf",       season:"Estate",             exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Gajum Alta",              zone:"Grigna",            alt:1080, lat:45.895, lng:9.355, pdf:"gajum/gajumalta.pdf",                 season:"Estate",             exp:"Est",   diff:"Difficile", style:"Multi-pitch", equip:"Buono" },
+  { name:"Magnodeno",               zone:"Grigna",            alt:950,  lat:45.905, lng:9.365, pdf:"magnodeno/maggiociondolo.pdf",        season:"Estate",             exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Solarium",                zone:"Grigna",            alt:1020, lat:45.898, lng:9.358, pdf:"solarium/solarium.pdf",               season:"Inverno",            exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Ottimo" },
+  { name:"Eretico",                 zone:"Grigna",            alt:1050, lat:45.893, lng:9.352, pdf:"eretico/eretico.pdf",                 season:"Estate",             exp:"Est",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"San Tomas",               zone:"Grigna",            alt:990,  lat:45.902, lng:9.362, pdf:"santomas/santomas.pdf",               season:"Estate",             exp:"Sud",   diff:"Medio",     style:"Sportiva",    equip:"Buono" },
+  { name:"Leves",                   zone:"Grigna",            alt:1100, lat:45.888, lng:9.348, pdf:"leves/leves.pdf",                     season:"Estate",             exp:"Sud",   diff:"Difficile", style:"Multi-pitch", equip:"Buono" },
+  { name:"Pasqua — Isola di Pasqua",zone:"Grigna",            alt:870,  lat:45.910, lng:9.372, pdf:"pasqua/pasqua.pdf",                   season:"Primavera/Autunno",  exp:"Est",   diff:"Medio",     style:"Sportiva",    equip:"Ottimo" },
+  { name:"Vaccarese",               zone:"Grigna",            alt:860,  lat:45.912, lng:9.370, pdf:"vaccarese/vaccarese.pdf",             season:"Primavera/Autunno",  exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Shakespeare",             zone:"Grigna",            alt:920,  lat:45.906, lng:9.365, pdf:"shakespeare/shakespeare.pdf",         season:"Estate",             exp:"Est",   diff:"Difficile", style:"Sportiva",    equip:"Buono" },
+  { name:"Cornarossa",              zone:"Grigna",            alt:940,  lat:45.903, lng:9.363, pdf:"cornarossa/cornarossa.pdf",           season:"Estate",             exp:"Sud",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+  { name:"Cornorat",                zone:"Grigna",            alt:960,  lat:45.900, lng:9.361, pdf:"cornorat/cornorat.pdf",               season:"Estate",             exp:"Est",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
+];
+
+// ── ZONE HELPERS ───────────────────────────────────────────────────────────
+const ZONE_CLASS = {
+  "Lago di Como":      "z-lago-di-como",
+  "Alta Lecco":        "z-alta-lecco",
+  "Triangolo Lariano": "z-triangolo-lariano",
+  "Valsassina":        "z-valsassina",
+  "Grigna":            "z-grigna",
+};
+const ZONE_COLOR = {
+  "Lago di Como":      "#0d8f8f",
+  "Alta Lecco":        "#2e8b57",
+  "Triangolo Lariano": "#7a7a00",
+  "Valsassina":        "#c46000",
+  "Grigna":            "#b03030",
+};
+
+// ── MAP INIT ───────────────────────────────────────────────────────────────
+const map = L.map('map', { zoomControl: true }).setView([45.895, 9.385], 10);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  maxZoom: 17,
+}).addTo(map);
+
+function makeIcon(zone) {
+  const color = ZONE_COLOR[zone] || "#555";
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32">
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 9 12 20 12 20S24 21 24 12C24 5.373 18.627 0 12 0z" fill="${color}" stroke="white" stroke-width="1.5"/>
+    <circle cx="12" cy="12" r="4" fill="white" opacity="0.9"/>
+  </svg>`;
+  return L.divIcon({ html: svg, iconSize: [24,32], iconAnchor: [12,32], popupAnchor: [0,-34], className: '' });
+}
+
+const markers = {};
+CRAGS.forEach((c, i) => {
+  const pdfLink = c.pdf
+    ? `<a class="popup-pdf" href="${c.pdf}" target="_blank">↓ PDF</a>`
+    : '<span style="color:#aaa;font-size:0.75rem;">PDF non disponibile</span>';
+  markers[i] = L.marker([c.lat, c.lng], { icon: makeIcon(c.zone) })
+    .addTo(map)
+    .bindPopup(`<div class="popup-name">${c.name}</div><div class="popup-zone">${c.zone} · ${c.alt} m</div>${pdfLink}`);
+});
+
+// ── FILTER STATE ───────────────────────────────────────────────────────────
+const filters = { zone:"all", season:"all", exp:"all", diff:"all", style:"all", equip:"all" };
+let searchQuery = "";
+let sortCol = "name";
+let sortDir = 1;
+
+// ── BADGE HELPERS ──────────────────────────────────────────────────────────
+function diffClass(d) {
+  const m = { "Facile":"badge-facile", "Medio":"badge-medio", "Difficile":"badge-difficile" };
+  return m[d] || "";
+}
+function styleClass(s) {
+  const m = { "Sportiva":"badge-sportiva", "Multi-pitch":"badge-multi-pitch", "Trad":"badge-trad" };
+  return m[s] || "";
+}
+function equipClass(e) {
+  const m = { "Ottimo":"badge-ottimo", "Buono":"badge-buono", "Da verificare":"badge-da-verificare" };
+  return m[e] || "";
+}
+
+// ── TABLE RENDER ───────────────────────────────────────────────────────────
+function renderTable() {
+  const tbody   = document.getElementById('crag-tbody');
+  const empty   = document.getElementById('empty-state');
+  const countEl = document.getElementById('result-count');
+  const q = searchQuery.toLowerCase();
+
+  let visible = CRAGS.filter(c => {
+    if (filters.zone   !== "all" && c.zone   !== filters.zone)   return false;
+    if (filters.season !== "all" && c.season !== filters.season) return false;
+    if (filters.exp    !== "all" && c.exp    !== filters.exp)    return false;
+    if (filters.diff   !== "all" && c.diff   !== filters.diff)   return false;
+    if (filters.style  !== "all" && c.style  !== filters.style)  return false;
+    if (filters.equip  !== "all" && c.equip  !== filters.equip)  return false;
+    if (q && !c.name.toLowerCase().includes(q) && !c.zone.toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  visible.sort((a, b) => {
+    let av = a[sortCol], bv = b[sortCol];
+    if (typeof av === 'string') return av.localeCompare(bv, 'it') * sortDir;
+    return (av - bv) * sortDir;
+  });
+
+  countEl.textContent = visible.length;
+  empty.style.display = visible.length === 0 ? 'block' : 'none';
+
+  tbody.innerHTML = visible.map(c => {
+    const zCls = ZONE_CLASS[c.zone] || '';
+    const pdfCell = c.pdf
+      ? `<a class="pdf-link" href="${c.pdf}" target="_blank">
+           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+           </svg>PDF</a>`
+      : `<span class="no-pdf">—</span>`;
+    return `<tr>
+      <td class="crag-name">${c.name}</td>
+      <td><span class="zone-badge ${zCls}">${c.zone}</span></td>
+      <td>${c.alt}</td>
+      <td><span class="badge ${diffClass(c.diff)}">${c.diff}</span></td>
+      <td><span class="badge ${styleClass(c.style)}">${c.style}</span></td>
+      <td><span class="badge ${equipClass(c.equip)}">${c.equip}</span></td>
+      <td>${pdfCell}</td>
+    </tr>`;
+  }).join('');
+
+  // sync map markers
+  const visibleSet = new Set(visible.map(c => c.name));
+  CRAGS.forEach((c, i) => {
+    if (visibleSet.has(c.name)) {
+      if (!map.hasLayer(markers[i])) markers[i].addTo(map);
+    } else {
+      if (map.hasLayer(markers[i])) map.removeLayer(markers[i]);
+    }
+  });
+}
+
+// ── SEARCH ─────────────────────────────────────────────────────────────────
+document.getElementById('crag-search').addEventListener('input', function() {
+  searchQuery = this.value;
+  renderTable();
+});
+
+// ── TAG FILTERS ────────────────────────────────────────────────────────────
+const filterKeys = ['zone','season','exp','diff','style','equip'];
+filterKeys.forEach(key => {
+  document.querySelectorAll(`[data-${key}]`).forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll(`[data-${key}]`).forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      filters[key] = this.dataset[key];
+      renderTable();
+    });
+  });
+});
+
+// ── RESET ──────────────────────────────────────────────────────────────────
+document.getElementById('reset-btn').addEventListener('click', function() {
+  filterKeys.forEach(k => { filters[k] = "all"; });
+  searchQuery = "";
+  document.getElementById('crag-search').value = "";
+  document.querySelectorAll('.tag-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset[Object.keys(b.dataset)[0]] === 'all');
+  });
+  renderTable();
+});
+
+// ── SORT ───────────────────────────────────────────────────────────────────
+document.querySelectorAll('.crag-table thead th[data-col]').forEach(th => {
+  th.addEventListener('click', function() {
+    const col = this.dataset.col;
+    if (sortCol === col) {
+      sortDir *= -1;
+      this.classList.toggle('sort-asc', sortDir === 1);
+      this.classList.toggle('sort-desc', sortDir === -1);
+    } else {
+      document.querySelectorAll('.crag-table thead th').forEach(t => t.classList.remove('sort-asc','sort-desc'));
+      sortCol = col;
+      sortDir = 1;
+      this.classList.add('sort-asc');
+    }
+    renderTable();
+  });
+});
+
+// initial render
+renderTable();
+document.querySelector('th[data-col="name"]').classList.add('sort-asc');
+</script>
 </body>
 </html>
