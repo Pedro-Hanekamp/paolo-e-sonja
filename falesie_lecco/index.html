@@ -246,6 +246,60 @@
     .popup-zone  { font-size: 0.75rem; color: #666; margin-bottom: 6px; }
     .popup-pdf   { font-size: 0.8rem; color: oklch(0.42 0.10 200); }
 
+    /* ── map layer toggle bar ── */
+    .map-wrap {
+      margin-bottom: var(--space-xl);
+      border-radius: var(--r-md);
+      border: 1px solid var(--divider);
+      overflow: hidden;
+    }
+    .map-wrap #map {
+      margin-bottom: 0;
+      border: none;
+      border-radius: 0;
+    }
+    .map-layer-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 1.1rem;
+      padding: 0.52rem var(--space-md);
+      background: var(--bg-alt);
+      border-bottom: 1px solid var(--divider);
+      align-items: center;
+    }
+    .map-layer-bar-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-muted);
+      margin-right: 0.2rem;
+    }
+    .map-layer-bar label {
+      display: flex;
+      align-items: center;
+      gap: 0.38rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      user-select: none;
+    }
+    .map-layer-bar input[type="checkbox"] {
+      accent-color: var(--accent);
+      cursor: pointer;
+      width: 13px;
+      height: 13px;
+      flex-shrink: 0;
+    }
+    .layer-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
     /* ── resource links bar ── */
     .resource-bar {
       display: flex;
@@ -422,7 +476,16 @@
     </div>
 
     <!-- MAP (full-width) -->
-    <div id="map" aria-label="Mappa delle falesie del Lecchese"></div>
+    <div class="map-wrap">
+      <div class="map-layer-bar">
+        <span class="map-layer-bar-title">Layer</span>
+        <label><input type="checkbox" id="layer-falesie" checked> <span class="layer-dot" style="background:#0d8f8f"></span> Falesie</label>
+        <label><input type="checkbox" id="layer-parcheggi" checked> <span class="layer-dot" style="background:#2563eb"></span> Parcheggi</label>
+        <label><input type="checkbox" id="layer-shops" checked> <span class="layer-dot" style="background:#d97706"></span> Shops</label>
+        <label><input type="checkbox" id="layer-accomodation" checked> <span class="layer-dot" style="background:#7c3aed"></span> Accomodation</label>
+      </div>
+      <div id="map" aria-label="Mappa delle falesie del Lecchese"></div>
+    </div>
 
     <!-- TABLE -->
     <div class="crag-table-wrap">
@@ -599,6 +662,49 @@ const CRAGS = [
   { name:"Cornorat",                zone:"Grigna",            alt:960,  lat:45.900, lng:9.361, pdf:"cornorat/cornorat.pdf",               season:"Estate",             exp:"Est",   diff:"Difficile", style:"Sportiva",    equip:"Ottimo" },
 ];
 
+// ── PARKING ────────────────────────────────────────────────────────────────
+const PARKING = [
+  { name:"Parcheggio Piani Resinelli",    lat:45.855, lng:9.369,  note:"Accesso principale: Medale, Solarium, Grigna" },
+  { name:"Parcheggio Bastionata del Lago",lat:45.869, lng:9.342,  note:"Attenzione: furto auto frequente — non lasciare oggetti in vista" },
+  { name:"Parcheggio Ballabio",           lat:45.886, lng:9.429,  note:"Accesso Valsassina, Libro Aperto, Medioevo" },
+  { name:"Parcheggio Valmadrera",         lat:45.848, lng:9.380,  note:"Accesso Gajum, Valmadrerabloc" },
+  { name:"Parcheggio Civate",             lat:45.831, lng:9.350,  note:"Accesso Civatebloc, Ranciobloc" },
+  { name:"Parcheggio Erba (Tramonto)",    lat:45.820, lng:9.222,  note:"Accesso Falesia del Tramonto — restrizioni nidificazione apr–giu" },
+  { name:"Parcheggio Introbio",           lat:45.970, lng:9.456,  note:"Accesso falesie alta Valsassina" },
+  { name:"Parcheggio Abbadia Lariana",    lat:45.888, lng:9.333,  note:"Accesso Bastionata del Lago lato sud" },
+];
+
+// ── SHOPS ──────────────────────────────────────────────────────────────────
+const SHOPS = [
+  { name:"Alpstation Brianza", lat:45.773, lng:9.347, addr:"Via Provinciale 11, Dolzago (LC)", tel:"0341-451.250", url:"http://www.alpstation.it/" },
+  { name:"Sherpa",             lat:45.731, lng:9.413, addr:"Via 4 novembre 42, Ronco Briantino (MI)", tel:"039-6817092", url:"http://www.sherpaonline.it/" },
+];
+
+// ── ACCOMMODATIONS ─────────────────────────────────────────────────────────
+const ACCOMMODATIONS = [
+  { name:"B&B Ai Frassini",            lat:45.857, lng:9.368, area:"Piani Resinelli", tel:"0341-590022" },
+  { name:"Camping La Meridiana",        lat:45.856, lng:9.371, area:"Piani Resinelli", tel:"0341-590000" },
+  { name:"Rifugio Casimiro Ferrari",    lat:45.860, lng:9.366, area:"Piani Resinelli", tel:"0341-590288" },
+  { name:"Rifugio S.E.L.",              lat:45.859, lng:9.373, area:"Piani Resinelli", tel:"0341-590163" },
+  { name:"Rifugio Soldanella",          lat:45.854, lng:9.374, area:"Piani Resinelli", tel:"0341-531132" },
+  { name:"Rifugio Carlo Porta",         lat:45.861, lng:9.365, area:"Piani Resinelli", tel:"" },
+  { name:"Rifugio Rosalba",             lat:45.850, lng:9.380, area:"Piani Resinelli", tel:"0341-732393" },
+  { name:"Ristorante 2184",             lat:45.858, lng:9.369, area:"Piani Resinelli", tel:"" },
+  { name:"Ostello Parco Monte Barro",   lat:45.825, lng:9.376, area:"Galbiate",         tel:"0341-540512" },
+  { name:"B&B Funivia Piani d'Erna",   lat:45.862, lng:9.399, area:"Lecco",            tel:"0341-499244" },
+  { name:"B&B Sul Lago Dorato",         lat:45.859, lng:9.396, area:"Lecco",            tel:"338-3831690" },
+  { name:"Camping Grigna",              lat:45.886, lng:9.429, area:"Ballabio",          tel:"0341-232045" },
+  { name:"Rifugio Stoppani",            lat:45.875, lng:9.472, area:"Monte Resegone",    tel:"" },
+  { name:"Camping Spiaggia",            lat:45.889, lng:9.332, area:"Abbadia Lariana",   tel:"" },
+  { name:"B&B Contrada Lunga",          lat:45.887, lng:9.334, area:"Abbadia Lariana",   tel:"" },
+  { name:"B&B Torre del Barbarossa",    lat:46.010, lng:9.318, area:"Mandello del Lario",tel:"" },
+  { name:"Cascina Lago Segrino",        lat:45.851, lng:9.276, area:"Canzo",             tel:"333-7801770" },
+  { name:"B&B LaVigna",                lat:45.986, lng:9.454, area:"Primaluna",          tel:"0341-981148" },
+  { name:"B&B L'Antica Officina",      lat:46.011, lng:9.319, area:"Mandello del Lario", tel:"334-9569005" },
+  { name:"Antico Borgo Camporeso",     lat:45.826, lng:9.371, area:"Galbiate",           tel:"" },
+  { name:"Alla Bonacina B&B",          lat:45.850, lng:9.404, area:"Lecco",              tel:"333-8918951" },
+];
+
 // ── ZONE HELPERS ───────────────────────────────────────────────────────────
 const ZONE_CLASS = {
   "Lago di Como":      "z-lago-di-como",
@@ -641,8 +747,48 @@ CRAGS.forEach((c, i) => {
     .bindPopup(`<div class="popup-name">${c.name}</div><div class="popup-zone">${c.zone} · ${c.alt} m</div>${pdfLink}`);
 });
 
+// ── POI ICON ───────────────────────────────────────────────────────────────
+function makePOIIcon(color, letter) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="32" viewBox="0 0 26 32">
+    <path d="M13 0C7.477 0 3 4.477 3 10c0 8.5 10 22 10 22S23 18.5 23 10C23 4.477 18.523 0 13 0z" fill="${color}" stroke="white" stroke-width="1.5"/>
+    <text x="13" y="13" text-anchor="middle" dominant-baseline="middle" fill="white" font-size="9" font-weight="800" font-family="system-ui,sans-serif">${letter}</text>
+  </svg>`;
+  return L.divIcon({ html: svg, iconSize:[26,32], iconAnchor:[13,32], popupAnchor:[0,-34], className:'' });
+}
+
+// ── POI LAYER GROUPS ───────────────────────────────────────────────────────
+const parkingGroup = L.layerGroup();
+PARKING.forEach(p => {
+  L.marker([p.lat, p.lng], { icon: makePOIIcon('#2563eb','P') })
+    .addTo(parkingGroup)
+    .bindPopup(`<div class="popup-name">${p.name}</div><div class="popup-zone">${p.note}</div>`);
+});
+parkingGroup.addTo(map);
+
+const shopsGroup = L.layerGroup();
+SHOPS.forEach(s => {
+  L.marker([s.lat, s.lng], { icon: makePOIIcon('#d97706','S') })
+    .addTo(shopsGroup)
+    .bindPopup(`<div class="popup-name">${s.name}</div>
+      <div class="popup-zone">${s.addr}</div>
+      ${s.tel ? `<div class="popup-zone">Tel: ${s.tel}</div>` : ''}
+      ${s.url ? `<a class="popup-pdf" href="${s.url}" target="_blank">→ Sito web</a>` : ''}`);
+});
+shopsGroup.addTo(map);
+
+const accomodationGroup = L.layerGroup();
+ACCOMMODATIONS.forEach(a => {
+  L.marker([a.lat, a.lng], { icon: makePOIIcon('#7c3aed','H') })
+    .addTo(accomodationGroup)
+    .bindPopup(`<div class="popup-name">${a.name}</div>
+      <div class="popup-zone">${a.area}</div>
+      ${a.tel ? `<div class="popup-zone">Tel: ${a.tel}</div>` : ''}`);
+});
+accomodationGroup.addTo(map);
+
 // ── FILTER STATE ───────────────────────────────────────────────────────────
 const filters = { zone:"all", season:"all", exp:"all", diff:"all", style:"all", equip:"all" };
+let falesieVisible = true;
 let searchQuery = "";
 let sortCol = "name";
 let sortDir = 1;
@@ -710,7 +856,7 @@ function renderTable() {
   // sync map markers
   const visibleSet = new Set(visible.map(c => c.name));
   CRAGS.forEach((c, i) => {
-    if (visibleSet.has(c.name)) {
+    if (falesieVisible && visibleSet.has(c.name)) {
       if (!map.hasLayer(markers[i])) markers[i].addTo(map);
     } else {
       if (map.hasLayer(markers[i])) map.removeLayer(markers[i]);
@@ -764,6 +910,21 @@ document.querySelectorAll('.crag-table thead th[data-col]').forEach(th => {
     }
     renderTable();
   });
+});
+
+// ── LAYER TOGGLE WIRING ────────────────────────────────────────────────────
+document.getElementById('layer-falesie').addEventListener('change', function() {
+  falesieVisible = this.checked;
+  renderTable();
+});
+document.getElementById('layer-parcheggi').addEventListener('change', function() {
+  if (this.checked) parkingGroup.addTo(map); else map.removeLayer(parkingGroup);
+});
+document.getElementById('layer-shops').addEventListener('change', function() {
+  if (this.checked) shopsGroup.addTo(map); else map.removeLayer(shopsGroup);
+});
+document.getElementById('layer-accomodation').addEventListener('change', function() {
+  if (this.checked) accomodationGroup.addTo(map); else map.removeLayer(accomodationGroup);
 });
 
 // initial render
