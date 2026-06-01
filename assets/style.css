@@ -117,6 +117,14 @@ small { font-size: 0.8rem; color: var(--text-muted); }
   display: flex;
   flex-direction: column;
   gap: 4px;
+  /* #1 — textured nav frame (subtle cream weave, recovered from original site) */
+  background-color: var(--bg-alt);
+  background-image: url("d15.jpeg");
+  background-repeat: repeat;
+  background-blend-mode: multiply;
+  border: 1px solid var(--divider);
+  border-radius: var(--r-md);
+  padding: var(--space-sm) var(--space-md);
 }
 
 /* ---- PRIMARY NAV ---- */
@@ -786,6 +794,19 @@ small { font-size: 0.8rem; color: var(--text-muted); }
   font-style: italic;
 }
 
+/* ---- BULLETIN / HISTORY THUMBNAILS ---- */
+.post-thumb,
+.pillole-thumb {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  margin-top: var(--space-sm);
+  border: 1px solid var(--divider);
+  border-radius: var(--r-sm);
+}
+.pillole-thumb { grid-column: 2; }
+
 /* ---- COPYRIGHT BOX ---- */
 .copyright-notice {
   background: var(--bg-alt);
@@ -884,6 +905,15 @@ small { font-size: 0.8rem; color: var(--text-muted); }
 .footer-copy a {
   color: var(--text-muted);
 }
+/* #9 — ShinyStat counter (legacy analytics, kept per Paolo's request) */
+.shinystat-counter {
+  border-top: 1px solid var(--divider);
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  text-align: center;
+  opacity: 0.7;
+}
+.shinystat-counter img { display: inline-block; }
 
 /* ---- UTILITY ---- */
 .rss-link {
@@ -919,6 +949,7 @@ small { font-size: 0.8rem; color: var(--text-muted); }
   .post-body { grid-column: 1; }
   .pillole-item { grid-template-columns: 1fr; gap: 4px; }
   .pillole-sub { grid-column: 1; }
+  .pillole-thumb { grid-column: 1; max-width: 100%; }
   .sector-grid { grid-template-columns: 1fr; }
   .accom-grid { grid-template-columns: 1fr; }
   .footer-inner { grid-template-columns: 1fr; }
