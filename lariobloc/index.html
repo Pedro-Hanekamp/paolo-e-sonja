@@ -6,6 +6,7 @@
   <title>Lariobloc — LARIOCLIMB</title>
   <meta name="description" content="Lariobloc: guida al bouldering intorno al Lago di Como. Ranciobloc, Civatebloc, Valmadrerabloc, Gajumbloc e altre zone.">
   <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -13,33 +14,12 @@
     /* ── Page-level font overrides ── */
     body { font-family: 'DM Sans', sans-serif; }
 
-    /* ── Hero ── */
-    .bloc-hero {
-      position: relative;
-      width: 100%;
-      height: 400px;
-      overflow: hidden;
-      border-radius: 12px;
-      margin-bottom: 3rem;
-    }
-    .bloc-hero img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .bloc-hero-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.18) 60%, transparent 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: flex-end;
-      padding: 2rem 2.4rem;
-    }
+    /* ── Hero (map) ── */
+    .bloc-hero-head { margin-bottom: 1.4rem; }
     .bloc-hero-title {
       font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(3.2rem, 8vw, 6rem);
-      color: #fff;
+      color: var(--text);
       line-height: 1;
       letter-spacing: 0.04em;
       margin: 0 0 0.4rem;
@@ -47,11 +27,32 @@
     .bloc-hero-sub {
       font-family: 'DM Sans', sans-serif;
       font-size: 1rem;
-      color: rgba(255,255,255,0.82);
+      color: var(--text-muted);
       letter-spacing: 0.06em;
       text-transform: uppercase;
       margin: 0;
     }
+    #bloc-map {
+      width: 100%;
+      height: 400px;
+      border-radius: 12px;
+      margin-bottom: 3rem;
+      border: 1px solid var(--divider);
+      z-index: 0;
+    }
+    @media (max-width: 600px) {
+      #bloc-map { height: 260px; }
+    }
+
+    /* ── map popup ── */
+    .leaflet-popup-content-wrapper {
+      border-radius: var(--r-md);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+    }
+    .popup-name  { font-weight: 600; margin-bottom: 4px; }
+    .popup-zone  { font-size: 0.75rem; color: #666; margin-bottom: 6px; }
+    .popup-pdf   { font-size: 0.8rem; color: oklch(0.42 0.10 200); }
 
     /* ── Section headings ── */
     .bloc-section-heading {
@@ -398,9 +399,9 @@
           <li><a href="http://www.paolo-sonja.net/masino/" target="_blank" rel="noopener">Masino-Bregaglia</a></li>
           <li><a href="http://www.paolo-sonja.net/mello/" target="_blank" rel="noopener">Val di Mello</a></li>
           <li><a href="http://www.paolo-sonja.net/bike/" target="_blank" rel="noopener">Bike</a></li>
-          <li><a href="http://www.paolo-sonja.net/alpiretiche/" target="_blank" rel="noopener">Alpi Retiche</a></li>
+          <li><a href="http://www.paolo-sonja.net/retiche/" target="_blank" rel="noopener">Alpi Retiche</a></li>
           <li><a href="http://www.paolo-sonja.net/qualido/" target="_blank" rel="noopener">Qualido</a></li>
-          <li><a href="http://www.paolo-sonja.net/scialpinismo/" target="_blank" rel="noopener">Sci Alpinismo</a></li>
+          <li><a href="http://www.paolo-sonja.net/scialp/" target="_blank" rel="noopener">Sci Alpinismo</a></li>
         </ul>
       </nav>
     </div>
@@ -412,15 +413,11 @@
     <div class="site-main">
 
       <!-- HERO -->
-      <div class="bloc-hero">
-        <img
-          src="https://images.unsplash.com/photo-1564769662533-4f00a87b4056?auto=format&fit=crop&w=1400&q=80"
-          alt="Bouldering sul Lago di Como">
-        <div class="bloc-hero-overlay">
-          <p class="bloc-hero-title">Lario Bloc</p>
-          <p class="bloc-hero-sub">Bouldering intorno al Lago di Como</p>
-        </div>
+      <div class="bloc-hero-head">
+        <h1 class="bloc-hero-title">Lario Bloc</h1>
+        <p class="bloc-hero-sub">Bouldering intorno al Lago di Como</p>
       </div>
+      <div id="bloc-map" aria-label="Mappa delle zone boulder intorno al Lago di Como"></div>
 
       <!-- CONTACT / SOCIAL -->
       <div class="bloc-contact-row">
@@ -921,6 +918,56 @@
 </footer>
 
 <script src="../assets/nav.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+// ── LARIO BLOC MAP ───────────────────────────────────────────────────────────
+const blocMap = L.map('bloc-map', { zoomControl: true, scrollWheelZoom: false })
+  .setView([45.84, 9.35], 11);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  maxZoom: 17,
+}).addTo(blocMap);
+
+function makeBlocIcon(color) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32">
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 9 12 20 12 20S24 21 24 12C24 5.373 18.627 0 12 0z" fill="${color}" stroke="white" stroke-width="1.5"/>
+    <circle cx="12" cy="12" r="4" fill="white" opacity="0.9"/>
+  </svg>`;
+  return L.divIcon({ html: svg, iconSize:[24,32], iconAnchor:[12,32], popupAnchor:[0,-34], className:'' });
+}
+
+// Coordinate verificate per ogni zona boulder (vedi piano)
+const BLOC_AREAS = [
+  { name:"Ranciobloc",           lat:45.872, lng:9.405, color:"#0d8f8f", note:"Tutto l'anno · 4-7A · 3 settori + Pietraluna",  pdf:"Ranciobloc_intro20.pdf" },
+  { name:"Civatebloc",           lat:45.812, lng:9.345, color:"#2e8b57", note:"La zona più varia · 3-7A · 7 settori",           pdf:"civatebloc_intro20.pdf" },
+  { name:"Valmadrerabloc",       lat:45.851, lng:9.350, color:"#c46000", note:"Tutto l'anno · 3-7A · 6-7 m · avv. 50 min",      pdf:"ValmadreraBloc20.pdf" },
+  { name:"Gajumbloc",            lat:45.858, lng:9.281, color:"#3b6ea5", note:"Valle ombrosa · Apr-Nov · 5-7A+ · avv. 15 min",  pdf:"GajumBloc20.pdf" },
+  { name:"Galbiatebloc",         lat:45.818, lng:9.378, color:"#9a5b2e", note:"Ott-Apr · fino a 6B+ · adatta alle famiglie",    pdf:"GalbiateBloc_smaterno20.pdf" },
+  { name:"La Bonacina di Lecco", lat:45.853, lng:9.412, color:"#8a3ab0", note:"Blocco urbano · lungo il torrente Calderone",   pdf:"Bonacinabloc_lecco21.pdf" },
+];
+
+const blocBounds = [];
+BLOC_AREAS.forEach(a => {
+  L.marker([a.lat, a.lng], { icon: makeBlocIcon(a.color) })
+    .addTo(blocMap)
+    .bindPopup(`<div class="popup-name">${a.name}</div><div class="popup-zone">${a.note}</div><a class="popup-pdf" href="${a.pdf}" target="_blank">↓ Topo PDF</a>`);
+  blocBounds.push([a.lat, a.lng]);
+});
+blocMap.fitBounds(blocBounds, { padding: [30, 30] });
+
+// Fix the "offset map / pins in the lake" bug: if the map initialises before its
+// container has its final on-screen size, Leaflet caches the wrong size and the
+// tiles drift out of sync with the pins (pins appear shifted into the water).
+// Recompute the size and re-frame the pins once layout + fonts have settled, and
+// again on resize (the hero map height also changes between desktop and mobile).
+function refreshBlocMap() {
+  blocMap.invalidateSize();
+  blocMap.fitBounds(blocBounds, { padding: [30, 30] });
+}
+window.addEventListener('load', refreshBlocMap);
+window.addEventListener('resize', refreshBlocMap);
+setTimeout(refreshBlocMap, 300);
+</script>
 <script>
 (function() {
   const pills = document.querySelectorAll('.diff-pill');
