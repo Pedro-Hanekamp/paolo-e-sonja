@@ -86,9 +86,13 @@ small { font-size: 0.8rem; color: var(--text-muted); }
 }
 .prose { max-width: var(--max-prose); }
 
-/* ---- SITE HEADER ---- */
+/* ---- SITE HEADER (single condensed band — Paolo #1) ---- */
 .site-header {
-  background: var(--bg);
+  /* Whole band carries the cream weave texture (was on the nav frame) */
+  background-color: var(--bg-alt);
+  background-image: url("d15.jpeg");
+  background-repeat: repeat;
+  background-blend-mode: multiply;
   border-bottom: 1px solid var(--divider);
   position: sticky;
   top: 0;
@@ -97,34 +101,44 @@ small { font-size: 0.8rem; color: var(--text-muted); }
 .header-inner {
   display: flex;
   align-items: center;
-  gap: var(--space-lg);
+  justify-content: space-between;
+  gap: var(--space-md);
   padding-block: var(--space-sm);
 }
-.site-logo {
+/* Brand block: yellow lake logo at full line-height + title + tagline */
+.site-brand {
   flex-shrink: 0;
   display: flex;
   align-items: center;
+  gap: var(--space-sm);
 }
-.site-logo img {
-  height: 80px;
-  max-height: 80px;
+.site-brand:hover { text-decoration: none; }
+.brand-logo {
+  height: 78px;
   width: auto;
-  max-width: 240px;
-  object-fit: contain;
+  flex-shrink: 0;
 }
-.header-nav-wrap {
-  flex: 1;
+.brand-text {
   display: flex;
   flex-direction: column;
+  line-height: 1.12;
+}
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.brand-tag {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.header-nav-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   gap: 4px;
-  /* #1 — textured nav frame (subtle cream weave, recovered from original site) */
-  background-color: var(--bg-alt);
-  background-image: url("d15.jpeg");
-  background-repeat: repeat;
-  background-blend-mode: multiply;
-  border: 1px solid var(--divider);
-  border-radius: var(--r-md);
-  padding: var(--space-sm) var(--space-md);
 }
 
 /* ---- PRIMARY NAV ---- */
@@ -132,6 +146,7 @@ small { font-size: 0.8rem; color: var(--text-muted); }
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
   gap: 2px;
   list-style: none;
   padding: 0;
@@ -161,6 +176,7 @@ small { font-size: 0.8rem; color: var(--text-muted); }
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
   gap: 2px;
   list-style: none;
   padding: 0;
