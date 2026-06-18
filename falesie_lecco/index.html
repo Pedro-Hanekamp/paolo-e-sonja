@@ -741,6 +741,11 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 17,
 }).addTo(map);
 
+// Pin alignment nudge — shift all markers slightly south + west onto the towns.
+// Tune these two numbers (negative = south / west). Set to 0 to disable.
+const MAP_SHIFT_LAT = -0.006;
+const MAP_SHIFT_LNG = -0.006;
+
 function makeIcon(zone) {
   const color = ZONE_COLOR[zone] || "#555";
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32">
@@ -755,7 +760,7 @@ CRAGS.forEach((c, i) => {
   const pdfLink = c.pdf
     ? `<a class="popup-pdf" href="${c.pdf}" target="_blank">↓ PDF</a>`
     : '<span style="color:#aaa;font-size:0.75rem;">PDF non disponibile</span>';
-  markers[i] = L.marker([c.lat, c.lng], { icon: makeIcon(c.zone) })
+  markers[i] = L.marker([c.lat + MAP_SHIFT_LAT, c.lng + MAP_SHIFT_LNG], { icon: makeIcon(c.zone) })
     .addTo(map)
     .bindPopup(`<div class="popup-name">${c.name}</div><div class="popup-zone">${c.zone} · ${c.alt} m</div>${pdfLink}`);
 });
@@ -772,7 +777,7 @@ function makePOIIcon(color, letter) {
 // ── POI LAYER GROUPS ───────────────────────────────────────────────────────
 const parkingGroup = L.layerGroup();
 PARKING.forEach(p => {
-  L.marker([p.lat, p.lng], { icon: makePOIIcon('#2563eb','P') })
+  L.marker([p.lat + MAP_SHIFT_LAT, p.lng + MAP_SHIFT_LNG], { icon: makePOIIcon('#2563eb','P') })
     .addTo(parkingGroup)
     .bindPopup(`<div class="popup-name">${p.name}</div><div class="popup-zone">${p.note}</div>`);
 });
@@ -780,7 +785,7 @@ parkingGroup.addTo(map);
 
 const shopsGroup = L.layerGroup();
 SHOPS.forEach(s => {
-  L.marker([s.lat, s.lng], { icon: makePOIIcon('#d97706','S') })
+  L.marker([s.lat + MAP_SHIFT_LAT, s.lng + MAP_SHIFT_LNG], { icon: makePOIIcon('#d97706','S') })
     .addTo(shopsGroup)
     .bindPopup(`<div class="popup-name">${s.name}</div>
       <div class="popup-zone">${s.addr}</div>
@@ -791,7 +796,7 @@ shopsGroup.addTo(map);
 
 const accomodationGroup = L.layerGroup();
 ACCOMMODATIONS.forEach(a => {
-  L.marker([a.lat, a.lng], { icon: makePOIIcon('#7c3aed','H') })
+  L.marker([a.lat + MAP_SHIFT_LAT, a.lng + MAP_SHIFT_LNG], { icon: makePOIIcon('#7c3aed','H') })
     .addTo(accomodationGroup)
     .bindPopup(`<div class="popup-name">${a.name}</div>
       <div class="popup-zone">${a.area}</div>
