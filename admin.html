@@ -206,6 +206,14 @@
     .post-card-title { font-size: 14px; font-weight: 600; }
     .post-card-body { font-size: 13px; color: var(--muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .post-card-actions { display: flex; gap: 4px; flex-shrink: 0; }
+    .post-card-thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
+
+    /* Photo picker */
+    .photo-picker { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; margin-top: 6px; }
+    .photo-tile { position: relative; aspect-ratio: 1; border: 2px solid var(--border); border-radius: 8px; overflow: hidden; cursor: pointer; padding: 0; background: var(--bg3); }
+    .photo-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-tile.selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+    .photo-none { display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--muted); text-align: center; line-height: 1.3; }
 
     /* Empty state */
     .empty-state { text-align: center; padding: 48px 20px; color: var(--muted); font-size: 14px; }
@@ -383,6 +391,11 @@
         <label>Testo</label>
         <textarea id="f-body" rows="5" placeholder="Scrivi il testo del post.&#10;&#10;Lascia una riga vuota tra i paragrafi.&#10;Puoi usare <strong>parola</strong> per il grassetto e <em>parola</em> per il corsivo."></textarea>
         <div class="form-hint">Riga vuota = nuovo paragrafo. Grassetto: &lt;strong&gt;parola&lt;/strong&gt; — corsivo: &lt;em&gt;parola&lt;/em&gt;</div>
+      </div>
+      <div class="form-full">
+        <label>Foto <span class="form-hint">(opzionale — scegli una foto già presente sul sito)</span></label>
+        <input type="hidden" id="f-photo" value="">
+        <div id="f-photo-grid" class="photo-picker"></div>
       </div>
       <div class="form-actions">
         <button class="btn btn-ghost" onclick="cancelForm()">Annulla</button>
@@ -768,7 +781,7 @@ const PREVIEW_BASE = 'https://larioclimb.paolo-sonja.net/'; // update to your Tu
 // ════════════════════════════════════════
 const state = {
   // Bacheca
-  posts: [], originalHtml: '', sha: null, dirty: false, editingId: null,
+  posts: [], bachecaImages: [], originalHtml: '', sha: null, dirty: false, editingId: null,
   // Negozi
   shops: [], shopsHtml: '', shopsSha: null, shopsDirty: false, shopsLoaded: false, editingShopIdx: null,
   // Alloggi
@@ -957,6 +970,45 @@ function encodeB64(str) { return btoa(unescape(encodeURIComponent(str))); }
 //  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝ ╚═════╝╚═╝  ╚═╝
 // ════════════════════════════════════════
 
+async function listBachecaImages() {
+  if (state.bachecaImages && state.bachecaImages.length) return state.bachecaImages;
+  const token = getToken();
+  if (!token) return [];
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${OWNER}/${REPO}/contents/bacheca/img?ref=${BRANCH}`,
+      { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    state.bachecaImages = data
+      .filter(f => f.type === 'file' && /\.(jpe?g|png|webp|gif)$/i.test(f.name))
+      .map(f => f.name).sort();
+    return state.bachecaImages;
+  } catch (e) { return []; }
+}
+
+function renderPhotoPicker(selected) {
+  const grid = document.getElementById('f-photo-grid');
+  if (!grid) return;
+  const imgs = state.bachecaImages || [];
+  let html = `<button type="button" class="photo-tile photo-none${!selected ? ' selected' : ''}" data-src="" onclick="selectPhoto('')">Nessuna<br>foto</button>`;
+  imgs.forEach(name => {
+    const src = `img/${name}`;
+    const url = `${PREVIEW_BASE}bacheca/img/${name}`;
+    const sel = selected === src ? ' selected' : '';
+    html += `<button type="button" class="photo-tile${sel}" data-src="${src}" onclick="selectPhoto('${src}')" title="${name}"><img src="${url}" alt="${name}" loading="lazy"></button>`;
+  });
+  grid.innerHTML = html;
+}
+
+function selectPhoto(src) {
+  document.getElementById('f-photo').value = src;
+  document.querySelectorAll('#f-photo-grid .photo-tile').forEach(t => {
+    t.classList.toggle('selected', t.getAttribute('data-src') === src);
+  });
+}
+
 function parsePosts(html) {
   const doc = new DOMParser().parseFromString(html, 'text/html');
   const posts = [];
@@ -978,13 +1030,16 @@ function parsePosts(html) {
     titleEl.childNodes.forEach(node => { if (node.nodeType === Node.TEXT_NODE) title += node.textContent; });
     title = title.trim();
     const bodyHtml = bodyEl ? bodyEl.innerHTML.trim() : '';
-    posts.push({ id: `post-${idx}-${Date.now()}`, dateDisplay, iso, year, tagClass, tagLabel, title, bodyHtml });
+    const thumbEl = li.querySelector('.post-thumb');
+    const thumb = thumbEl ? (thumbEl.getAttribute('src') || '') : '';
+    posts.push({ id: `post-${idx}-${Date.now()}`, dateDisplay, iso, year, tagClass, tagLabel, title, bodyHtml, thumb });
   });
   return posts;
 }
 
 function postItemHtml(p) {
   const tagHtml = p.tagClass ? `\n              <span class="post-tag ${p.tagClass}">${p.tagLabel}</span>` : '';
+  const thumbHtml = p.thumb ? `\n            <img class="post-thumb" src="${p.thumb}" alt="${escHtml(p.title)}" loading="lazy">` : '';
   return `        <li class="post-item">
           <span class="post-date">${p.dateDisplay}</span>
           <div>
@@ -993,7 +1048,7 @@ function postItemHtml(p) {
             </div>
             <div class="post-body">
               ${p.bodyHtml}
-            </div>
+            </div>${thumbHtml}
           </div>
         </li>`;
 }
@@ -1056,8 +1111,10 @@ function renderPostList() {
       const tagHtml = p.tagClass ? `<span class="tag-chip ${p.tagClass}">${p.tagLabel}</span>` : '';
       const bodyText = p.bodyHtml.replace(/<[^>]+>/g, '').trim();
       const isEditing = state.editingId === p.id;
+      const thumbImg = p.thumb ? `<img class="post-card-thumb" src="${PREVIEW_BASE}bacheca/${p.thumb}" alt="" loading="lazy">` : '';
       return `
         <div class="post-card${isEditing ? ' editing' : ''}" id="card-${p.id}">
+          ${thumbImg}
           <div class="post-card-left">
             <div class="post-card-date">${p.dateDisplay}</div>
             <div class="post-card-head">${tagHtml}<span class="post-card-title">${p.title}</span></div>
@@ -1094,10 +1151,13 @@ function openNewPostForm() {
   document.getElementById('f-tag').value   = '';
   document.getElementById('f-title').value = '';
   document.getElementById('f-body').value  = '';
+  document.getElementById('f-photo').value = '';
   document.getElementById('post-submit-btn').textContent = 'Aggiungi Post';
   document.getElementById('post-form-wrap').classList.add('open');
   document.getElementById('new-post-btn').style.display = 'none';
   document.getElementById('f-title').focus();
+  renderPhotoPicker('');
+  listBachecaImages().then(() => renderPhotoPicker(''));
 }
 
 function editPost(id) {
@@ -1109,10 +1169,13 @@ function editPost(id) {
   document.getElementById('f-tag').value   = parseTagValue(post.tagClass, post.tagLabel);
   document.getElementById('f-title').value = post.title;
   document.getElementById('f-body').value  = bodyHtmlToText(post.bodyHtml);
+  document.getElementById('f-photo').value = post.thumb || '';
   document.getElementById('post-submit-btn').textContent = 'Salva Modifiche';
   document.getElementById('post-form-wrap').classList.add('open');
   document.getElementById('new-post-btn').style.display = 'none';
   document.getElementById('f-title').focus();
+  renderPhotoPicker(post.thumb || '');
+  listBachecaImages().then(() => renderPhotoPicker(post.thumb || ''));
   renderPostList();
 }
 
@@ -1128,6 +1191,7 @@ function submitPost() {
   const tagVal   = document.getElementById('f-tag').value;
   const title    = document.getElementById('f-title').value.trim();
   const bodyText = document.getElementById('f-body').value;
+  const thumb    = document.getElementById('f-photo').value || '';
   if (!dateIso)  { alert('Inserisci una data.'); return; }
   if (!title)    { alert('Inserisci un titolo.'); return; }
   const [tagClass, tagLabel] = tagVal ? tagVal.split('|') : ['', ''];
@@ -1136,9 +1200,9 @@ function submitPost() {
   const bodyHtml = bodyText.trim() ? textToBodyHtml(bodyText) : '<p></p>';
   if (state.editingId) {
     const idx = state.posts.findIndex(p => p.id === state.editingId);
-    if (idx !== -1) state.posts[idx] = { ...state.posts[idx], dateDisplay, iso: dateIso, year, tagClass, tagLabel, title, bodyHtml };
+    if (idx !== -1) state.posts[idx] = { ...state.posts[idx], dateDisplay, iso: dateIso, year, tagClass, tagLabel, title, bodyHtml, thumb };
   } else {
-    state.posts.unshift({ id: `post-${Date.now()}`, dateDisplay, iso: dateIso, year, tagClass, tagLabel, title, bodyHtml });
+    state.posts.unshift({ id: `post-${Date.now()}`, dateDisplay, iso: dateIso, year, tagClass, tagLabel, title, bodyHtml, thumb });
   }
   state.dirty = true; state.editingId = null;
   cancelForm(); renderPostList(); updateBachecaBar();
