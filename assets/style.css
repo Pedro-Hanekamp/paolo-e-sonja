@@ -103,7 +103,8 @@ small { font-size: 0.8rem; color: var(--text-muted); }
   align-items: center;
   justify-content: space-between;
   gap: var(--space-md);
-  padding-block: var(--space-sm);
+  /* Tight band so the enlarged lake logo nearly laps the texture edges */
+  padding-block: 6px;
 }
 /* Brand block: yellow lake logo at full line-height + title + tagline */
 .site-brand {
@@ -114,7 +115,7 @@ small { font-size: 0.8rem; color: var(--text-muted); }
 }
 .site-brand:hover { text-decoration: none; }
 .brand-logo {
-  height: 78px;
+  height: 104px;
   width: auto;
   flex-shrink: 0;
 }
@@ -961,6 +962,7 @@ small { font-size: 0.8rem; color: var(--text-muted); }
   .header-nav-wrap { display: none; }
   .header-nav-wrap.open { display: flex; width: 100%; }
   .header-inner { flex-wrap: wrap; }
+  .brand-logo { height: 76px; }
   .post-item { grid-template-columns: 1fr; gap: 4px; }
   .post-body { grid-column: 1; }
   .pillole-item { grid-template-columns: 1fr; gap: 4px; }
