@@ -330,6 +330,7 @@
   <div class="topbar-sep"></div>
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('bacheca')">📋 Bacheca</button>
+    <button class="tab-btn" onclick="switchTab('homepage')">🏠 Homepage</button>
     <button class="tab-btn" onclick="switchTab('negozi')">🏪 Negozi</button>
     <button class="tab-btn" onclick="switchTab('alloggi')">🏕 Alloggi</button>
     <button class="tab-btn" onclick="switchTab('pillole')">📖 Pillole</button>
@@ -414,6 +415,47 @@
     <div class="spacer"></div>
     <button class="btn btn-ghost" onclick="reloadBacheca()" style="font-size:12px;padding:6px 12px;">↺ Ricarica</button>
     <button class="btn btn-publish" id="publish-btn" onclick="openCommitModalWith('Aggiornamento bacheca', doBachecaPublish)" disabled>🚀 Pubblica</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TAB: HOMEPAGE
+══════════════════════════════════════ -->
+<div class="tab-content" id="tab-homepage">
+  <div class="section-wrap">
+    <div class="form-hint" style="margin-bottom:16px;">Modifica i testi della pagina iniziale del sito. Cambia ciò che vuoi e premi Pubblica in fondo.</div>
+
+    <div style="margin-bottom:28px;">
+      <div class="post-form-title">Presentazione</div>
+      <div class="form-full"><label>Primo paragrafo</label><textarea id="h-about-p1" rows="3" oninput="markHomeDirty()"></textarea></div>
+      <div class="form-full"><label>Secondo paragrafo</label><textarea id="h-about-p2" rows="3" oninput="markHomeDirty()"></textarea></div>
+      <div class="form-full"><label>Nota copyright</label><textarea id="h-about-copyright" rows="2" oninput="markHomeDirty()"></textarea></div>
+    </div>
+
+    <div style="margin-bottom:28px;">
+      <div class="post-form-title">Bacheca Virtuale</div>
+      <div class="form-full"><label>Titolo sezione</label><input type="text" id="h-bacheca-title" oninput="markHomeDirty()"></div>
+      <div class="form-full"><label>Testo introduttivo</label><textarea id="h-bacheca-intro" rows="2" oninput="markHomeDirty()"></textarea></div>
+    </div>
+
+    <div style="margin-bottom:28px;">
+      <div class="post-form-title">Pillole di Storia</div>
+      <div class="form-full"><label>Titolo sezione</label><input type="text" id="h-pillole-title" oninput="markHomeDirty()"></div>
+      <div class="form-full"><label>Testo introduttivo</label><textarea id="h-pillole-intro" rows="2" oninput="markHomeDirty()"></textarea></div>
+    </div>
+
+    <div style="margin-bottom:28px;">
+      <div class="post-form-title">Topos</div>
+      <div class="form-full"><label>Titolo sezione</label><input type="text" id="h-topos-title" oninput="markHomeDirty()"></div>
+      <div class="form-full"><label>Testo introduttivo</label><textarea id="h-topos-intro" rows="2" oninput="markHomeDirty()"></textarea></div>
+    </div>
+  </div>
+
+  <div class="publish-bar">
+    <div class="publish-info" id="home-publish-info">Nessuna modifica in sospeso</div>
+    <div class="spacer"></div>
+    <button class="btn btn-ghost" onclick="reloadHome()" style="font-size:12px;padding:6px 12px;">↺ Ricarica</button>
+    <button class="btn btn-publish" id="home-publish-btn" onclick="openCommitModalWith('Aggiornamento homepage', doHomePublish)" disabled>🚀 Pubblica</button>
   </div>
 </div>
 
@@ -775,6 +817,7 @@ const PILLOLE_PATH = 'pillole/pillole.html';
 const AUTORI_PATH     = 'autori.html';
 const LARIOBLOC_PATH  = 'lariobloc/index.html';
 const PREVIEW_BASE = 'https://larioclimb.paolo-sonja.net/'; // update to your Turbify domain
+const HOME_PATH    = 'index.html';
 
 // ════════════════════════════════════════
 //  STATE
@@ -790,6 +833,8 @@ const state = {
   pillole: [], pilloleHtml: '', pilloleSha: null, pilloleDirty: false, pilloleLoaded: false, editingPilloleIdx: null,
   // Autori
   autori: [], autoriHtml: '', autoriSha: null, autoriDirty: false, autoriLoaded: false,
+  // Homepage
+  homeHtml: '', homeSha: null, homeDirty: false, homeLoaded: false,
   // Lariobloc
   larioblocZones: [], larioblocHtml: '', larioblocSha: null, larioblocDirty: false, larioblocLoaded: false, editingLarioblocZone: null, editingLarioblocSector: null,
   // Editor
@@ -909,6 +954,7 @@ function switchTab(name) {
   if (name === 'pillole'    && !state.pilloleLoaded)    loadPillole();
   if (name === 'autori'     && !state.autoriLoaded)     loadAutori();
   if (name === 'lariobloc'  && !state.larioblocLoaded)  loadLariobloc();
+  if (name === 'homepage'   && !state.homeLoaded)       loadHome();
 }
 
 // ════════════════════════════════════════
@@ -1249,6 +1295,60 @@ async function doBachecaPublish(message) {
     setStatus('ok', 'Pubblicato! Il sito si aggiornerà in ~30 secondi.');
   } catch(e) { setStatus('err', `Errore: ${e.message}`); }
   finally { bachecaPublishing = false; updateBachecaBar(); }
+}
+
+// ════════════════════════════════════════
+//  HOMEPAGE
+// ════════════════════════════════════════
+const HOME_FIELDS = {
+  'home.about.p1':'h-about-p1','home.about.p2':'h-about-p2','home.about.copyright':'h-about-copyright',
+  'home.bacheca.title':'h-bacheca-title','home.bacheca.intro':'h-bacheca-intro',
+  'home.pillole.title':'h-pillole-title','home.pillole.intro':'h-pillole-intro',
+  'home.topos.title':'h-topos-title','home.topos.intro':'h-topos-intro',
+};
+let homePublishing = false;
+function decodeHtml(s){ const t=document.createElement('textarea'); t.innerHTML=s; return t.value; }
+function homeFieldRe(key){ return new RegExp('<!--EDIT:'+key.replace(/\./g,'\\.')+'-->([\\s\\S]*?)<!--/EDIT-->'); }
+async function loadHome(){
+  setStatus('loading','Caricamento homepage...');
+  try{
+    const {html,sha}=await loadFile(HOME_PATH);
+    state.homeHtml=html; state.homeSha=sha;
+    for(const [key,id] of Object.entries(HOME_FIELDS)){
+      const m=html.match(homeFieldRe(key));
+      const el=document.getElementById(id);
+      if(el) el.value = m ? decodeHtml(m[1].trim()) : '';
+    }
+    state.homeLoaded=true; state.homeDirty=false; updateHomeBar();
+    setStatus('ok','Homepage caricata.');
+  }catch(e){ setStatus('err',`Errore: ${e.message}`); }
+}
+async function reloadHome(){ state.homeDirty=false; await loadHome(); }
+function markHomeDirty(){ state.homeDirty=true; updateHomeBar(); }
+function updateHomeBar(){
+  const info=document.getElementById('home-publish-info');
+  const btn=document.getElementById('home-publish-btn');
+  if(info) info.textContent = state.homeDirty ? 'Modifiche non pubblicate' : 'Nessuna modifica in sospeso';
+  if(btn) btn.disabled = !state.homeDirty || homePublishing;
+}
+async function doHomePublish(message){
+  if(homePublishing) return;
+  homePublishing=true;
+  setStatus('loading','Pubblicazione homepage...');
+  document.getElementById('home-publish-btn').disabled=true;
+  try{
+    let html=state.homeHtml;
+    for(const [key,id] of Object.entries(HOME_FIELDS)){
+      const el=document.getElementById(id);
+      if(!el) continue;
+      const val=escHtml(el.value.trim());
+      html=html.replace(homeFieldRe(key), ()=>'<!--EDIT:'+key+'-->'+val+'<!--/EDIT-->');
+    }
+    state.homeSha=await saveFile(HOME_PATH, state.homeSha, html, message||'Aggiornamento homepage');
+    state.homeHtml=html; state.homeDirty=false; updateHomeBar();
+    setStatus('ok','Pubblicato! Il sito si aggiornerà in ~30 secondi.');
+  }catch(e){ setStatus('err',`Errore: ${e.message}`); }
+  finally{ homePublishing=false; updateHomeBar(); }
 }
 
 // ════════════════════════════════════════
