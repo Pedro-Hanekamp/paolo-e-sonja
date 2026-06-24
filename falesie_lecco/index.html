@@ -771,6 +771,7 @@ function makeIcon(zone) {
 }
 
 const markers = {};
+const allPins = [];  // every marker + its raw coord — used by #calibrate to move them all at once
 CRAGS.forEach((c, i) => {
   const pdfLink = c.pdf
     ? `<a class="popup-pdf" href="${c.pdf}" target="_blank">↓ PDF</a>`
@@ -778,6 +779,7 @@ CRAGS.forEach((c, i) => {
   markers[i] = L.marker([c.lat + MAP_SHIFT_LAT, c.lng + MAP_SHIFT_LNG], { icon: makeIcon(c.zone) })
     .addTo(map)
     .bindPopup(`<div class="popup-name">${c.name}</div><div class="popup-zone">${c.zone} · ${c.alt} m</div>${pdfLink}`);
+  allPins.push({ m: markers[i], lat: c.lat, lng: c.lng });
 });
 
 // ── POI ICON ───────────────────────────────────────────────────────────────
@@ -792,32 +794,70 @@ function makePOIIcon(color, letter) {
 // ── POI LAYER GROUPS ───────────────────────────────────────────────────────
 const parkingGroup = L.layerGroup();
 PARKING.forEach(p => {
-  L.marker([p.lat + MAP_SHIFT_LAT, p.lng + MAP_SHIFT_LNG], { icon: makePOIIcon('#2563eb','P') })
+  const mk = L.marker([p.lat + MAP_SHIFT_LAT, p.lng + MAP_SHIFT_LNG], { icon: makePOIIcon('#2563eb','P') })
     .addTo(parkingGroup)
     .bindPopup(`<div class="popup-name">${p.name}</div><div class="popup-zone">${p.note}</div>`);
+  allPins.push({ m: mk, lat: p.lat, lng: p.lng });
 });
 parkingGroup.addTo(map);
 
 const shopsGroup = L.layerGroup();
 SHOPS.forEach(s => {
-  L.marker([s.lat + MAP_SHIFT_LAT, s.lng + MAP_SHIFT_LNG], { icon: makePOIIcon('#d97706','S') })
+  const mk = L.marker([s.lat + MAP_SHIFT_LAT, s.lng + MAP_SHIFT_LNG], { icon: makePOIIcon('#d97706','S') })
     .addTo(shopsGroup)
     .bindPopup(`<div class="popup-name">${s.name}</div>
       <div class="popup-zone">${s.addr}</div>
       ${s.tel ? `<div class="popup-zone">Tel: ${s.tel}</div>` : ''}
       ${s.url ? `<a class="popup-pdf" href="${s.url}" target="_blank">→ Sito web</a>` : ''}`);
+  allPins.push({ m: mk, lat: s.lat, lng: s.lng });
 });
 shopsGroup.addTo(map);
 
 const accomodationGroup = L.layerGroup();
 ACCOMMODATIONS.forEach(a => {
-  L.marker([a.lat + MAP_SHIFT_LAT, a.lng + MAP_SHIFT_LNG], { icon: makePOIIcon('#7c3aed','H') })
+  const mk = L.marker([a.lat + MAP_SHIFT_LAT, a.lng + MAP_SHIFT_LNG], { icon: makePOIIcon('#7c3aed','H') })
     .addTo(accomodationGroup)
     .bindPopup(`<div class="popup-name">${a.name}</div>
       <div class="popup-zone">${a.area}</div>
       ${a.tel ? `<div class="popup-zone">Tel: ${a.tel}</div>` : ''}`);
+  allPins.push({ m: mk, lat: a.lat, lng: a.lng });
 });
 accomodationGroup.addTo(map);
+
+// ── PIN CALIBRATION — only active when the URL ends in #calibrate ─────────────
+// Lets you MEASURE the exact global offset by clicking, instead of guessing.
+// Normal visitors never trigger this. After we get the two numbers, this whole
+// block gets deleted and the values go into MAP_SHIFT_LAT / MAP_SHIFT_LNG above.
+if (location.hash === '#calibrate') {
+  const banner = document.createElement('div');
+  banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#111;color:#fff;'
+    + 'font:14px/1.45 system-ui,sans-serif;padding:10px 14px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.5)';
+  banner.innerHTML = '🎯 <b>Calibrazione</b> — passa a <b>Satellite</b> (in alto a destra), poi: '
+    + '1) clicca un pin sbagliato, 2) clicca il punto giusto.';
+  document.body.appendChild(banner);
+
+  let step = 0, fromLL = null;
+  map.on('click', (e) => {
+    if (step === 0) {
+      let best = null, bestD = Infinity;
+      allPins.forEach(p => {
+        const d = map.distance(e.latlng, p.m.getLatLng());
+        if (d < bestD) { bestD = d; best = p; }
+      });
+      fromLL = best.m.getLatLng();
+      banner.innerHTML = '🎯 Pin selezionato. Ora clicca il punto <b>REALE</b> di quella falesia sul satellite.';
+      step = 1;
+    } else {
+      const dLat = +(e.latlng.lat - fromLL.lat).toFixed(5);
+      const dLng = +(e.latlng.lng - fromLL.lng).toFixed(5);
+      allPins.forEach(p => p.m.setLatLng([p.lat + dLat, p.lng + dLng]));
+      banner.innerHTML = '✅ Tutti i pin spostati. Mandami questi due numeri:<br>'
+        + `<b style="font-size:18px">MAP_SHIFT_LAT = ${dLat} &nbsp;|&nbsp; MAP_SHIFT_LNG = ${dLng}</b>`
+        + '<br><span style="font-size:12px;opacity:.8">Non sono a posto? Ricarica la pagina e riprova.</span>';
+      step = 0;
+    }
+  });
+}
 
 // ── FILTER STATE ───────────────────────────────────────────────────────────
 const filters = { zone:"all", season:"all", exp:"all", diff:"all", style:"all", equip:"all" };
