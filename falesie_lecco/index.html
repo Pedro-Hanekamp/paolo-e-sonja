@@ -704,7 +704,7 @@ const ACCOMMODATIONS = [
   { name:"Rifugio Rosalba",             lat:45.850, lng:9.380, area:"Piani Resinelli", tel:"0341-732393" },
   { name:"Ristorante 2184",             lat:45.858, lng:9.369, area:"Piani Resinelli", tel:"" },
   { name:"Ostello Parco Monte Barro",   lat:45.825, lng:9.376, area:"Galbiate",         tel:"0341-540512" },
-  { name:"B&B Funivia Piani d'Erna",   lat:45.881, lng:9.424, area:"Lecco",            tel:"0341-499244" },
+  { name:"B&B Funivia Piani d'Erna",   lat:45.875, lng:9.418, area:"Lecco",            tel:"0341-499244" },
   { name:"B&B Sul Lago Dorato",         lat:45.859, lng:9.396, area:"Lecco",            tel:"338-3831690" },
   { name:"Camping Grigna",              lat:45.886, lng:9.429, area:"Ballabio",          tel:"0341-232045" },
   { name:"Rifugio Stoppani",            lat:45.875, lng:9.472, area:"Monte Resegone",    tel:"" },
@@ -741,10 +741,10 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 17,
 }).addTo(map);
 
-// Pin alignment nudge — shift all markers slightly south + west onto the towns.
-// Tune these two numbers (negative = south / west). Set to 0 to disable.
-const MAP_SHIFT_LAT = -0.006;
-const MAP_SHIFT_LNG = -0.006;
+// Pin alignment nudge — kept at 0 so every marker renders on its true coordinate.
+// (Negative = south / west.) Leave at 0 unless every pin is uniformly offset.
+const MAP_SHIFT_LAT = 0;
+const MAP_SHIFT_LNG = 0;
 
 function makeIcon(zone) {
   const color = ZONE_COLOR[zone] || "#555";
