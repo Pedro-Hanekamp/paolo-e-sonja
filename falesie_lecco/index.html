@@ -736,10 +736,25 @@ const ZONE_COLOR = {
 
 // ── MAP INIT ───────────────────────────────────────────────────────────────
 const map = L.map('map', { zoomControl: true }).setView([45.895, 9.385], 10);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+
+// ── BASE LAYERS: street map (default) + satellite (toggle, top-right) ─────────
+// Satellite makes pin placement visually verifiable — you can see the actual
+// cliff / town / lake under each pin, so any wrong coordinate is obvious.
+const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-  maxZoom: 17,
+  maxZoom: 19,
 }).addTo(map);
+
+const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  attribution: 'Imagery © <a href="https://www.esri.com">Esri</a>, Maxar, Earthstar Geographics',
+  maxZoom: 19,
+});
+
+L.control.layers(
+  { 'Mappa': streetLayer, 'Satellite': satelliteLayer },
+  null,
+  { position: 'topright', collapsed: false }
+).addTo(map);
 
 // Pin alignment nudge — kept at 0 so every marker renders on its true coordinate.
 // (Negative = south / west.) Leave at 0 unless every pin is uniformly offset.
