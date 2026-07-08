@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bormio — Arrampicata in Alta Valtellina | LarioClimb</title>
+  <meta name="description" content="Falesie e vie d'arrampicata nella zona di Bormio, Alta Valtellina (Alpi Retiche): Bagni Vecchi, Corno del Caprone, Discarica Abusiva, Isolaccia, Becco dell'Aquila.">
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <style>
+    #bormio-map {
+      width: 100%;
+      height: 460px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--divider);
+      margin-bottom: var(--space-md);
+    }
+    @media (max-width: 700px) { #bormio-map { height: 320px; } }
+
+    .leaflet-popup-content-wrapper { border-radius: var(--r-md); font-family: var(--font-body); font-size: 0.85rem; }
+    .popup-name { font-weight: 600; font-family: var(--font-display); margin-bottom: 2px; }
+    .popup-zone { font-size: 0.75rem; color: #666; margin-bottom: 6px; }
+    .popup-link { font-size: 0.8rem; color: oklch(0.42 0.10 200); text-decoration: none; margin-right: 12px; }
+    .popup-link:hover { text-decoration: underline; }
+
+    .zone-legend { display: flex; flex-wrap: wrap; gap: 1.1rem; margin: 0 0 var(--space-xl); font-size: 0.85rem; color: var(--text-muted); }
+    .zone-legend-item { display: inline-flex; align-items: center; gap: 0.45rem; }
+    .zone-legend-dot { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid #fff; box-shadow: 0 0 0 1px var(--divider); }
+
+    .crag-blurb { font-size: 0.9rem; color: var(--text-muted); margin: 0.6rem 0 0.9rem; line-height: 1.5; }
+    .crag-links { display: flex; gap: 1.1rem; flex-wrap: wrap; }
+    .crag-links a { font-size: 0.85rem; color: var(--accent); text-decoration: none; font-weight: 500; }
+    .crag-links a:hover { text-decoration: underline; }
+    .crag-links .disabled { color: var(--text-muted); font-weight: 400; cursor: default; }
+
+    .intro-note { font-size: 0.82rem; color: var(--text-muted); font-style: italic; line-height: 1.55; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.35em; font-size: 0.9rem; color: var(--accent); text-decoration: none; margin-bottom: var(--space-md); }
+    .back-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <a class="site-brand" href="../index.html" aria-label="LARIOCLIMB — home">
+          <img class="brand-logo" src="../assets/logo-lake.png" alt="LarioClimb — logo lago">
+          <span class="brand-text">
+            <span class="brand-name">LARIOCLIMB</span>
+            <span class="brand-tag">Arrampicata intorno alle sponde del Lago di Como</span>
+          </span>
+        </a>
+        <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Apri menu">☰</button>
+        <nav class="header-nav-wrap" id="main-nav" aria-label="Navigazione principale">
+          <ul class="nav-primary" role="list">
+            <li><a href="../falesie_lecco/index.html">Topos</a></li>
+            <li><a href="../bacheca/index.html">Bacheca</a></li>
+            <li><a href="../lariobloc/index.html">Lariobloc</a></li>
+            <li><a href="https://www.paolo-sonja.net/scialp/lario/" target="_blank" rel="noopener">Larioski ↗</a></li>
+            <li><a href="../accomodation.html">Accomodation</a></li>
+            <li><a href="../shops.html">Shops</a></li>
+            <li><a href="http://www.vienormali.it/" target="_blank" rel="noopener">Altre Topos ↗</a></li>
+            <li><a href="../index.html#meteo">Meteo</a></li>
+            <li class="nav-mail"><a href="../mailus.html">@mail</a></li>
+          </ul>
+          <ul class="nav-secondary" role="list">
+            <li><a href="http://www.paolo-sonja.net/" target="_blank" rel="noopener">Paolo&amp;Sonja</a></li>
+            <li><a href="http://www.paolo-sonja.net/viaggi/" target="_blank" rel="noopener">Viaggi-Trips</a></li>
+            <li><a href="http://www.paolo-sonja.net/masino/" target="_blank" rel="noopener">Masino-Bregaglia</a></li>
+            <li><a href="http://www.paolo-sonja.net/mello/" target="_blank" rel="noopener">Val di Mello</a></li>
+            <li><a href="http://www.paolo-sonja.net/bike/" target="_blank" rel="noopener">Bike</a></li>
+            <li class="nav-active"><a href="http://www.paolo-sonja.net/retiche/" target="_blank" rel="noopener">Alpi Retiche</a></li>
+            <li><a href="http://www.paolo-sonja.net/qualido/" target="_blank" rel="noopener">Qualido</a></li>
+            <li><a href="http://www.paolo-sonja.net/scialp/" target="_blank" rel="noopener">Sci Alpinismo</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <section class="page-title-bar">
+    <div class="container">
+      <h1>BORMIO</h1>
+      <p>Arrampicata in Alta Valtellina — Alpi Retiche</p>
+    </div>
+  </section>
+
+  <main class="container">
+    <a class="back-link" href="index.html">← Alpi Retiche</a>
+
+    <section class="prose" style="margin-bottom: var(--space-xl);">
+      <p>La conca di Bormio, all'estremità superiore della Valtellina, raccoglie falesie e
+      vie d'arrampicata su roccia molto varia: dal calcare giallo e compatto dei
+      <strong>Bagni Vecchi</strong> al granito della <strong>Discarica Abusiva</strong>,
+      fino alle vie alpinistiche del <strong>Becco dell'Aquila</strong>. Sole, quota e
+      avvicinamenti brevi rendono la zona arrampicabile gran parte dell'anno.</p>
+      <p class="intro-note">I disegni ed i testi delle relazioni sono opera di Paolo Vitali,
+      Eraldo Meraldi e Pietro Corti, a disposizione degli scalatori: si chiede di astenersi
+      dal copiarli. Le relazioni di dettaglio e i PDF rimandano al sito originale.</p>
+    </section>
+
+    <div id="bormio-map" role="img" aria-label="Mappa delle falesie di Bormio"></div>
+    <div class="zone-legend" aria-hidden="true">
+      <span class="zone-legend-item"><span class="zone-legend-dot" style="background:#c08a2e;"></span> Calcare</span>
+      <span class="zone-legend-item"><span class="zone-legend-dot" style="background:#a85a3c;"></span> Granito</span>
+      <span class="zone-legend-item"><span class="zone-legend-dot" style="background:#15788a;"></span> Via alpinistica</span>
+    </div>
+
+    <section class="area-section">
+      <div class="area-header">
+        <h2>Falesie e vie</h2>
+        <p class="section-label">5 settori — calcare, granito e vie alpinistiche</p>
+      </div>
+
+      <div class="sector-grid">
+
+        <div class="sector">
+          <h4>Calcare</h4>
+          <h3>Bagni Vecchi</h3>
+          <ul class="sector-specs">
+            <li><span>Stagione</span><span>Tutto l'anno</span></li>
+            <li><span>Gradi</span><span>4a – 8a</span></li>
+            <li><span>Vie</span><span>~101 (Basso + Alto)</span></li>
+            <li><span>Avvicinamento</span><span>5 – 10 min</span></li>
+          </ul>
+          <p class="crag-blurb">Calcare giallo esposto a sud, ~2 km a NW di Bormio sulla
+          strada dello Stelvio. La falesia più comoda e frequentata della zona.</p>
+          <div class="crag-links">
+            <a href="http://www.paolo-sonja.net/retiche/bagni.html" target="_blank" rel="noopener">Relazione ↗</a>
+            <a href="http://www.paolo-sonja.net/retiche/bagnivecchi.pdf" target="_blank" rel="noopener">↓ PDF</a>
+          </div>
+        </div>
+
+        <div class="sector">
+          <h4>Calcare</h4>
+          <h3>Corno del Caprone</h3>
+          <ul class="sector-specs">
+            <li><span>Stagione</span><span>Tutto l'anno</span></li>
+            <li><span>Gradi</span><span>5c – 7c</span></li>
+            <li><span>Vie</span><span>13 + 2</span></li>
+            <li><span>Materiale</span><span>Corda 60 m, 10 rinvii</span></li>
+          </ul>
+          <p class="crag-blurb">Calcare grigio compatto, poco sopra i Bagni Vecchi. Settore
+          breve ma con tiri di buona difficoltà.</p>
+          <div class="crag-links">
+            <a href="http://www.paolo-sonja.net/retiche/cornodelcaprone.html" target="_blank" rel="noopener">Relazione ↗</a>
+            <a href="http://www.paolo-sonja.net/retiche/cornodelcaprone.pdf" target="_blank" rel="noopener">↓ PDF</a>
+          </div>
+        </div>
+
+        <div class="sector">
+          <h4>Granito</h4>
+          <h3>Discarica Abusiva</h3>
+          <ul class="sector-specs">
+            <li><span>Stagione</span><span>Esposta a sud</span></li>
+            <li><span>Gradi</span><span>6b – 8b</span></li>
+            <li><span>Vie</span><span>6</span></li>
+            <li><span>Quota</span><span>~1100 m</span></li>
+          </ul>
+          <p class="crag-blurb">Granito compatto sul fondo della frana della Val Pola (1987),
+          presso Sant'Antonio Morignone in Valdisotto. Tiri brevi e atletici.</p>
+          <div class="crag-links">
+            <a href="http://www.paolo-sonja.net/retiche/discaricaabusiva/index.html" target="_blank" rel="noopener">Relazione ↗</a>
+            <a href="http://www.paolo-sonja.net/retiche/discaricaabusiva/discaricaabusiva.pdf" target="_blank" rel="noopener">↓ PDF</a>
+          </div>
+        </div>
+
+        <div class="sector">
+          <h4>Calcare</h4>
+          <h3>Isolaccia — Crap de Scegn</h3>
+          <ul class="sector-specs">
+            <li><span>Stagione</span><span>Soleggiata</span></li>
+            <li><span>Roccia</span><span>Calcare ottimo</span></li>
+            <li><span>Stile</span><span>Vario</span></li>
+            <li><span>Località</span><span>Valdidentro</span></li>
+          </ul>
+          <p class="crag-blurb">Detta anche "Sasso di Scianno", a Isolaccia in Valdidentro.
+          Calcare di ottima qualità, arrampicata varia e ben esposta al sole.</p>
+          <div class="crag-links">
+            <a href="http://www.paolo-sonja.net/retiche/" target="_blank" rel="noopener">Relazione ↗</a>
+            <span class="disabled">PDF non disponibile</span>
+          </div>
+        </div>
+
+        <div class="sector">
+          <h4>Via alpinistica</h4>
+          <h3>Becco dell'Aquila</h3>
+          <ul class="sector-specs">
+            <li><span>Tipo</span><span>Multipitch alpinistica</span></li>
+            <li><span>Difficoltà</span><span>max 6c+ / obbl. 6a+</span></li>
+            <li><span>Lunghezze</span><span>4 tiri — vetta 2496 m</span></li>
+            <li><span>Avvicinamento</span><span>~1h 30</span></li>
+          </ul>
+          <p class="crag-blurb">Pilastro all'estremità ovest della Cresta di Reit, richiodato.
+          Via di stampo alpinistico, impegnativa.</p>
+          <div class="access-box" style="margin:0.4rem 0 0.9rem;">
+            <strong>Nota:</strong> roccia non sempre ottima e ambiente d'alta quota; la
+            posizione in mappa è approssimativa. Verificare sempre attrezzatura e condizioni
+            sul posto.
+          </div>
+          <div class="crag-links">
+            <a href="http://www.paolo-sonja.net/retiche/beccoaquila.html" target="_blank" rel="noopener">Relazione ↗</a>
+            <a href="http://www.paolo-sonja.net/retiche/beccoaquila.pdf" target="_blank" rel="noopener">↓ PDF</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <p class="intro-note" style="margin-bottom: var(--space-2xl);">
+      Copyright © 2002–2025 Paolo Vitali / Eraldo Meraldi. L'arrampicata è un'attività
+      potenzialmente pericolosa: ogni informazione va verificata sul posto, in particolare
+      lo stato delle attrezzature.
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-col">
+          <h5>Sezioni</h5>
+          <ul>
+            <li><a href="../falesie_lecco/index.html">Topos — Falesie Lecco</a></li>
+            <li><a href="../bacheca/index.html">Bacheca Virtuale</a></li>
+            <li><a href="../lariobloc/index.html">Lariobloc</a></li>
+            <li><a href="../pillole/pillole.html">Pillole di Storia</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Info</h5>
+          <ul>
+            <li><a href="../accomodation.html">Accomodation</a></li>
+            <li><a href="../shops.html">Shops</a></li>
+            <li><a href="../autori.html">Gli Autori</a></li>
+            <li><a href="../mailus.html">Contatti</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Rete Paolo &amp; Sonja</h5>
+          <ul>
+            <li><a href="http://www.paolo-sonja.net/" target="_blank" rel="noopener">paolo-sonja.net</a></li>
+            <li><a href="http://www.paolo-sonja.net/masino/" target="_blank" rel="noopener">Masino-Bregaglia</a></li>
+            <li><a href="http://www.paolo-sonja.net/mello/" target="_blank" rel="noopener">Val di Mello</a></li>
+            <li><a href="https://www.paolo-sonja.net/scialp/lario/" target="_blank" rel="noopener">LarioSki</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-copy">
+        <span>© Copyright 2002–2025 larioclimb.paolo-sonja.net</span>
+        <span><a href="../autori.html">Autori</a> · <a href="../mailus.html">Contatti</a></span>
+        <img src="http://larioclimb.paolo-sonja.net/lagodicomo.jpg" alt="Lago di Como" style="max-width:120px; border-radius:6px; margin-left:auto;">
+      </div>
+    </div>
+    <div class="container">
+      <div class="shinystat-counter">
+        <!-- Inizio Codice ShinyStat -->
+        <script type="text/javascript" src="https://codice.shinystat.it/cgi-bin/getcod.cgi?USER=pvbacheca"></script>
+        <noscript><a href="https://www.shinystat.it/cgi-bin/shinystatv.cgi?USER=pvbacheca" target="_top"><img src="https://www.shinystat.it/cgi-bin/shinystat.cgi?USER=pvbacheca" alt="ShinyStat" border="0"></a></noscript>
+        <!-- Fine Codice ShinyStat -->
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/nav.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script>
+    const ROCK_COLOR = {
+      "Calcare": "#c08a2e",
+      "Granito": "#a85a3c",
+      "Alpinismo": "#15788a"
+    };
+
+    const CRAGS = [
+      { name: "Bagni Vecchi", type: "Calcare", alt: 1300, lat: 46.4924, lng: 10.3609,
+        detail: "http://www.paolo-sonja.net/retiche/bagni.html",
+        pdf: "http://www.paolo-sonja.net/retiche/bagnivecchi.pdf" },
+      { name: "Corno del Caprone", type: "Calcare", alt: 1400, lat: 46.4968, lng: 10.3588,
+        detail: "http://www.paolo-sonja.net/retiche/cornodelcaprone.html",
+        pdf: "http://www.paolo-sonja.net/retiche/cornodelcaprone.pdf" },
+      { name: "Discarica Abusiva", type: "Granito", alt: 1100, lat: 46.3970, lng: 10.3542,
+        detail: "http://www.paolo-sonja.net/retiche/discaricaabusiva/index.html",
+        pdf: "http://www.paolo-sonja.net/retiche/discaricaabusiva/discaricaabusiva.pdf" },
+      { name: "Isolaccia — Crap de Scegn", type: "Calcare", alt: 1345, lat: 46.4891, lng: 10.2952,
+        detail: "http://www.paolo-sonja.net/retiche/",
+        pdf: null },
+      { name: "Becco dell'Aquila", type: "Alpinismo", alt: 2496, lat: 46.4980, lng: 10.3780,
+        detail: "http://www.paolo-sonja.net/retiche/beccoaquila.html",
+        pdf: "http://www.paolo-sonja.net/retiche/beccoaquila.pdf" }
+    ];
+
+    const map = L.map('bormio-map', { zoomControl: true, scrollWheelZoom: false }).setView([46.47, 10.34], 11);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 17
+    }).addTo(map);
+
+    function makeIcon(type) {
+      const color = ROCK_COLOR[type] || "#555";
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32">
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 9 12 20 12 20S24 21 24 12C24 5.373 18.627 0 12 0z" fill="${color}" stroke="white" stroke-width="1.5"/>
+        <circle cx="12" cy="12" r="4" fill="white" opacity="0.9"/>
+      </svg>`;
+      return L.divIcon({ html: svg, iconSize: [24, 32], iconAnchor: [12, 32], popupAnchor: [0, -34], className: '' });
+    }
+
+    const bounds = [];
+    CRAGS.forEach(c => {
+      const pdfLink = c.pdf
+        ? `<a class="popup-link" href="${c.pdf}" target="_blank" rel="noopener">↓ PDF</a>`
+        : '';
+      L.marker([c.lat, c.lng], { icon: makeIcon(c.type) })
+        .addTo(map)
+        .bindPopup(`<div class="popup-name">${c.name}</div><div class="popup-zone">${c.type} · ${c.alt} m</div><a class="popup-link" href="${c.detail}" target="_blank" rel="noopener">Relazione ↗</a>${pdfLink}`);
+      bounds.push([c.lat, c.lng]);
+    });
+    map.fitBounds(bounds, { padding: [40, 40] });
+  </script>
+</body>
+</html>
