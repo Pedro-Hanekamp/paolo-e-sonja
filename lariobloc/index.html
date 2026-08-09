@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
@@ -161,6 +161,21 @@
       font-weight: 500;
       letter-spacing: 0.05em;
       text-transform: uppercase;
+    }
+    /* Mini-mappa dentro la scheda settore (al posto della foto) */
+    .sector-mini-map {
+      position: relative;
+      z-index: 0;
+      background: oklch(95% 0.008 240);
+      border-bottom: 1px solid oklch(90% 0.01 240);
+      cursor: pointer;
+    }
+    .sector-mini-map .leaflet-container { background: oklch(95% 0.008 240); }
+    .bloc-map-note {
+      margin: 0.5rem 0 0;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      color: oklch(55% 0.02 240);
     }
     .sector-card-body {
       padding: 1rem 1.1rem;
@@ -391,8 +406,6 @@
           <li><a href="../bacheca/index.html">Bacheca</a></li>
           <li class="nav-active"><a href="index.html">Lariobloc</a></li>
           <li><a href="https://www.paolo-sonja.net/scialp/lario/" target="_blank" rel="noopener">Larioski ↗</a></li>
-          <li><a href="../accomodation.html">Accomodation</a></li>
-          <li><a href="../shops.html">Shops</a></li>
           <li><a href="http://www.vienormali.it/" target="_blank" rel="noopener">Altre Topos ↗</a></li>
           <li><a href="../index.html#meteo">Meteo</a></li>
           <li class="nav-mail"><a href="../mailus.html">@mail</a></li>
@@ -421,7 +434,8 @@
         <h1 class="bloc-hero-title">Lario Bloc</h1>
         <p class="bloc-hero-sub">Bouldering intorno al Lago di Como</p>
       </div>
-      <div id="bloc-map" aria-label="Mappa delle zone boulder intorno al Lago di Como"></div>
+      <div id="bloc-map" aria-label="Mappa dei settori boulder intorno al Lago di Como"></div>
+      <p class="bloc-map-note">Un pin per ogni settore boulder. Le coordinate delle zone sono verificate; la posizione dei singoli settori all'interno della zona è indicativa (ricavata dai tempi di avvicinamento dei topo). Per l'avvicinamento fai sempre riferimento al PDF. <a href="#" id="fly-cimaganda">CimagandaBloc</a> si trova in Val San Giacomo, fuori dall'area del Lario.</p>
 
       <!-- CONTACT / SOCIAL -->
       <div class="bloc-contact-row">
@@ -477,11 +491,8 @@
         <div class="sector-grid">
 
           <!-- Raduno -->
-          <div class="sector-card" data-diff="medio difficile">
-            <div class="sector-card-photo sector-photo-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-              <span>Aggiungi foto</span>
-            </div>
+          <div class="sector-card" id="sec-raduno" data-diff="medio difficile">
+            <div class="sector-card-photo sector-mini-map" id="minimap-raduno" title="Posizione indicativa del settore"></div>
             <div class="sector-card-body">
               <h3 class="sector-card-name">Raduno</h3>
               <div class="sector-stats">
@@ -499,11 +510,8 @@
           </div>
 
           <!-- Felice -->
-          <div class="sector-card" data-diff="facile medio">
-            <div class="sector-card-photo sector-photo-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-              <span>Aggiungi foto</span>
-            </div>
+          <div class="sector-card" id="sec-felice" data-diff="facile medio">
+            <div class="sector-card-photo sector-mini-map" id="minimap-felice" title="Posizione indicativa del settore"></div>
             <div class="sector-card-body">
               <h3 class="sector-card-name">Felice</h3>
               <div class="sector-stats">
@@ -520,11 +528,8 @@
           </div>
 
           <!-- Menaresta -->
-          <div class="sector-card" data-diff="facile medio">
-            <div class="sector-card-photo sector-photo-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-              <span>Aggiungi foto</span>
-            </div>
+          <div class="sector-card" id="sec-menaresta" data-diff="facile medio">
+            <div class="sector-card-photo sector-mini-map" id="minimap-menaresta" title="Posizione indicativa del settore"></div>
             <div class="sector-card-body">
               <h3 class="sector-card-name">Menaresta</h3>
               <div class="sector-stats">
@@ -541,11 +546,8 @@
           </div>
 
           <!-- Pietraluna -->
-          <div class="sector-card" data-diff="facile">
-            <div class="sector-card-photo sector-photo-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-              <span>Aggiungi foto</span>
-            </div>
+          <div class="sector-card" id="sec-pietraluna" data-diff="facile">
+            <div class="sector-card-photo sector-mini-map" id="minimap-pietraluna" title="Posizione indicativa del settore"></div>
             <div class="sector-card-body">
               <h3 class="sector-card-name">Pietraluna</h3>
               <div class="sector-stats">
@@ -578,11 +580,8 @@
         <div class="sector-grid">
 
           <!-- Taja Sass -->
-          <div class="sector-card" data-diff="facile medio difficile">
-            <div class="sector-card-photo sector-photo-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-              <span>Aggiungi foto</span>
-            </div>
+          <div class="sector-card" id="sec-tajasass" data-diff="facile medio difficile">
+            <div class="sector-card-photo sector-mini-map" id="minimap-tajasass" title="Posizione indicativa del settore"></div>
             <div class="sector-card-body">
               <h3 class="sector-card-name">Taja Sass <span class="sector-year">2022</span></h3>
               <p class="sector-note">Il settore più recente della zona, sviluppato da Paolo Zorloni e collaboratori.</p>
@@ -594,11 +593,8 @@
           </div>
 
           <!-- Solarium -->
-          <div class="sector-card" data-diff="facile medio difficile">
-            <div class="sector-card-photo sector-photo-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-              <span>Aggiungi foto</span>
-            </div>
+          <div class="sector-card" id="sec-solarium" data-diff="facile medio difficile">
+            <div class="sector-card-photo sector-mini-map" id="minimap-solarium" title="Posizione indicativa del settore"></div>
             <div class="sector-card-body">
               <h3 class="sector-card-name">Solarium</h3>
               <div class="sector-stats">
@@ -615,11 +611,8 @@
           </div>
 
           <!-- Condominio -->
-          <div class="sector-card" data-diff="facile medio">
-            <div class="sector-card-photo sector-photo-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-              <span>Aggiungi foto</span>
-            </div>
+          <div class="sector-card" id="sec-condominio" data-diff="facile medio">
+            <div class="sector-card-photo sector-mini-map" id="minimap-condominio" title="Posizione indicativa del settore"></div>
             <div class="sector-card-body">
               <h3 class="sector-card-name">Condominio</h3>
               <div class="sector-stats">
@@ -636,11 +629,8 @@
           </div>
 
           <!-- Lo Stinco -->
-          <div class="sector-card" data-diff="facile medio">
-            <div class="sector-card-photo sector-photo-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-              <span>Aggiungi foto</span>
-            </div>
+          <div class="sector-card" id="sec-lostinco" data-diff="facile medio">
+            <div class="sector-card-photo sector-mini-map" id="minimap-lostinco" title="Posizione indicativa del settore"></div>
             <div class="sector-card-body">
               <h3 class="sector-card-name">Lo Stinco</h3>
               <div class="sector-stats">
@@ -657,11 +647,8 @@
           </div>
 
           <!-- Trappole di Luce -->
-          <div class="sector-card" data-diff="facile medio">
-            <div class="sector-card-photo sector-photo-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-              <span>Aggiungi foto</span>
-            </div>
+          <div class="sector-card" id="sec-trappole" data-diff="facile medio">
+            <div class="sector-card-photo sector-mini-map" id="minimap-trappole" title="Posizione indicativa del settore"></div>
             <div class="sector-card-body">
               <h3 class="sector-card-name">Trappole di Luce</h3>
               <div class="sector-stats">
@@ -678,11 +665,8 @@
           </div>
 
           <!-- Eremo -->
-          <div class="sector-card" data-diff="facile medio difficile">
-            <div class="sector-card-photo sector-photo-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-              <span>Aggiungi foto</span>
-            </div>
+          <div class="sector-card" id="sec-eremo" data-diff="facile medio difficile">
+            <div class="sector-card-photo sector-mini-map" id="minimap-eremo" title="Posizione indicativa del settore"></div>
             <div class="sector-card-body">
               <h3 class="sector-card-name">Eremo</h3>
               <div class="sector-stats">
@@ -699,11 +683,8 @@
           </div>
 
           <!-- Meteore -->
-          <div class="sector-card" data-diff="facile medio">
-            <div class="sector-card-photo sector-photo-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-              <span>Aggiungi foto</span>
-            </div>
+          <div class="sector-card" id="sec-meteore" data-diff="facile medio">
+            <div class="sector-card-photo sector-mini-map" id="minimap-meteore" title="Posizione indicativa del settore"></div>
             <div class="sector-card-body">
               <h3 class="sector-card-name">Meteore</h3>
               <div class="sector-stats">
@@ -734,11 +715,8 @@
         <div class="sector-grid sector-grid--wide">
 
           <!-- Valmadrerabloc -->
-          <div class="sector-card" data-diff="facile medio difficile">
-            <div class="sector-card-photo sector-photo-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-              <span>Aggiungi foto</span>
-            </div>
+          <div class="sector-card" id="sec-valmadrera" data-diff="facile medio difficile">
+            <div class="sector-card-photo sector-mini-map" id="minimap-valmadrera" title="Posizione indicativa del settore"></div>
             <div class="sector-card-body">
               <h3 class="sector-card-name">Valmadrerabloc</h3>
               <div class="sector-stats">
@@ -756,11 +734,8 @@
           </div>
 
           <!-- Gajumbloc -->
-          <div class="sector-card" data-diff="medio difficile">
-            <div class="sector-card-photo sector-photo-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-              <span>Aggiungi foto</span>
-            </div>
+          <div class="sector-card" id="sec-gajum" data-diff="medio difficile">
+            <div class="sector-card-photo sector-mini-map" id="minimap-gajum" title="Posizione indicativa del settore"></div>
             <div class="sector-card-body">
               <h3 class="sector-card-name">Gajumbloc</h3>
               <div class="sector-stats">
@@ -778,11 +753,8 @@
           </div>
 
           <!-- Galbiatebloc -->
-          <div class="sector-card" data-diff="facile medio">
-            <div class="sector-card-photo sector-photo-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-              <span>Aggiungi foto</span>
-            </div>
+          <div class="sector-card" id="sec-galbiate" data-diff="facile medio">
+            <div class="sector-card-photo sector-mini-map" id="minimap-galbiate" title="Posizione indicativa del settore"></div>
             <div class="sector-card-body">
               <h3 class="sector-card-name">Galbiatebloc</h3>
               <div class="sector-stats">
@@ -798,11 +770,8 @@
           </div>
 
           <!-- La Bonacina -->
-          <div class="sector-card" data-diff="facile medio difficile">
-            <div class="sector-card-photo sector-photo-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-              <span>Aggiungi foto</span>
-            </div>
+          <div class="sector-card" id="sec-bonacina" data-diff="facile medio difficile">
+            <div class="sector-card-photo sector-mini-map" id="minimap-bonacina" title="Posizione indicativa del settore"></div>
             <div class="sector-card-body">
               <h3 class="sector-card-name">La Bonacina</h3>
               <div class="sector-stats">
@@ -817,11 +786,8 @@
           </div>
 
           <!-- CimagandaBloc -->
-          <div class="sector-card" data-diff="facile medio difficile">
-            <div class="sector-card-photo sector-photo-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-              <span>Aggiungi foto</span>
-            </div>
+          <div class="sector-card" id="sec-cimaganda" data-diff="facile medio difficile">
+            <div class="sector-card-photo sector-mini-map" id="minimap-cimaganda" title="Posizione indicativa del settore"></div>
             <div class="sector-card-body">
               <h3 class="sector-card-name">CimagandaBloc</h3>
               <div class="sector-stats">
@@ -890,8 +856,6 @@
       <div class="footer-col">
         <h5>Info</h5>
         <ul>
-          <li><a href="../accomodation.html">Accomodation</a></li>
-          <li><a href="../shops.html">Shops</a></li>
           <li><a href="../autori.html">Gli Autori</a></li>
           <li><a href="../mailus.html">Contatti</a></li>
         </ul>
@@ -932,35 +896,45 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 17,
 }).addTo(blocMap);
 
-// Pin alignment nudge — shift all markers slightly south + west onto the towns.
-// Tune these two numbers (negative = south / west). Set to 0 to disable.
-const MAP_SHIFT_LAT = -0.006;
-const MAP_SHIFT_LNG = -0.006;
-
 function makeBlocIcon(color) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32">
-    <path d="M12 0C5.373 0 0 5.373 0 12c0 9 12 20 12 20S24 21 24 12C24 5.373 18.627 0 12 0z" fill="${color}" stroke="white" stroke-width="1.5"/>
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="24" viewBox="0 0 24 32">
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 9 12 20 12 20S24 21 24 12C24 5.373 18.627 0 12 0z" fill="${color}" stroke="white" stroke-width="2"/>
     <circle cx="12" cy="12" r="4" fill="white" opacity="0.9"/>
   </svg>`;
-  return L.divIcon({ html: svg, iconSize:[24,32], iconAnchor:[12,32], popupAnchor:[0,-34], className:'' });
+  return L.divIcon({ html: svg, iconSize:[18,24], iconAnchor:[9,24], popupAnchor:[0,-26], className:'' });
 }
 
-// Coordinate verificate per ogni zona boulder (vedi piano)
-const BLOC_AREAS = [
-  { name:"Ranciobloc",           lat:45.872, lng:9.405, color:"#0d8f8f", note:"Tutto l'anno · 4-7A · 3 settori + Pietraluna",  pdf:"Ranciobloc_intro20.pdf" },
-  { name:"Civatebloc",           lat:45.8197, lng:9.3421, color:"#2e8b57", note:"La zona più varia · 3-7A · 7 settori",           pdf:"civatebloc_intro20.pdf" },
-  { name:"Valmadrerabloc",       lat:45.851, lng:9.350, color:"#c46000", note:"Tutto l'anno · 3-7A · 6-7 m · avv. 50 min",      pdf:"ValmadreraBloc20.pdf" },
-  { name:"Gajumbloc",            lat:45.858, lng:9.281, color:"#3b6ea5", note:"Valle ombrosa · Apr-Nov · 5-7A+ · avv. 15 min",  pdf:"GajumBloc20.pdf" },
-  { name:"Galbiatebloc",         lat:45.818, lng:9.378, color:"#9a5b2e", note:"Ott-Apr · fino a 6B+ · adatta alle famiglie",    pdf:"GalbiateBloc_smaterno20.pdf" },
-  { name:"La Bonacina di Lecco", lat:45.853, lng:9.412, color:"#8a3ab0", note:"Blocco urbano · lungo il torrente Calderone",   pdf:"Bonacinabloc_lecco21.pdf" },
+// Un pin per ogni settore boulder. Le coordinate delle ZONE (Rancio, Civate,
+// Valmadrera, Gajum, Galbiate, Bonacina) sono verificate; la posizione dei
+// singoli settori dentro la zona è indicativa, ricavata dai tempi di
+// avvicinamento dei topo: serve a orientarsi, non a navigare.
+// Nessun offset globale sui pin (vedi bug -0.006 già corretto sulle falesie).
+const BLOC_SECTORS = [
+  { slug:"menaresta",  name:"Menaresta",        zone:"Ranciobloc",     lat:45.8712, lng:9.4032, color:"#0d8f8f", note:"avv. 5-10 min",   pdf:"Ranciobloc_menaresta20.pdf" },
+  { slug:"pietraluna", name:"Pietraluna",       zone:"Ranciobloc",     lat:45.8728, lng:9.4045, color:"#0d8f8f", note:"avv. 10 min",     pdf:"Ranciobloc_pietraluna21.pdf" },
+  { slug:"raduno",     name:"Raduno",           zone:"Ranciobloc",     lat:45.8735, lng:9.4068, color:"#0d8f8f", note:"avv. 10-15 min",  pdf:"Ranciobloc_raduno21.pdf" },
+  { slug:"felice",     name:"Felice",           zone:"Ranciobloc",     lat:45.8748, lng:9.4085, color:"#0d8f8f", note:"avv. 15-20 min",  pdf:"Ranciobloc_gara20.pdf" },
+  { slug:"meteore",    name:"Meteore",          zone:"Civatebloc",     lat:45.8205, lng:9.3390, color:"#2e8b57", note:"avv. 5 min",      pdf:"civatebloc_meteoreoro21.pdf" },
+  { slug:"lostinco",   name:"Lo Stinco",        zone:"Civatebloc",     lat:45.8215, lng:9.3372, color:"#2e8b57", note:"avv. 10 min",     pdf:"civatebloc_lostinco23.pdf" },
+  { slug:"trappole",   name:"Trappole di Luce", zone:"Civatebloc",     lat:45.8228, lng:9.3358, color:"#2e8b57", note:"avv. 15 min",     pdf:"civatebloc_trappolediluce20.pdf" },
+  { slug:"condominio", name:"Condominio",       zone:"Civatebloc",     lat:45.8236, lng:9.3345, color:"#2e8b57", note:"avv. 20 min",     pdf:"civatebloc_condominio22.pdf" },
+  { slug:"tajasass",   name:"Taja Sass",        zone:"Civatebloc",     lat:45.8244, lng:9.3330, color:"#2e8b57", note:"settore 2022",    pdf:"civatebloc_tajasass22.pdf" },
+  { slug:"solarium",   name:"Solarium",         zone:"Civatebloc",     lat:45.8252, lng:9.3316, color:"#2e8b57", note:"avv. 30-40 min",  pdf:"civatebloc_solarium21.pdf" },
+  { slug:"eremo",      name:"Eremo",            zone:"Civatebloc",     lat:45.8266, lng:9.3298, color:"#2e8b57", note:"avv. 45 min",     pdf:"civatebloc_eremo20.pdf" },
+  { slug:"valmadrera", name:"Valmadrerabloc",   zone:"Valmadrera",     lat:45.851,  lng:9.350,  color:"#c46000", note:"avv. 50 min · 6-7 m",  pdf:"ValmadreraBloc20.pdf" },
+  { slug:"gajum",      name:"Gajumbloc",        zone:"Gajum",          lat:45.858,  lng:9.281,  color:"#3b6ea5", note:"avv. 15 min · Apr-Nov", pdf:"GajumBloc20.pdf" },
+  { slug:"galbiate",   name:"Galbiatebloc",     zone:"Galbiate",       lat:45.818,  lng:9.378,  color:"#9a5b2e", note:"avv. 30 sec-3 min · Ott-Apr", pdf:"GalbiateBloc_smaterno20.pdf" },
+  { slug:"bonacina",   name:"La Bonacina",      zone:"Lecco",          lat:45.853,  lng:9.412,  color:"#8a3ab0", note:"blocco urbano · torrente Calderone", pdf:"Bonacinabloc_lecco21.pdf" },
+  { slug:"cimaganda",  name:"CimagandaBloc",    zone:"Val San Giacomo", lat:46.380, lng:9.350,  color:"#6b7280", note:"fuori Lario · sopra Chiavenna", pdf:"miniguida_cimaganda_bloc.pdf", offLario:true },
 ];
 
 const blocBounds = [];
-BLOC_AREAS.forEach(a => {
-  L.marker([a.lat + MAP_SHIFT_LAT, a.lng + MAP_SHIFT_LNG], { icon: makeBlocIcon(a.color) })
+BLOC_SECTORS.forEach(s => {
+  L.marker([s.lat, s.lng], { icon: makeBlocIcon(s.color) })
     .addTo(blocMap)
-    .bindPopup(`<div class="popup-name">${a.name}</div><div class="popup-zone">${a.note}</div><a class="popup-pdf" href="${a.pdf}" target="_blank">↓ Topo PDF</a>`);
-  blocBounds.push([a.lat + MAP_SHIFT_LAT, a.lng + MAP_SHIFT_LNG]);
+    .bindPopup(`<div class="popup-name">${s.name}</div><div class="popup-zone">${s.zone} · ${s.note}</div><a class="popup-pdf" href="${s.pdf}" target="_blank">↓ Topo PDF</a><a class="popup-pdf" href="#sec-${s.slug}">→ Vai alla scheda</a>`);
+  // Cimaganda è a 65 km: se entrasse nel fitBounds schiaccerebbe tutto il Lario.
+  if (!s.offLario) blocBounds.push([s.lat, s.lng]);
 });
 blocMap.fitBounds(blocBounds, { padding: [30, 30] });
 
@@ -976,6 +950,53 @@ function refreshBlocMap() {
 window.addEventListener('load', refreshBlocMap);
 window.addEventListener('resize', refreshBlocMap);
 setTimeout(refreshBlocMap, 300);
+
+// ── MINI-MAPPE PER SETTORE ───────────────────────────────────────────────────
+// Ogni scheda settore ha la sua mini-mappa al posto della foto. Vengono create
+// solo quando la scheda entra nello schermo (IntersectionObserver), cosi' non
+// carichiamo 16 mappe tutte insieme. Clic sulla mini-mappa = la mappa grande
+// sale in vista e zooma su quel settore.
+const miniMaps = {};
+
+function initMiniMap(el, s) {
+  if (!s || miniMaps[s.slug]) return;
+  const m = L.map(el, {
+    zoomControl: false, attributionControl: false, scrollWheelZoom: false,
+    dragging: false, doubleClickZoom: false, boxZoom: false, keyboard: false,
+    touchZoom: false, tap: false,
+  }).setView([s.lat, s.lng], 14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 17 }).addTo(m);
+  L.marker([s.lat, s.lng], { icon: makeBlocIcon(s.color) }).addTo(m);
+  miniMaps[s.slug] = m;
+  setTimeout(() => m.invalidateSize(), 60);
+  el.addEventListener('click', () => {
+    document.getElementById('bloc-map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    blocMap.setView([s.lat, s.lng], 15);
+  });
+}
+
+const miniObserver = ('IntersectionObserver' in window)
+  ? new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        obs.unobserve(e.target);
+        initMiniMap(e.target, BLOC_SECTORS.find(s => s.slug === e.target.dataset.slug));
+      });
+    }, { rootMargin: '200px' })
+  : null;
+
+BLOC_SECTORS.forEach(s => {
+  const el = document.getElementById('minimap-' + s.slug);
+  if (!el) return;
+  el.dataset.slug = s.slug;
+  if (miniObserver) miniObserver.observe(el); else initMiniMap(el, s);
+});
+
+// Una scheda nascosta dal filtro ha dimensione zero: quando torna visibile
+// Leaflet ha bisogno di rimisurare, altrimenti resta grigia.
+window.refreshMiniMaps = function() {
+  Object.keys(miniMaps).forEach(k => miniMaps[k].invalidateSize());
+};
 </script>
 <script>
 (function() {
